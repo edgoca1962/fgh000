@@ -1,0 +1,1 @@
+<h3>La información consultada no puede ser mostrada.</h3>
