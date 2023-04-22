@@ -43,7 +43,7 @@ if (!function_exists('fgh000_get_acuerdo_param')) {
       $div2 = 'col-xl-8';
       $div3 = "row row-cols-1 g-4 mb-5";
       $div4 = 'col-xl-4';
-      $agregarpost = 'modules/' . $postType . '/template-parts/' . $postType . '-mantenimiento';
+      $agregarpost = '';
       $templatepart = 'modules/' . $postType . '/template-parts/' . $postType;
       $barra = 'modules/' . $postType . '/template-parts/' . $postType . '-busquedas';
       $templatepartsingle = 'modules/' . $postType . '/template-parts/' . $postType . '-single';
@@ -141,6 +141,7 @@ if (!function_exists('fgh000_get_acuerdo_param')) {
          }
       }
       if (isset($_GET['acta_id']) != null) {
+         $agregarpost = 'modules/' . $postType . '/template-parts/' . $postType . '-mantenimiento';
          $acta_id = sanitize_text_field($_GET['acta_id']);
          if (get_post($acta_id)) {
             $subtitulo = get_post($acta_id)->post_title;

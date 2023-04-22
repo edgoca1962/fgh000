@@ -34,5 +34,5 @@
       </div>
    </div>
 <?php else: ?>
-   <?php get_template_part('modules/core/template-parts/cor', 'none'); ?>
+   <?php get_template_part('modules/core/template-parts/core', 'none'); ?>
 <?php endif; ?>
