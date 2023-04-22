@@ -71,12 +71,12 @@
                <div class="row mb-3">
                   <label for="asignar_id" class="form-label">Acuerdo asignado a:</label>
                   <select name="asignar_id" id="asignar_id_agregar" class="form-select" aria-label="Selecionar miembro">
-                     <option <?= (get_post_meta($post->ID, '_asignar_id', true) == '') ? 'value="0" selected' : 'value="0"' ?>>Sin asignar</option>
+                     <option <?= (get_post_meta(get_the_ID(), '_asignar_id', true) == '') ? 'value="0" selected' : 'value="0"' ?>>Sin asignar</option>
                      <?php
                      $usuarios = get_users('orderby=display_name');
                      foreach ($usuarios as $usuario) {
                         ?>
-                        <option <?= (get_post_meta($post->ID, '_asignar_id', true) == $usuario->ID) ? 'value="' . esc_attr($usuario->ID) . '" Selected' : 'value="' . $usuario->ID . '"' ?>><?= $usuario->display_name ?></option>
+                        <option <?= (get_post_meta(get_the_ID(), '_asignar_id', true) == $usuario->ID) ? 'value="' . esc_attr($usuario->ID) . '" Selected' : 'value="' . $usuario->ID . '"' ?>><?= $usuario->display_name ?></option>
                         <?php
                      }
                      ?>
@@ -138,12 +138,12 @@
                   <div class="col mb-3">
                      <label for="asignar_id" class="form-label">Acuerdo asignado a:</label>
                      <select name="asignar_id" id="asignar_id" class="form-select" aria-label="Selecionar miembro">
-                        <option <?= (get_post_meta($post->ID, '_asignar_id', true) == '') ? 'value="0" selected' : 'value="0"' ?>>Sin asignar</option>
+                        <option <?= (get_post_meta(get_the_ID(), '_asignar_id', true) == '') ? 'value="0" selected' : 'value="0"' ?>>Sin asignar</option>
                         <?php
                         $usuarios = get_users('orderby=nicename');
                         foreach ($usuarios as $usuario) {
                            ?>
-                           <option <?= (get_post_meta($post->ID, '_asignar_id', true) == $usuario->ID) ? 'value="' . esc_attr($usuario->ID) . '" Selected' : 'value="' . $usuario->ID . '"' ?>><?= $usuario->display_name ?></option>
+                           <option <?= (get_post_meta(get_the_ID(), '_asignar_id', true) == $usuario->ID) ? 'value="' . esc_attr($usuario->ID) . '" Selected' : 'value="' . $usuario->ID . '"' ?>><?= $usuario->display_name ?></option>
                            <?php
                         }
                         ?>

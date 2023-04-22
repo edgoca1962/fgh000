@@ -734,3 +734,179 @@ if (!function_exists('verAcuerdos')) {
       return $verAcuerdosComite;
    }
 }
+
+/******************************************************************************
+ * 
+ * 
+ * Mantenimiento de acuerdos
+ * 
+ * 
+ *****************************************************************************/
+function fgh000_registrar_acuerdo()
+{
+   //Validación de seguridad
+   if (!wp_verify_nonce($_POST['nonce'], 'agregar_acuerdo')) {
+      wp_send_json_error('Error de seguridad', 401);
+      wp_die();
+   } else {
+
+      //Creación aleatoria del nombre del permalink del post
+      $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      $charactersLength = strlen($characters);
+      $randomString = '';
+      for ($i = 0; $i < 15; $i++) {
+         $randomString .= $characters[rand(0, $charactersLength - 1)];
+      }
+      $post_name = 'aid_' . $randomString;
+
+      //Registro del post en la base de datos.
+      $n_acuerdo = sanitize_text_field($_POST['n_acuerdo']);
+      $comite_id = sanitize_text_field($_POST['comite_id']);
+      $acta_id = sanitize_text_field($_POST['acta_id']);
+      $n_acta = sanitize_text_field($_POST['n_acta']);
+
+      $titulo = 'Acuerdo-' . $n_acuerdo . ' - ' . $n_acta;
+      $content = sanitize_textarea_field($_POST['contenido']);
+      $post_parent = $acta_id;
+
+      $asignar_id = sanitize_textarea_field($_POST['asignar_id']);
+      $f_compromiso = sanitize_textarea_field($_POST['f_compromiso']);
+      $vigente = sanitize_textarea_field($_POST['vigente']);
+      $f_seguimiento = sanitize_textarea_field($_POST['f_seguimiento']);
+      $asignar_id = sanitize_text_field($_POST['asignar_id']);
+
+      $post_data = array(
+         'post_type' => 'acuerdo',
+         'post_title' => $titulo,
+         'post_content' => $content,
+         'post_name' => $post_name,
+         'post_date' => get_post($post_parent)->post_date,
+         'post_status' => 'publish',
+         'post_parent' => $post_parent,
+         'meta_input' => array(
+            '_asignar_id' => $asignar_id,
+            '_comite_id' => $comite_id,
+            '_acta_id' => $acta_id,
+            '_n_acuerdo' => $n_acuerdo,
+            '_vigente' => $vigente,
+            '_f_compromiso' => $f_compromiso,
+            '_f_seguimiento' => $f_seguimiento,
+         )
+
+      );
+
+      wp_insert_post($post_data);
+      wp_send_json_success('Acuerdo Registrado');
+      wp_die();
+   }
+}
+add_action('wp_ajax_agregar_acuerdo', 'fgh000_registrar_acuerdo');
+
+function fgh000_editar_acuerdo()
+{
+   //Validación de seguridad
+   if (!wp_verify_nonce($_POST['nonce'], 'editar_acuerdo')) {
+      wp_send_json_error('Error de seguridad', 401);
+      die();
+   } else {
+      $post_id = sanitize_text_field($_POST['post_id']);
+      $f_compromiso = sanitize_text_field($_POST['f_compromiso']);
+      $vigente = sanitize_text_field($_POST['vigente']);
+      $f_seguimiento = sanitize_text_field($_POST['f_seguimiento']);
+      $asingar_id = sanitize_text_field($_POST['asignar_id']);
+      $contenido = sanitize_textarea_field($_POST['contenido']);
+
+      $post_data = [
+         'ID' => $post_id,
+         'post_content' => $contenido,
+         'meta_input' => [
+            '_f_compromiso' => $f_compromiso,
+            '_vigente' => $vigente,
+            '_f_seguimiento' => $f_seguimiento,
+            '_asignar_id' => $asingar_id,
+         ]
+      ];
+      wp_update_post($post_data);
+      wp_send_json_success('Acuerdo Editado');
+      wp_die();
+   }
+}
+add_action('wp_ajax_editar_acuerdo', 'fgh000_editar_acuerdo');
+
+function fgh000_eliminar_acuerdo()
+{
+   if (!wp_verify_nonce($_POST['nonce'], 'eliminar_acuerdo')) {
+      wp_send_json_error('Error de seguridad', 401);
+      die();
+   } else {
+      $post_id = sanitize_text_field($_POST['post_id']);
+      wp_trash_post($post_id);
+      wp_send_json_success('Acuerdo Eliminado');
+      wp_die();
+   }
+}
+add_action('wp_ajax_eliminar_acuerdo', 'fgh000_eliminar_acuerdo');
+function verAcuerdos()
+{
+   $usuario = wp_get_current_user();
+   $roles = $usuario->roles;
+
+   $comites = get_posts([
+      'post_type' => 'comite',
+      'numberposts' => -1,
+      'post_status' => 'publish',
+   ]);
+
+   $acuerdos = get_posts([
+      'post_type' => 'acuerdo',
+      'numberposts' => -1,
+      'post_status' => 'publish',
+   ]);
+
+   $miembros = get_posts([
+      'post_type' => 'miembro',
+      'numberposts' => -1,
+      'post_status' => 'publish',
+      'meta_key' => '_usr_id',
+      'meta_value' => $usuario->ID,
+   ]);
+
+   $verAcuerdosComite = [];
+   if (fgh000_get_param()['userAdmin']) {
+      foreach ($comites as $comite) {
+         $verAcuerdosComite[$comite->ID] = 'todos';
+      }
+   } else {
+      $miembroJunta = false;
+      foreach ($miembros as $miembro) {
+         if (preg_match("/Junta/i", $miembro->post_title)) {
+            $miembroJunta = true;
+         }
+      }
+      if ($miembroJunta) {
+         foreach ($comites as $comite) {
+            $verAcuerdosComite[$comite->ID] = 'todos';
+         }
+      } else {
+         $coordinador = false;
+         foreach ($miembros as $miembro) {
+            if (preg_match("/Coordina/i", $miembro->post_title)) {
+               $verAcuerdosComite[get_post_meta($miembro->ID, '_comite_id', true)] = 'todos';
+               $coordinador = true;
+            }
+         }
+         if ($coordinador) {
+            foreach ($comites as $comite) {
+               if ($verAcuerdosComite[$comite->ID] == null) {
+                  $verAcuerdosComite[$comite->ID] = 'asignados';
+               }
+            }
+         } else {
+            foreach ($comites as $comite) {
+               $verAcuerdosComite[$comite->ID] = 'asignados';
+            }
+         }
+      }
+   }
+   return $verAcuerdosComite;
+}

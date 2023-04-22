@@ -914,7 +914,7 @@ function fgh000_get_comites()
  * 
  *****************************************************************************/
 
-function fgh000_pre_get_posts($query)
+function fgh000_pre_get_acuerdo($query)
 {
    if ($query->is_main_query() && !is_admin()) {
 
@@ -1171,4 +1171,4 @@ function fgh000_pre_get_posts($query)
       }
    }
 }
-add_action('pre_get_posts', 'fgh000_pre_get_posts');
+add_action('pre_get_posts', 'fgh000_pre_get_acuerdo');
