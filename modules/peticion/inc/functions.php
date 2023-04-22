@@ -1,7 +1,36 @@
 <?php
 require get_template_directory() . "/modules/oracion/inc/oracion.php";
 require get_template_directory() . "/modules/peticion/inc/peticion.php";
-if (!function_exists('fgh_002_get_peticion_param')) {
+/******************************************************************************
+ * 
+ * 
+ * Crea páginas requeridas.
+ * 
+ * 
+ ******************************************************************************/
+$principal = get_posts([
+   'post_type' => 'page',
+   'post_status' => 'publish',
+   'name' => 'peticion-principal',
+]);
+if (count($principal) > 0) {
+} else {
+   $post_data = array(
+      'post_type' => 'page',
+      'post_title' => 'Peticiones',
+      'post_name' => 'peticion-principal',
+      'post_status' => 'publish',
+   );
+   wp_insert_post($post_data);
+}
+/******************************************************************************
+ * 
+ * 
+ * Obtiene parámetros para peticiones.
+ * 
+ * 
+ ******************************************************************************/
+if (!function_exists('fgh000_get_peticion_param')) {
    function fgh000_get_peticion_param($postType = 'peticion')
    {
       $atributos = [];
@@ -52,27 +81,6 @@ if (!function_exists('fgh_002_get_peticion_param')) {
       // $atributos['template404'] = $template404;
       $atributos['btn_regresar'] = $btn_regresar;
       $atributos['regresar'] = $regresar;
+      return $atributos;
    }
-}
-/******************************************************************************
- * 
- * 
- * Crea páginas requeridas.
- * 
- * 
- ******************************************************************************/
-$principal = get_posts([
-   'post_type' => 'page',
-   'post_status' => 'publish',
-   'name' => 'peticion-principal',
-]);
-if (count($principal) > 0) {
-} else {
-   $post_data = array(
-      'post_type' => 'page',
-      'post_title' => 'Peticiones',
-      'post_name' => 'peticion-principal',
-      'post_status' => 'publish',
-   );
-   wp_insert_post($post_data);
 }

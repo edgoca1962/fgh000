@@ -31,7 +31,8 @@ function fgh000_csvfile()
             fclose($file);
          }
       }
-      /**************************************************** * Importa e Inserta los datos ***************************************************/if (($file = fopen(get_template_directory("__FILE__") . '/csv/' . basename($_FILES['csvfile']['name']), "r")) !== FALSE) {
+      /**************************************************** * Importa e Inserta los datos ***************************************************/
+      if (($file = fopen(get_template_directory("__FILE__") . '/csv/' . basename($_FILES['csvfile']['name']), "r")) !== FALSE) {
          if (($data = fgetcsv($file)) !== FALSE) {
             $post_fields = [];
             $post_meta = [];

@@ -18,17 +18,33 @@ require get_template_directory() . "/modules/peticion/inc/functions.php";
  * Crea páginas requeridas.
  */
 
-$login = get_posts([
+$pagina = get_posts([
    'post_type' => 'page',
    'name' => 'core-login',
    'post_status' => 'publish',
 ]);
-if (count($login) > 0) {
+if (count($pagina) > 0) {
 } else {
    $post_data = array(
       'post_type' => 'page',
       'post_title' => 'Login',
       'post_name' => 'core-login',
+      'post_status' => 'publish',
+   );
+   wp_insert_post($post_data);
+}
+
+$pagina = get_posts([
+   'post_type' => 'page',
+   'name' => 'principal',
+   'post_status' => 'publish',
+]);
+if (count($pagina) > 0) {
+} else {
+   $post_data = array(
+      'post_type' => 'page',
+      'post_title' => 'Página Principal',
+      'post_name' => 'principal',
       'post_status' => 'publish',
    );
    wp_insert_post($post_data);
@@ -41,7 +57,7 @@ if (!function_exists('fgh000_get_param')) {
    function fgh000_get_param($postType = '')
    {
       $atributos = [];
-
+      /*===== usuario,roles y ID ============================================*/
       if (is_user_logged_in()) {
          $usuario = wp_get_current_user();
          $usuario_id = $usuario->ID;
@@ -56,18 +72,25 @@ if (!function_exists('fgh000_get_param')) {
          $userAdmin = '';
          $postType = 'page';
       }
+      /*===== postType  =====================================================*/
       if (is_404()) {
          if (isset($_GET['cpt'])) {
             $postType = sanitize_text_field($_GET['cpt']);
          } else {
             $postType = 'page';
          }
+      } else {
+         if (isset($_GET['cpt'])) {
+            $postType = sanitize_text_field($_GET['cpt']);
+         }
       }
+      /*===== imagen  =======================================================*/
       if (get_the_post_thumbnail_url()) {
          $imagen = get_the_post_thumbnail_url();
       } else {
          $imagen = get_template_directory_uri() . '/assets/img/bg.jpg';
       }
+      /*===== templatepart  =================================================*/
       if (isset(get_post(get_the_ID())->post_name)) {
          $slug = get_post(get_the_ID())->post_name;
          $guion = strpos($slug, '-');
@@ -78,9 +101,7 @@ if (!function_exists('fgh000_get_param')) {
          $modulo = '';
          $templatepart = '';
       }
-      if (isset($_GET['cpt'])) {
-         $postType = sanitize_text_field($_GET['cpt']);
-      }
+      /*===== pag, pag_ant  =================================================*/
       if (isset(explode("/", $_SERVER['REQUEST_URI'])[3])) {
          if (explode("/", $_SERVER['REQUEST_URI'])[3] != '') {
             if (explode("/", $_SERVER['REQUEST_URI'])[3] == 'page') {
@@ -99,14 +120,15 @@ if (!function_exists('fgh000_get_param')) {
       } else {
          $pag_ant = 1;
       }
-
+      /*===== atributos  ====================================================*/
       $atributos['fullpage'] = true;
       $atributos['height'] = '100vh';
       $atributos['imagen'] = $imagen;
+      $atributos['templatepart'] = $templatepart;
 
       switch ($postType) {
          case 'page':
-            $fullpage = false;
+            /*===== titulo  =================================================*/
             if (isset($_GET['cptpg'])) {
                $cptpg = sanitize_text_field($_GET['cptpg']);
                if ($cptpg == 'acuerdo') {
@@ -117,6 +139,7 @@ if (!function_exists('fgh000_get_param')) {
             } else {
                $titulo = get_the_title();
             }
+            /*===== varias  =================================================*/
             $fontweight = 'fw-lighter';
             $display = 'display-4';
             $subtitulo = '';
@@ -124,8 +147,9 @@ if (!function_exists('fgh000_get_param')) {
             $subtitulo2 = '';
             $displaysub2 = 'display-6';
             $height = '60vh';
-            $div0 = 'background-blend py-5';
+            $div0 = 'background-blend  py-5';
             $div1 = 'container';
+            /*===== fullpage, height, div0, titulo  =========================*/
             if (is_user_logged_in()) {
                if (is_front_page()) {
                   $fullpage = false;
@@ -144,24 +168,19 @@ if (!function_exists('fgh000_get_param')) {
                   $height = '60vh';
                }
             } else {
+               $fullpage = true;
                if (is_page('core-login')) {
-                  $fullpage = true;
                   $height = '100vh';
-                  $templatepart = 'modules/core/template-parts/core-login';
                } elseif (is_front_page()) {
-                  $fullpage = true;
                   $height = '100vh';
                   $titulo = get_the_title();
                } elseif (is_404()) {
-                  $fullpage = true;
                   $height = '100vh';
                   $titulo = 'Página no existe';
                } else {
                   $titulo = 'Favor ingresar a la aplicación';
-                  $fullpage = true;
                   $height = '100vh';
                }
-               $fullpage = true;
             }
             $atributos['imagen'] = $imagen;
             $atributos['fullpage'] = $fullpage;
@@ -178,39 +197,30 @@ if (!function_exists('fgh000_get_param')) {
             $atributos['div1'] = $div1;
             $atributos['templatepart'] = $templatepart;
             break;
-
          case 'post':
             $atributos = fgh000_get_post_param($postType);
             break;
-
          case 'comite':
             $atributos = fgh000_get_comite_param($postType);
             break;
-
          case 'acta':
             $atributos = fgh000_get_acta_param($postType);
             break;
-
          case 'acuerdo':
             $atributos = fgh000_get_acuerdo_param($postType);
             break;
-
          case 'miembro':
             $atributos = fgh000_get_miembro_param($postType);
             break;
-
          case 'puesto':
             $atributos = fgh000_get_puesto_param($postType);
             break;
-
          case 'evento':
             $atributos = fgh000_get_evento_param($postType);
             break;
-
          case 'peticion':
             $atributos = fgh000_get_peticion_param($postType);
             break;
-
          default:
             $fullpage = false;
             $titulo = 'Título';
