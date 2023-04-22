@@ -6,7 +6,7 @@
             if (has_custom_logo()) { ?>
                <div class="d-flex justify-content-center">
                   <a href="<?= esc_url(site_url('/')) ?>">
-                     <img class="bg-transparent shadowcss" style="width: 100px; height:auto;"
+                     <img class="rounded-circle bg-transparent shadowcss" style="width: 100px; height:auto;"
                         src="<?= wp_get_attachment_image_src(get_theme_mod('custom_logo'))[0] ?>" alt="Logo">
                   </a>
                </div>
