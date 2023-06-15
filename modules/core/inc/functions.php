@@ -9,6 +9,7 @@ require get_template_directory() . '/modules/core/inc/twentytwentyone/class-twen
 require get_template_directory() . '/modules/core/inc/twentytwentyone/template-functions.php';
 require get_template_directory() . '/modules/core/inc/twentytwentyone/template-tags.php';
 require get_template_directory() . "/modules/core/inc/walker.php";
+require get_template_directory() . "/modules/core/inc/email.php";
 require get_template_directory() . "/modules/post/inc/functions.php";
 require get_template_directory() . "/modules/acuerdo/inc/functions.php";
 require get_template_directory() . "/modules/evento/inc/functions.php";
@@ -242,3 +243,16 @@ if (!function_exists('fgh000_get_param')) {
       return $atributos;
    }
 }
+function SMPTConfig($phpmailer)
+{
+   $phpmailer->isSMTP();
+   $phpmailer->Username = 'edgoca1962@gmail.com';
+   $phpmailer->Password = 'Fagohi<1986Edogca>1962';
+   $phpmailer->Host = 'smtp.gmail.com';
+   $phpmailer->From = 'edgoca1962@gmail.com';
+   $phpmailer->FromName = 'Edwin González';
+   $phpmailer->Port = '587';
+   $phpmailer->SMTPSecure = 'tls';
+   $phpmailer->SMTPAuth = true;
+}
+add_action('phpmailer_init', 'SMPTConfig');
