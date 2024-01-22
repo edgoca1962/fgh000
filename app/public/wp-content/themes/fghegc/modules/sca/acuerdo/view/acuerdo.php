@@ -6,9 +6,10 @@
  * @package FGHEGC
  */
 
+use FGHEGC\Modules\Core\CoreController;
 use FGHEGC\Modules\Sca\Acuerdo\AcuerdoController;
 
-$atributos = $args;
+$atributos = CoreController::get_instance()->get_atributos('acuerdo');
 $acuerdo = AcuerdoController::get_instance();
 
 $status = $acuerdo->get_vigencia_acuerdos(get_post_meta(get_the_ID(), '_f_compromiso', true), get_post_meta(get_the_ID(), '_vigente', true));

@@ -176,7 +176,7 @@ class CoreController
 
       switch ($postType) {
          case 'page':
-            $this->atributos = PageController::get_instance()->get_atributos();
+            $this->atributos = PageController::get_instance()->atributos;
             break;
 
          case 'post':
