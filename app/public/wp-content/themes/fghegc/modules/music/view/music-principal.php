@@ -3,8 +3,8 @@
 use FGHEGC\Modules\Music\MusicController;
 use FGHEGC\Modules\Music\MusicModel;
 
-$atributos = MusicController::get_instance()->get_atributos('music');
-$musicmodelo = MusicModel::get_instance();
+$music = MusicController::get_instance();
+
 ?>
 <div class="row">
    <div class="col-md-9 mb-5">
@@ -20,13 +20,15 @@ $musicmodelo = MusicModel::get_instance();
       </div>
    </div>
    <div class="col-md-3">
-      <?php get_template_part($atributos['sidebar']) ?>
+      <?php get_template_part($music->atributos['sidebar'])
+      ?>
    </div>
 </div>
-
 <?php
 
 /*
+$musicmodelo = MusicModel::get_instance();
+
 // $file= '/Volumes/Hitachi_03/Music/Aleks Syntek/1993 -Mas Fuerte De Lo Que Pensaba/01. El Camino.mp3'
 // $file='/Volumes/Hitachi_03/MusicLlaves/Lexar/1979 -Trabuco Venezolano/23201.mp3'
 $datos = $musicmodelo->get_fileinfo_mp3tag($file);
