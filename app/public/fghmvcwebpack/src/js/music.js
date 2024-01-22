@@ -7,6 +7,10 @@ if (document.getElementById('discogs')) {
    const discogsApiUrl = `https://api.discogs.com/database/search?page=1&per_page=10`;
    const personalToken = 'RJRSNGepkZgYxgPFgPuLVGaOVCvYpEXDwxvokhyx';
 
+   document.getElementById('btnBorrar').addEventListener('click', function () {
+      location.reload()
+   })
+
    btnCerrarMusic.addEventListener('click', f_cerrar_resultados)
    var typingTimer = 0;
 
