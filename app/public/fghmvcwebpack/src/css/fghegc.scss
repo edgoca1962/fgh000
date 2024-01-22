@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
+
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+
+$custom-colors:
+(
+"indigo"       :#6610f2,
+"purple"       :#6f42c1,
+"pink"         :#d63384,
+"orange"       :#fd7e14,
+"teal"         :#20c997,
+"cyan"         :#0dcaf0,
+"mcsverde"     :#2baab1,
+"mcsmorado"    :#ae66dd,
+"mcsazul"      :#409af7
+);
+
+$theme-colors: map-merge($theme-colors,$custom-colors);
+
+$enable-negative-margins: true;
+$font-family-sans-serif: 'Roboto Condensed', sans-serif;
+$link-color: rgb(240, 240, 240);
+$box-shadow: 0 .5rem 1rem rgba($black, .75);
+
+@import "~bootstrap/scss/bootstrap";

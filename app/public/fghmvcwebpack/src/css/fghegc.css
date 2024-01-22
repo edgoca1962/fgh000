@@ -1,0 +1,264 @@
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+   border: 1px solid green;
+   -webkit-text-fill-color: white;
+   --box-shadow: 0 0 0px 1000px #000 inset;
+   transition: background-color 5000s ease-in-out 0s;
+}
+
+.ingreso-bg {
+   /* From https://css.glass */
+   background: rgba(249, 249, 249, 0.08);
+   border-radius: 16px;
+   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+   backdrop-filter: blur(9.4px);
+   -webkit-backdrop-filter: blur(9.4px);
+   border: 1px solid rgba(249, 249, 249, 0.3);
+}
+
+.background-blend {
+   --maxWidth: 1600px;
+   --gap: 3rem;
+   scrollbar-color: #666 #201c29;
+   color: #fff;
+   overflow-x: hidden;
+   --featured-img: linear-gradient(180deg, #fff, #262626);
+   --bg-blend-mode: overlay;
+   background-color: #262626;
+   background-position: top 0 center;
+   background-repeat: no-repeat;
+   background-image: radial-gradient(50% 50% at top center, rgba(0, 0, 0, .66), #262626),
+      var(--featured-img);
+   background-size: 120% 2000px,
+}
+
+/*Observer */
+.navbar-scroll {
+   opacity: 1;
+   background-color: rgba(0, 0, 0, 0.8);
+   backdrop-filter: blur(5px);
+   transition: 0.50s ease;
+}
+
+.logo img {
+   max-width: 100px;
+   height: auto;
+   transition: 0.50s ease;
+}
+
+.cambio img {
+   max-width: 50px;
+   height: auto;
+   transition: 0.50s ease;
+}
+
+.bgmenumini {
+   background: rgba(0, 0, 0, 0.8);
+   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+   /* -webkit-backdrop-filter: blur(9.4px);
+   backdrop-filter: blur(9.4px); */
+}
+
+/* ============ Resultados Busquedas// ============ */
+.search-overlay {
+   color: black;
+   overflow: hidden;
+   background: rgba(255, 255, 255, 0.95);
+   border-radius: 5px;
+   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.search-overlay a.hover {
+   color: black;
+}
+
+/* Sombreado
+--------------------------------------------- */
+.shadowcss {
+   -webkit-box-shadow: 10px 14px 35px 0px rgba(0, 0, 0, 0.75);
+   -moz-box-shadow: 10px 14px 35px 0px rgba(0, 0, 0, 0.75);
+   box-shadow: 10px 14px 35px 0px rgba(0, 0, 0, 0.75);
+}
+
+/*****************************************
+*
+* Paginación para los Posts y Custom Posts
+*
+*****************************************/
+.pagination .nav-links {
+   width: 100%;
+   display: flex;
+   flex-direction: row;
+}
+
+.pagination .nav-links>*.prev {
+   margin-right: auto;
+}
+
+.pagination .nav-links>*:first-child {
+   margin-left: 0;
+}
+
+.pagination .nav-links>*.current {
+   margin-left: 1rem;
+   margin-right: 1rem;
+   color: gray;
+}
+
+.pagination .nav-links>*:not(.dots):not(.current):hover {
+   text-decoration-style: dotted;
+}
+
+.pagination .nav-links>.dots {
+   font-size: 1rem;
+   margin-right: 1rem;
+}
+
+.pagination .nav-links>*:last-child {
+   margin-right: 0;
+}
+
+.pagination .nav-links>*.next {
+   margin-left: auto;
+}
+
+@media only screen and (max-width: 821px) {
+
+   .pagination .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+   }
+
+   .pagination .page-numbers {
+      display: none;
+   }
+
+   .pagination .page-numbers.prev,
+   .pagination .page-numbers.next {
+      display: inline-block;
+      flex: 0 1 auto;
+   }
+}
+
+@media only screen and (max-width: 481px) {
+
+   .pagination .nav-short {
+      display: none;
+   }
+}
+
+/*****************************************
+*
+* Rotate menu pseudo class
+*
+*****************************************/
+.active {
+   border-radius: 5%;
+   background-color: rgba(40, 48, 61, 0.8);
+}
+
+@media(max-width:576px) {
+   .dropdown-item::before {
+      transform: rotate(-90deg)
+   }
+
+   #main_navbar {
+      background-color: rgba(40, 48, 61, 1);
+   }
+}
+/*****************************************
+*
+* Formato de Tarjetas de tablero
+*
+*****************************************/
+.card {
+   background-color: #fff;
+   border-radius: 10px;
+   border: none;
+   position: relative;
+   margin-bottom: 30px;
+   box-shadow: 0 0.46875rem 2.1875rem rgba(90, 97, 105, 0.1), 0 0.9375rem 1.40625rem rgba(90, 97, 105, 0.1), 0 0.25rem 0.53125rem rgba(90, 97, 105, 0.12), 0 0.125rem 0.1875rem rgba(90, 97, 105, 0.1);
+}
+
+.l-bg-cherry {
+   background: linear-gradient(to right, #493240, #f09) !important;
+   color: #fff;
+}
+
+.l-bg-blue-dark {
+   background: linear-gradient(to right, #373b44, #4286f4) !important;
+   color: #fff;
+}
+
+.l-bg-green-dark {
+   background: linear-gradient(to right, #0a504a, #38ef7d) !important;
+   color: #fff;
+}
+
+.l-bg-orange-dark {
+   background: linear-gradient(to right, #a86008, #ffba56) !important;
+   color: #fff;
+}
+
+.card .card-statistic-3 .card-icon-large .fas,
+.card .card-statistic-3 .card-icon-large .far,
+.card .card-statistic-3 .card-icon-large .fab,
+.card .card-statistic-3 .card-icon-large .fal {
+   font-size: 110px;
+}
+
+.card .card-statistic-3 .card-icon {
+   text-align: center;
+   line-height: 50px;
+   margin-left: 15px;
+   color: #000;
+   position: absolute;
+   right: -5px;
+   top: 20px;
+   opacity: 0.1;
+}
+
+.l-bg-cyan {
+   background: linear-gradient(135deg, #289cf5, #84c0ec) !important;
+   color: #fff;
+}
+
+.l-bg-green {
+   background: linear-gradient(135deg, #23bdb8 0%, #43e794 100%) !important;
+   color: #fff;
+}
+
+.l-bg-orange {
+   background: linear-gradient(to right, #f9900e, #ffba56) !important;
+   color: #fff;
+}
+
+.l-bg-cyan {
+   background: linear-gradient(135deg, #289cf5, #84c0ec) !important;
+   color: #fff;
+}
+
+/*****************************************
+*
+* Zoom out imagen
+*
+****************************************/
+.zoomout{ 
+   overflow: hidden;
+}
+.zoomout img{
+   transition: all 1.5s ;
+}
+.zoomout:hover img{
+   transform: scale(1.5);
+}
+.bg-fgh{
+   background-color: rgb(253, 126, 20);
+}

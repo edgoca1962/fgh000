@@ -1,0 +1,11 @@
+1. corecontroller: 
+   1. Eliminar getID3.
+   2. Eliminar módulos no utilizados
+   3. get_banner function incluir is_page('evento-principal') para banner = ''.
+2. core->view->navbar: 
+   1. Eliminar validación de login en el menú.
+   2. Incluir clase "container".
+3. pagecontroller: modificar frontpage->fullpage=true.
+4. WP-Admin:
+   1. Modificar menú (en caso necesario).
+   2. Modificar Home Page en Settings -> Reading.   
