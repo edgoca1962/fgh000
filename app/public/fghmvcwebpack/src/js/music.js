@@ -10,9 +10,6 @@ if (document.getElementById('discogs')) {
    btnCerrarMusic.addEventListener('click', f_cerrar_resultados)
    var typingTimer = 0;
 
-   document.getElementById('btnBorrar').addEventListener('click', function () {
-      location.reload()
-   })
    datoBuscar.addEventListener('keyup', f_mostrar_resultados)
 
    function f_mostrar_resultados() {

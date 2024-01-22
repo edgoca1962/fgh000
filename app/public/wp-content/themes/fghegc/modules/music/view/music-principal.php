@@ -1,9 +1,10 @@
 <?php
 
-use FGHEGC\Modules\Music\MusicController;
+use FGHEGC\Modules\Core\CoreController;
+
 use FGHEGC\Modules\Music\MusicModel;
 
-$music = MusicController::get_instance();
+$atributos = CoreController::get_instance()->get_atributos('music');
 
 ?>
 <div class="row">
@@ -20,7 +21,7 @@ $music = MusicController::get_instance();
       </div>
    </div>
    <div class="col-md-3">
-      <?php get_template_part($music->atributos['sidebar'])
+      <?php get_template_part($atributos['sidebar']);
       ?>
    </div>
 </div>

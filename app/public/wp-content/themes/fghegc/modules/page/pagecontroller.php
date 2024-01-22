@@ -71,11 +71,7 @@ class PageController
       $subatributos['fullpage'] = false;
       $subatributos['div0'] = 'background-blend pt-5';
       $subatributos['div1'] = 'container';
-      if ($this->getSlugModulo()['modulo'] == 'music') {
-         $subatributos['height'] = '60vh';
-      } else {
-         $subatributos['height'] = '60vh';
-      }
+      $subatributos['height'] = '60vh';
       $subatributos['titulo'] = get_the_title();
 
       if (is_front_page()) {

@@ -8,7 +8,7 @@ class MusicController
 {
    use Singleton;
    public $atributos;
-   private function __construct($postType = 'music')
+   public function __construct($postType = 'music')
    {
       $this->atributos['titulo'] = 'Música';
       $this->atributos['subtitulo'] = $this->get_atributos($postType)['subtitulo'];
@@ -46,8 +46,11 @@ class MusicController
          $parametros['div4'] = 'row row-cols-1 row-cols-md-4 g-4 pb-3';
       }
 
-      $parametros['sidebar'] = 'modules/' . $postType . '/view/' . $postType . '-sidebar';
-      $parametros['templatepartnone'] = 'modules/' . $postType . '/view/' . $postType . '-none';;
+      $parametros['sidebar'] = '';
+      if (!isset($_GET['cpt'])) {
+         $parametros['sidebar'] = 'modules/' . $postType . '/view/' . $postType . '-sidebar';
+      }
+      $parametros['templatepartnone'] = 'modules/' . $postType . '/view/' . $postType . '-none';
 
       return $parametros;
    }

@@ -39,13 +39,11 @@ $atributos = CoreController::get_instance()->get_atributos(get_post_type());
                      <?php
                      while (have_posts()) :
                         the_post();
-                        get_template_part($atributos['templatepart'], '', $atributos);
+                        get_template_part($atributos['templatepart']);
                      endwhile;
                      ?>
                   </div>
-                  <?php twenty_twenty_one_the_posts_navigation()
-                  ?>
-
+                  <?php twenty_twenty_one_the_posts_navigation() ?>
                   <?php get_template_part($atributos['btnregresar']) ?>
                </div>
             <?php else : ?>

@@ -180,7 +180,7 @@ class CoreController
             break;
 
          case 'post':
-            $this->atributos = PostController::get_instance()->get_atributos($postType);
+            $this->atributos = PostController::get_instance()->atributos;
             break;
 
          case 'comite':
@@ -212,7 +212,7 @@ class CoreController
             break;
 
          case 'music':
-            $this->atributos = MusicController::get_instance()->get_atributos($postType);
+            $this->atributos = MusicController::get_instance()->atributos;
             break;
 
          case 'peticion':
@@ -223,7 +223,7 @@ class CoreController
             if (isset($_GET['cpt'])) {
                $titulo = 'No hay un información registrada';
             } else {
-               $titulo = 'Página no existe aquí';
+               $titulo = 'Página no existe';
             }
             $this->atributos['fullpage'] = true;
             $this->atributos['height'] = '100vh';
