@@ -1,10 +1,8 @@
 <?php
 
 use FGHEGC\Modules\Core\CoreController;
-use FGHEGC\Modules\Sae\Evento\EventoController;
 
-$atributos = CoreController::get_instance()->get_atributos('page');
-$eventosAtributos = EventoController::get_instance()->get_atributos('evento');
+$atributos = CoreController::get_instance()->get_atributos('evento');
 
 $finicial = date('Y-m-d', strtotime('first day of next month'));
 $finicial = date('Y-m-d');
@@ -38,7 +36,7 @@ $eventos = get_posts(
          <?php foreach ($eventos as $evento) { ?>
             <div class="row">
                <div class="col-md-6 text-md-end"><?php echo $evento->post_title ?></div>
-               <div class="col-md-6 "><?php echo $eventosAtributos['diasemanaesp'][date('N', strtotime(get_post_meta($evento->ID, '_f_proxevento', true)))] . ' ' . date('j', strtotime(get_post_meta($evento->ID, '_f_proxevento', true))) . ' de ' . $eventosAtributos['mesannoesp'][date('n', strtotime(get_post_meta($evento->ID, '_f_proxevento', true)))] . ' a las ' . date('H', strtotime(get_post_meta($evento->ID, '_f_proxevento', true))) . ' horas' ?></div>
+               <div class="col-md-6 "><?php echo $atributos['diasemanaesp'][date('N', strtotime(get_post_meta($evento->ID, '_f_proxevento', true)))] . ' ' . date('j', strtotime(get_post_meta($evento->ID, '_f_proxevento', true))) . ' de ' . $atributos['mesannoesp'][date('n', strtotime(get_post_meta($evento->ID, '_f_proxevento', true)))] . ' a las ' . date('H', strtotime(get_post_meta($evento->ID, '_f_proxevento', true))) . ' horas' ?></div>
             </div>
          <?php } ?>
          <div class="row animate__animated animate__fadeInUp">

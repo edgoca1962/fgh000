@@ -9,44 +9,48 @@ class ComiteController
    use Singleton;
    public $atributos;
 
-   private function __construct($postType = 'comite')
+   private function __construct()
    {
-      $this->atributos['titulo'] = 'Comités';
-      $this->atributos['subtitulo'] = $this->get_atributos($postType)['subtitulo'];
-      $this->atributos['div2'] = 'row';
-      $this->atributos['div3'] = 'col-md-8';
-      $this->atributos['div4'] = $this->get_atributos($postType)['div4'];
-      $this->atributos['div5'] = 'col-md-4';
-      $this->atributos['agregarpost'] = $this->get_atributos($postType)['agregarpost'];
-      $this->atributos['templatepart'] = $this->get_atributos($postType)['templatepart'];
-      $this->atributos['templatepartnone'] = 'modules/sca/' . $postType . '/view/' . $postType . '-none';
-      $this->atributos['sidebar'] = 'modules/sca/acuerdo/view/sidebar-busquedas';
-      $this->atributos['miembros'] = $this->get_atributos($postType)['miembros'];
-      $this->atributos['actas'] = $this->get_atributos($postType)['actas'];
-      $this->atributos['acuerdos'] = $this->get_atributos($postType)['acuerdos'];
-
-      return $this->atributos;
+      $this->atributos = [];
    }
    public function get_atributos($postType)
    {
-      $parametros = [];
+      $this->atributos['titulo'] = 'Comités';
+      $this->atributos['subtitulo'] = $this->get_datosAtributos($postType)['subtitulo'];
+      $this->atributos['div2'] = 'row';
+      $this->atributos['div3'] = 'col-md-8';
+      $this->atributos['div4'] = $this->get_datosAtributos($postType)['div4'];
+      $this->atributos['div5'] = 'col-md-4';
+      $this->atributos['agregarpost'] = $this->get_datosAtributos($postType)['agregarpost'];
+      $this->atributos['templatepart'] = $this->get_datosAtributos($postType)['templatepart'];
+      $this->atributos['templatepartnone'] = 'modules/sca/' . $postType . '/view/' . $postType . '-none';
+      $this->atributos['sidebar'] = 'modules/sca/acuerdo/view/sidebar-busquedas';
+      $this->atributos['miembros'] = $this->get_datosAtributos($postType)['miembros'];
+      $this->atributos['actas'] = $this->get_datosAtributos($postType)['actas'];
+      $this->atributos['acuerdos'] = $this->get_datosAtributos($postType)['acuerdos'];
+
+      return $this->atributos;
+   }
+   private function get_datosAtributos($postType)
+   {
+      $datosAtributos = [];
       if (is_user_logged_in()) {
          $usuarioRoles = wp_get_current_user()->roles;
          if (in_array('administrator', $usuarioRoles) || in_array('useradmingeneral', $usuarioRoles) || in_array('useradmincomite', $usuarioRoles)) {
-            $parametros['agregarpost'] = 'modules/sca/' . $postType . '/view/' . $postType . '-agregar';
+            $datosAtributos['agregarpost'] = 'modules/sca/' . $postType . '/view/' . $postType . '-agregar';
          } else {
-            $parametros['agregarpost'] = '';
+            $datosAtributos['agregarpost'] = '';
          }
       }
 
       if (is_single()) {
-         $parametros['templatepart'] = 'modules/sca/' . $postType . '/view/' . $postType . '-single';
-         $parametros['subtitulo'] = get_the_title();
-         $parametros['div4'] = '';
+         $datosAtributos['templatepart'] = 'modules/sca/' . $postType . '/view/' . $postType . '-single';
+         $datosAtributos['subtitulo'] = get_the_title();
+         $datosAtributos['div4'] = '';
       } else {
-         $parametros['templatepart'] = 'modules/sca/' . $postType . '/view/' . $postType;
-         $parametros['subtitulo'] = '';
-         $parametros['div4'] = 'row row-cols-1 row-cols-md-2 g-4 pb-3';
+         $datosAtributos['templatepart'] = 'modules/sca/' . $postType . '/view/' . $postType;
+         $datosAtributos['subtitulo'] = '';
+         $datosAtributos['div4'] = 'row row-cols-1 row-cols-md-2 g-4 pb-3';
       }
 
       $miembros = get_posts(
@@ -58,7 +62,7 @@ class ComiteController
             'meta_value' => get_the_ID()
          ]
       );
-      $parametros['miembros'] = count($miembros);
+      $datosAtributos['miembros'] = count($miembros);
 
       $actas = get_posts(
          [
@@ -69,7 +73,7 @@ class ComiteController
             'meta_value' => get_the_ID()
          ]
       );
-      $parametros['actas'] = count($actas);
+      $datosAtributos['actas'] = count($actas);
 
       $acuerdos = get_posts([
          'numberposts' => -1,
@@ -78,8 +82,8 @@ class ComiteController
          'meta_key' => '_comite_id',
          'meta_value' => get_the_ID()
       ]);
-      $parametros['acuerdos'] = count($acuerdos);
+      $datosAtributos['acuerdos'] = count($acuerdos);
 
-      return $parametros;
+      return $datosAtributos;
    }
 }

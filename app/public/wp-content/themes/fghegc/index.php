@@ -58,6 +58,9 @@ $atributos = CoreController::get_instance()->get_atributos(get_post_type());
                <?php get_template_part($atributos['piepagina']) ?>
             </footer>
          <?php endif; ?>
+         <pre>
+            <?php print_r($atributos) ?>
+         </pre>
       </div>
    </section>
    <?php wp_footer(); ?>

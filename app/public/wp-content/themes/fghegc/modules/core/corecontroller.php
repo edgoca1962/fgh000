@@ -161,6 +161,7 @@ class CoreController
       $atributosCore['div5'] = '';
       $atributosCore['agregarpost'] = $this->get_agregarpost($postType);
       $atributosCore['templatepart'] = $this->get_templatepart($postType);
+      $atributosCore['single'] = is_single();
       $atributosCore['templatepartnone'] = '';
       $atributosCore['sidebar'] = '';
       $atributosCore['parametros'] = '';
@@ -176,31 +177,31 @@ class CoreController
 
       switch ($postType) {
          case 'page':
-            $this->atributos = PageController::get_instance()->atributos;
+            $this->atributos = PageController::get_instance()->get_atributos($postType);
             break;
 
          case 'post':
-            $this->atributos = PostController::get_instance()->atributos;
+            $this->atributos = PostController::get_instance()->get_atributos($postType);
             break;
 
          case 'comite':
-            $this->atributos = ComiteController::get_instance()->atributos;
+            $this->atributos = ComiteController::get_instance()->get_atributos($postType);
             break;
 
          case 'acta':
-            $this->atributos = ActaController::get_instance()->atributos;
+            $this->atributos = ActaController::get_instance()->get_atributos($postType);
             break;
 
          case 'acuerdo':
-            $this->atributos = AcuerdoController::get_instance()->atributos;
+            $this->atributos = AcuerdoController::get_instance()->get_atributos($postType);
             break;
 
          case 'miembro':
-            $this->atributos = MiembroController::get_instance()->atributos;
+            $this->atributos = MiembroController::get_instance()->get_atributos($postType);
             break;
 
          case 'puesto':
-            $this->atributos = PuestoController::get_instance()->atributos;
+            $this->atributos = PuestoController::get_instance()->get_atributos($postType);
             break;
 
          case 'evento':
@@ -212,7 +213,7 @@ class CoreController
             break;
 
          case 'music':
-            $this->atributos = MusicController::get_instance()->atributos;
+            $this->atributos = MusicController::get_instance()->get_atributos($postType);
             break;
 
          case 'peticion':

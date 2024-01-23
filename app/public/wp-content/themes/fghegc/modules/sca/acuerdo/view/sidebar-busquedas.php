@@ -9,10 +9,9 @@
 use FGHEGC\Modules\Core\CoreController;
 use FGHEGC\Modules\Sca\Acuerdo\AcuerdoController;
 
-$atributos = CoreController::get_instance()->get_atributos('acuerdo');
-
-$acuerdo = AcuerdoController::get_instance();
-$totalAcuerdos = $atributos['totalAcuerdos'];
+$userAdmin = CoreController::get_instance()->get_atributos(get_post_type())['userAdmin'];
+$miembroJunta = AcuerdoController::get_instance()->get_miembroJunta();
+$totalAcuerdos = AcuerdoController::get_instance()->atributos['totalAcuerdos']
 
 ?>
 
@@ -61,7 +60,7 @@ $totalAcuerdos = $atributos['totalAcuerdos'];
    <?php } ?>
 </div>
 
-<?php if ($atributos['userAdmin'] || $acuerdo->get_miembroJunta()) : ?>
+<?php if ($userAdmin || $miembroJunta) : ?>
    <div class="row ms-3 mb-5">
       <h5>Acuerdos asignados a:</h5>
       <div class="row row-cols-1">

@@ -8,23 +8,27 @@ class MusicController
 {
    use Singleton;
    public $atributos;
-   public function __construct($postType = 'music')
+   private function __construct()
+   {
+      $this->atributos = [];
+   }
+   public function get_atributos2($postType)
    {
       $this->atributos['titulo'] = 'Música';
-      $this->atributos['subtitulo'] = $this->get_atributos($postType)['subtitulo'];
+      $this->atributos['subtitulo'] = $this->get_datosAtributos($postType)['subtitulo'];
       $this->atributos['div2'] = 'row';
       $this->atributos['div3'] = 'col-md-9';
-      $this->atributos['div4'] = $this->get_atributos($postType)['div4'];
+      $this->atributos['div4'] = $this->get_datosAtributos($postType)['div4'];
       $this->atributos['div5'] = 'col-md-3';
-      $this->atributos['agregarpost'] = $this->get_atributos($postType)['agregarpost'];
-      $this->atributos['sidebar'] = $this->get_atributos($postType)['sidebar'];
-      $this->atributos['templatepart'] = $this->get_atributos($postType)['templatepart'];
-      $this->atributos['templatepartnone'] = $this->get_atributos($postType)['templatepartnone'];
+      $this->atributos['agregarpost'] = $this->get_datosAtributos($postType)['agregarpost'];
+      $this->atributos['sidebar'] = $this->get_datosAtributos($postType)['sidebar'];
+      $this->atributos['templatepart'] = $this->get_datosAtributos($postType)['templatepart'];
+      $this->atributos['templatepartnone'] = $this->get_datosAtributos($postType)['templatepartnone'];
       $this->atributos['regresar'] = $postType;
 
       return $this->atributos;
    }
-   private function get_atributos($postType)
+   private function get_datosAtributos($postType)
    {
       $parametros = [];
       $parametros['agregarpost'] = '';

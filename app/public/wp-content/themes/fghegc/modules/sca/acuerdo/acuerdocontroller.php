@@ -10,7 +10,11 @@ class AcuerdoController
 
    public $atributos;
 
-   private function __construct($postType = 'acuerdo')
+   private function __construct()
+   {
+      $this->atributos = [];
+   }
+   public function get_atributos($postType)
    {
       if (isset($_GET['comite_id'])) {
          $comite_id = sanitize_text_field($_GET['comite_id']);
@@ -40,7 +44,6 @@ class AcuerdoController
       $this->atributos['div3'] = 'col-md-8';
       $this->atributos['div4'] = 'row row-cols-1 g-4 mb-5';
       $this->atributos['div5'] = 'col-md-4';
-      $this->atributos['templatepart'] = $this->get_templatepart($postType);
       $this->atributos['templatepartnone'] = 'modules/sca/acuerdo/view/acuerdo-none';
       $this->atributos['agregarpost'] = $this->get_agregarpost($postType, $acta_id);
       $this->atributos['sidebar'] = 'modules/sca/acuerdo/view/sidebar-busquedas';
@@ -58,16 +61,6 @@ class AcuerdoController
       $this->atributos['totalAcuerdos'] = $this->get_totalAcuerdos();
 
       return $this->atributos;
-   }
-
-   private function get_templatepart($postType)
-   {
-      if (is_single()) {
-         $templatepart = 'modules/sca/' . $postType . '/view/' . $postType . '-single';
-      } else {
-         $templatepart = 'modules/sca/' . $postType . '/view/' . $postType;
-      }
-      return $templatepart;
    }
    private function get_titulo($comite_id, $asignar_id, $vigencia)
    {

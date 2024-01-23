@@ -9,27 +9,31 @@ class ActaController
    use Singleton;
    public $atributos;
 
-   private function __construct($postType = 'acta')
+   private function __construct()
    {
-      $this->atributos['titulo'] = $this->get_atributos($postType)['titulo'];
-      $this->atributos['subtitulo'] = $this->get_atributos($postType)['subtitulo'];
+      $this->atributos = [];
+   }
+   public function get_atributos($postType)
+   {
+      $this->atributos['titulo'] = $this->get_datosAtributos($postType)['titulo'];
+      $this->atributos['subtitulo'] = $this->get_datosAtributos($postType)['subtitulo'];
       $this->atributos['div2'] = 'row';
       $this->atributos['div3'] = 'col-md-8';
-      $this->atributos['div4'] = $this->get_atributos($postType)['div4'];
+      $this->atributos['div4'] = $this->get_datosAtributos($postType)['div4'];
       $this->atributos['div5'] = 'col-md-4';
-      $this->atributos['agregarpost'] = $this->get_atributos($postType)['agregarpost'];
+      $this->atributos['agregarpost'] = $this->get_datosAtributos($postType)['agregarpost'];
       $this->atributos['sidebar'] = 'modules/sca/acuerdo/view/sidebar-busquedas';
-      $this->atributos['templatepart'] = $this->get_atributos($postType)['templatepart'];
+      $this->atributos['templatepart'] = $this->get_datosAtributos($postType)['templatepart'];
       $this->atributos['templatepartnone'] = 'modules/sca/' . $postType . '/view/' . $postType . '-none';
       $this->atributos['regresar'] = $postType;
-      $this->atributos['comite_id'] = $this->get_atributos($postType)['comite_id'];
-      $this->atributos['consecutivo'] = $this->get_atributos($postType)['qryconsecutivo'];
-      $this->atributos['num_actas'] = $this->get_atributos($postType)['num_actas'];
-      $this->atributos['prefijo'] = $this->get_atributos($postType)['prefijo'];
+      $this->atributos['comite_id'] = $this->get_datosAtributos($postType)['comite_id'];
+      $this->atributos['consecutivo'] = $this->get_datosAtributos($postType)['qryconsecutivo'];
+      $this->atributos['num_actas'] = $this->get_datosAtributos($postType)['num_actas'];
+      $this->atributos['prefijo'] = $this->get_datosAtributos($postType)['prefijo'];
 
       return $this->atributos;
    }
-   private function get_atributos($postType)
+   private function get_datosAtributos($postType)
    {
       $datosAtributos = [];
       if (is_user_logged_in()) {

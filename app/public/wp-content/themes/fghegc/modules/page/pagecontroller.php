@@ -11,16 +11,20 @@ class PageController
 
    private function __construct()
    {
-      $this->atributos['templatepartpage'] = $this->get_atributos()['templatepart'];
-      $this->atributos['fullpage'] = $this->get_atributos()['fullpage'];
-      $this->atributos['height'] = $this->get_atributos()['height'];
-      $this->atributos['titulo'] = $this->get_atributos()['titulo'];
-      $this->atributos['subtitulo'] = $this->get_atributos()['subtitulo'];
-      $this->atributos['div0'] = $this->get_atributos()['div0'];
-      $this->atributos['div1'] = $this->get_atributos()['div1'];
+      $this->atributos = [];
+   }
+   public function get_atributos()
+   {
+      $this->atributos['templatepartpage'] = $this->get_datosAtributos()['templatepart'];
+      $this->atributos['fullpage'] = $this->get_datosAtributos()['fullpage'];
+      $this->atributos['height'] = $this->get_datosAtributos()['height'];
+      $this->atributos['titulo'] = $this->get_datosAtributos()['titulo'];
+      $this->atributos['subtitulo'] = $this->get_datosAtributos()['subtitulo'];
+      $this->atributos['div0'] = $this->get_datosAtributos()['div0'];
+      $this->atributos['div1'] = $this->get_datosAtributos()['div1'];
       return $this->atributos;
    }
-   private function get_atributos()
+   private function get_datosAtributos()
    {
       if (isset(get_post(get_the_ID())->post_name)) {
          $modulo = $this->getSlugModulo()['modulo'];

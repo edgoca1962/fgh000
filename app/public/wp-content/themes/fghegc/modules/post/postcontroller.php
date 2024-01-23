@@ -9,17 +9,21 @@ class PostController
    use Singleton;
    public $atributos;
 
-   private function __construct($postType = 'post')
+   private function __construct()
+   {
+      $this->atributos = [];
+   }
+
+   public function get_atributos($postType)
    {
       $this->atributos['titulo'] = 'Blog';
-      $this->atributos['div4'] = $this->get_atributos($postType)['div4'];
+      $this->atributos['div4'] = $this->get_datosAtributos($postType)['div4'];
       $this->atributos['regresar'] = $postType;
-      $this->atributos['templatepart'] = $this->get_atributos($postType)['templatepart'];
+      $this->atributos['templatepart'] = $this->get_datosAtributos($postType)['templatepart'];
 
       return $this->atributos;
    }
-
-   private function get_atributos($postType)
+   private function get_datosAtributos($postType)
    {
       if (is_single()) {
          $datosAtributos['templatepart'] = 'modules/' . $postType . '/view/' . $postType . '-single';

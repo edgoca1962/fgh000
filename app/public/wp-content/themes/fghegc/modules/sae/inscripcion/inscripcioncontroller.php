@@ -9,13 +9,12 @@ class InscripcionController
    use Singleton;
    public $atributos;
 
-   public function __construct()
+   private function __construct()
    {
       $this->atributos = [];
    }
    public function get_atributos($postType)
    {
-
       $this->atributos['titulo'] = 'Inscripciones';
       if (isset($_GET['pid'])) {
          $post_parent = sanitize_text_field($_GET['pid']);
@@ -38,32 +37,32 @@ class InscripcionController
       $this->atributos['regresar'] = $postType;
       $this->atributos['imagen'] = FGHEGC_DIR_URI . '/assets/img/mano.jpeg';
 
-      $this->atributos['mes'] = $this->get_subatributos()['mes'];
-      $this->atributos['anno'] = $this->get_subatributos()['anno'];
-      $this->atributos['espacios'] = $this->get_subatributos()['espacios'];
-      $this->atributos['restante'] = $this->get_subatributos()['restante'];
-      $this->atributos['mesConsulta'] = $this->get_subatributos()['mesConsulta'];
-      $this->atributos['mesConsultaLink'] = $this->get_subatributos()['mesConsultaLink'];
-      $this->atributos['diaSemanaPost'] = $this->get_subatributos()['diaSemanaPost'];
+      $this->atributos['mes'] = $this->get_datosAtributos()['mes'];
+      $this->atributos['anno'] = $this->get_datosAtributos()['anno'];
+      $this->atributos['espacios'] = $this->get_datosAtributos()['espacios'];
+      $this->atributos['restante'] = $this->get_datosAtributos()['restante'];
+      $this->atributos['mesConsulta'] = $this->get_datosAtributos()['mesConsulta'];
+      $this->atributos['mesConsultaLink'] = $this->get_datosAtributos()['mesConsultaLink'];
+      $this->atributos['diaSemanaPost'] = $this->get_datosAtributos()['diaSemanaPost'];
 
       return $this->atributos;
    }
-   private function get_subatributos()
+   private function get_datosAtributos()
    {
 
-      $subatributos = [];
-      $subatributos['espacios'] = 0;
-      $subatributos['restante'] = 0;
-      $subatributos['subtitulo2'] = '';
-      $subatributos['diaSemanaPost'] = ['Monday' => 'Lunes', 'Tuesday' => 'Martes', 'Wednesday' => 'Miércoles', 'Thursday' => 'Jueves', 'Friday' => 'Viernes', 'Saturday' => 'Sábado', 'Sunday' => 'Domingo'];
+      $datosAtributos = [];
+      $datosAtributos['espacios'] = 0;
+      $datosAtributos['restante'] = 0;
+      $datosAtributos['subtitulo2'] = '';
+      $datosAtributos['diaSemanaPost'] = ['Monday' => 'Lunes', 'Tuesday' => 'Martes', 'Wednesday' => 'Miércoles', 'Thursday' => 'Jueves', 'Friday' => 'Viernes', 'Saturday' => 'Sábado', 'Sunday' => 'Domingo'];
 
-      $subatributos['mes'] = date('F');
-      $subatributos['anno'] = date('Y');
-      $subatributos['mesConsultaLink'] = 'mes=' . $subatributos['mes'];
-      $subatributos['mesConsulta'] = $subatributos['mes'];
-      $subatributos['espacios'] = date('N', strtotime('first day of ' . $subatributos['mes'])) - 1;
-      $subatributos['restante'] = 8 - $subatributos['espacios'];
+      $datosAtributos['mes'] = date('F');
+      $datosAtributos['anno'] = date('Y');
+      $datosAtributos['mesConsultaLink'] = 'mes=' . $datosAtributos['mes'];
+      $datosAtributos['mesConsulta'] = $datosAtributos['mes'];
+      $datosAtributos['espacios'] = date('N', strtotime('first day of ' . $datosAtributos['mes'])) - 1;
+      $datosAtributos['restante'] = 8 - $datosAtributos['espacios'];
 
-      return $subatributos;
+      return $datosAtributos;
    }
 }

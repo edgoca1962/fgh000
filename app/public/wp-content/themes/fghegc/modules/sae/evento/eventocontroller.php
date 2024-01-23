@@ -7,8 +7,15 @@ use FGHEGC\Modules\Core\Singleton;
 class EventoController
 {
    use Singleton;
+
    public $atributos;
-   public function __construct()
+
+   private function __construct()
+   {
+      $this->atributos = [];
+   }
+
+   public function get_atributos($postType)
    {
       $this->atributos = [];
       $this->atributos['periodicidadevento'] = ['1' => 'Evento Único', '2' => 'Evento Diario', '3' => 'Evento Semanal', '4' => 'Evento Mensual', '5' => 'Evento Anual'];
@@ -26,17 +33,12 @@ class EventoController
       }
       if (in_array('usercoordinaeventos', wp_get_current_user()->roles)) {
       }
-   }
-   public function get_atributos($postType)
-   {
-
       $this->atributos['titulo'] = 'Eventos';
       $this->atributos['subtitulo'] = $this->get_subatributos()['subtitulo'];
       $this->atributos['subtitulo2'] = $this->get_subatributos()['subtitulo2'];
       $this->atributos['div2'] = 'row';
       $this->atributos['div3'] = 'col-xl-9';
       $this->atributos['div5'] = 'col-xl-3';
-      $this->atributos['templatepart'] = $this->get_templatepart($postType);
       $this->atributos['templatepartnone'] = 'modules/sae/' . $postType . '/view/' . $postType . '-none';
       $this->atributos['agregarpost'] = '';
       $this->atributos['sidebar'] = 'modules/sae/' . $postType . '/view/' . $postType . '-calendario';
@@ -54,7 +56,6 @@ class EventoController
       $this->atributos['evento_semanal'] = 'modules/sae/evento/view/evento-semanal';
       $this->atributos['evento_mensual'] = 'modules/sae/evento/view/evento-mensual';
       $this->atributos['evento_anual'] = 'modules/sae/evento/view/evento-anual';
-
 
       return $this->atributos;
    }
@@ -101,17 +102,6 @@ class EventoController
          }
       }
       return $subatributos;
-   }
-   private function get_templatepart($postType)
-   {
-      if (is_single()) {
-         $templatepart = 'modules/sae/' . $postType . '/view/' . $postType . '-single';
-         $this->atributos['div4'] = '';
-      } else {
-         $templatepart = 'modules/sae/' . $postType . '/view/' . $postType;
-         $this->atributos['div4'] = 'row row-cols-1 row-cols-md-3 g-4 mb-5';
-      }
-      return $templatepart;
    }
    public function sae_fechasevento($evento_ID, $finicio = '', $ffinal = '', $tipoevento = '', $npereventos = '', $opcionesquema = '', $diaordinalevento = '', $diasemanaevento = [], $mesConsulta = '', $anno = '', $fpe_param)
    {
