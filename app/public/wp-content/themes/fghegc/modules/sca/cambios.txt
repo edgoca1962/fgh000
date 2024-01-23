@@ -1,0 +1,10 @@
+
+Cambios para mcssca: 
+1) Copiar Screeshot versión vigente
+2) Copiar carpeta img versión vigente
+3) CoreController: eliminar módulos no utilizados
+4) Cambiar TextDomain en todos los archivos
+5) Modificar el prefijo de la base de datos wp por wpsr
+6) PageController: cambiar fullpage=true is_front_page()
+7) core-login.php: acuerdo-consultas
+8) navbar.php: tamaño logo
