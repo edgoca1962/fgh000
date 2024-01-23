@@ -9,9 +9,11 @@
 use FGHEGC\Modules\Core\CoreController;
 use FGHEGC\Modules\Sca\Acuerdo\AcuerdoController;
 
-$userAdmin = CoreController::get_instance()->get_atributos(get_post_type())['userAdmin'];
+$userAdmin = CoreController::get_instance()->get_atributos('acuerdo')['userAdmin'];
+$atributos = AcuerdoController::get_instance()->get_atributos('acuerdo');
+$totalAcuerdos = $atributos['totalAcuerdos'];
 $miembroJunta = AcuerdoController::get_instance()->get_miembroJunta();
-$totalAcuerdos = AcuerdoController::get_instance()->atributos['totalAcuerdos']
+
 
 ?>
 

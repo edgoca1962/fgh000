@@ -12,7 +12,7 @@ class MusicController
    {
       $this->atributos = [];
    }
-   public function get_atributos2($postType)
+   public function get_atributos($postType)
    {
       $this->atributos['titulo'] = 'Música';
       $this->atributos['subtitulo'] = $this->get_datosAtributos($postType)['subtitulo'];
