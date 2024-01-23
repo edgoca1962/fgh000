@@ -8,64 +8,61 @@ class ActaController
 {
    use Singleton;
    public $atributos;
-   private function __construct()
-   {
-      $this->atributos = [];
-   }
-   public function get_atributos($postType)
-   {
 
-      $this->atributos['titulo'] = $this->get_parametros($postType)['titulo'];
-      $this->atributos['subtitulo'] = $this->get_parametros($postType)['subtitulo'];
+   private function __construct($postType = 'acta')
+   {
+      $this->atributos['titulo'] = $this->get_atributos($postType)['titulo'];
+      $this->atributos['subtitulo'] = $this->get_atributos($postType)['subtitulo'];
       $this->atributos['div2'] = 'row';
       $this->atributos['div3'] = 'col-md-8';
-      $this->atributos['div4'] = $this->get_parametros($postType)['div4'];
+      $this->atributos['div4'] = $this->get_atributos($postType)['div4'];
       $this->atributos['div5'] = 'col-md-4';
-      $this->atributos['agregarpost'] = $this->get_parametros($postType)['agregarpost'];
+      $this->atributos['agregarpost'] = $this->get_atributos($postType)['agregarpost'];
       $this->atributos['sidebar'] = 'modules/sca/acuerdo/view/sidebar-busquedas';
-      $this->atributos['templatepart'] = $this->get_parametros($postType)['templatepart'];
+      $this->atributos['templatepart'] = $this->get_atributos($postType)['templatepart'];
+      $this->atributos['templatepartnone'] = 'modules/sca/' . $postType . '/view/' . $postType . '-none';
       $this->atributos['regresar'] = $postType;
-      $this->atributos['comite_id'] = $this->get_parametros($postType)['comite_id'];
-      $this->atributos['consecutivo'] = $this->get_parametros($postType)['qryconsecutivo'];
-      $this->atributos['num_actas'] = $this->get_parametros($postType)['num_actas'];
-      $this->atributos['prefijo'] = $this->get_parametros($postType)['prefijo'];
+      $this->atributos['comite_id'] = $this->get_atributos($postType)['comite_id'];
+      $this->atributos['consecutivo'] = $this->get_atributos($postType)['qryconsecutivo'];
+      $this->atributos['num_actas'] = $this->get_atributos($postType)['num_actas'];
+      $this->atributos['prefijo'] = $this->get_atributos($postType)['prefijo'];
 
       return $this->atributos;
    }
-   private function get_parametros($postType)
+   private function get_atributos($postType)
    {
-      $atributos = [];
+      $datosAtributos = [];
       if (is_user_logged_in()) {
          $usuarioRoles = wp_get_current_user()->roles;
          if (in_array('administrator', $usuarioRoles) || in_array('useradmingeneral', $usuarioRoles) || in_array('useradmincomite', $usuarioRoles)) {
-            $subatributos['agregarpost'] = 'modules/sca/' . $postType . '/view/' . $postType . '-agregar';
+            $datosAtributos['agregarpost'] = 'modules/sca/' . $postType . '/view/' . $postType . '-agregar';
          } else {
-            $subatributos['agregarpost'] = '';
+            $datosAtributos['agregarpost'] = '';
          }
       }
       if (is_single()) {
-         $subatributos['templatepart'] = 'modules/sca/' . $postType . '/view/' . $postType . '-single';
-         $subatributos['subtitulo'] = get_the_title();
-         $subatributos['div4'] = '';
+         $datosAtributos['templatepart'] = 'modules/sca/' . $postType . '/view/' . $postType . '-single';
+         $datosAtributos['subtitulo'] = get_the_title();
+         $datosAtributos['div4'] = '';
       } else {
-         $subatributos['templatepart'] = 'modules/sca/' . $postType . '/view/' . $postType;
-         $subatributos['subtitulo'] = '';
-         $subatributos['div4'] = 'row row-cols-1 row-cols-md-2 g-4 pb-3';
+         $datosAtributos['templatepart'] = 'modules/sca/' . $postType . '/view/' . $postType;
+         $datosAtributos['subtitulo'] = '';
+         $datosAtributos['div4'] = 'row row-cols-1 row-cols-md-2 g-4 pb-3';
       }
       if (isset($_GET['comite_id']) != null) {
          $comite_id = sanitize_text_field($_GET['comite_id']);
-         $subatributos['comite_id'] = $comite_id;
+         $datosAtributos['comite_id'] = $comite_id;
          $comite = get_post($comite_id)->post_title;
          if (preg_match("/Junta/i", $comite)) {
-            $subatributos['titulo'] = "Actas de " . $comite;
-            $subatributos['prefijo'] = 'Acta';
+            $datosAtributos['titulo'] = "Actas de " . $comite;
+            $datosAtributos['prefijo'] = 'Acta';
          } else {
-            $subatributos['titulo'] = "Minutas del " . $comite;
-            $subatributos['prefijo'] = 'Minuta';
+            $datosAtributos['titulo'] = "Minutas del " . $comite;
+            $datosAtributos['prefijo'] = 'Minuta';
          }
          global $wpdb;
 
-         $subatributos['qryconsecutivo'] = $wpdb->get_var(
+         $datosAtributos['qryconsecutivo'] = $wpdb->get_var(
             "SELECT MAX(cast(t01.meta_value as unsigned))+1 consecutivo
             FROM wp_posts
             INNER JOIN wp_postmeta t01 ON (ID = t01.post_id)
@@ -94,16 +91,16 @@ class ActaController
          foreach ($qry_n_actas as $acta) {
             $num_actas .= $acta['meta_value'] . ',';
          }
-         $subatributos['num_actas'] = $num_actas;
+         $datosAtributos['num_actas'] = $num_actas;
       } else {
-         $subatributos['titulo'] = 'Minutas y Actas';
-         $subatributos['prefijo'] = 'Minutas o Actas';
-         $subatributos['comite_id'] = '';
-         $subatributos['qryconsecutivo'] = 0;
-         $subatributos['num_actas'] = '';
-         $subatributos['prefijo'] = '';
+         $datosAtributos['titulo'] = 'Minutas y Actas';
+         $datosAtributos['prefijo'] = 'Minutas o Actas';
+         $datosAtributos['comite_id'] = '';
+         $datosAtributos['qryconsecutivo'] = 0;
+         $datosAtributos['num_actas'] = '';
+         $datosAtributos['prefijo'] = '';
       }
 
-      return $subatributos;
+      return $datosAtributos;
    }
 }

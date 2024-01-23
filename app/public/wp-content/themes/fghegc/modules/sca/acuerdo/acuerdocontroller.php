@@ -10,11 +10,7 @@ class AcuerdoController
 
    public $atributos;
 
-   public function __construct()
-   {
-      $this->atributos = [];
-   }
-   public function get_atributos($postType)
+   private function __construct($postType = 'acuerdo')
    {
       if (isset($_GET['comite_id'])) {
          $comite_id = sanitize_text_field($_GET['comite_id']);
@@ -63,6 +59,7 @@ class AcuerdoController
 
       return $this->atributos;
    }
+
    private function get_templatepart($postType)
    {
       if (is_single()) {
@@ -478,8 +475,8 @@ class AcuerdoController
    }
    public function get_verAcuerdos()
    {
-      $usuario= wp_get_current_user(  );
-      $verAcuerdosComite=[];
+      $usuario = wp_get_current_user();
+      $verAcuerdosComite = [];
 
       $comites = get_posts([
          'post_type' => 'comite',
@@ -546,7 +543,7 @@ class AcuerdoController
    {
       $fechaInicial = date('Y-m-d', strtotime('First day of ' . date('F')));
       $fechaFinal = date('Y-m-d', strtotime('Last day of ' . date('F')));
-      $status='';
+      $status = '';
       if ($f_compromiso < $fechaInicial && $vigente == 1) {
          $status = 'Vencido';
       } elseif ($f_compromiso >= $fechaInicial && $f_compromiso <= $fechaFinal && $vigente == 1) {

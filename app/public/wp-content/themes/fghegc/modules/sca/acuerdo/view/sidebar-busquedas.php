@@ -9,11 +9,10 @@
 use FGHEGC\Modules\Core\CoreController;
 use FGHEGC\Modules\Sca\Acuerdo\AcuerdoController;
 
-$atributos = CoreController::get_instance()->get_atributos(get_post_type());
+$atributos = CoreController::get_instance()->get_atributos('acuerdo');
 
 $acuerdo = AcuerdoController::get_instance();
-$atributosAcuerdo = AcuerdoController::get_instance()->get_atributos('acuerdo');
-$totalAcuerdos = $atributosAcuerdo['totalAcuerdos'];
+$totalAcuerdos = $atributos['totalAcuerdos'];
 
 ?>
 

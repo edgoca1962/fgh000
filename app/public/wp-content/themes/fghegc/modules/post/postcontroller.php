@@ -7,7 +7,7 @@ use FGHEGC\Modules\Core\Singleton;
 class PostController
 {
    use Singleton;
-   private $atributos;
+   public $atributos;
 
    private function __construct($postType = 'post')
    {

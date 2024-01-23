@@ -8,26 +8,23 @@ class MiembroController
 {
    use Singleton;
    public $atributos;
-   private function __construct()
-   {
-      $this->atributos = [];
-   }
-   public function get_atributos($postType)
+   private function __construct($postType = 'miembro')
    {
       $this->atributos['titulo'] = 'Miembros';
-      $this->atributos['subtitulo'] = $this->get_parametros($postType)['subtitulo'];
+      $this->atributos['subtitulo'] = $this->get_atributos($postType)['subtitulo'];
       $this->atributos['div2'] = 'row';
       $this->atributos['div3'] = 'col-md-8';
-      $this->atributos['div4'] = $this->get_parametros($postType)['div4'];
+      $this->atributos['div4'] = $this->get_atributos($postType)['div4'];
       $this->atributos['div5'] = 'col-md-4';
-      $this->atributos['agregarpost'] = $this->get_parametros($postType)['agregarpost'];
+      $this->atributos['agregarpost'] = $this->get_atributos($postType)['agregarpost'];
       $this->atributos['sidebar'] = 'modules/sca/acuerdo/view/sidebar-busquedas';
-      $this->atributos['templatepart'] = $this->get_parametros($postType)['templatepart'];
+      $this->atributos['templatepart'] = $this->get_atributos($postType)['templatepart'];
+      $this->atributos['templatepartnone'] = 'modules/sca/' . $postType . '/view/' . $postType . '-none';
       $this->atributos['regresar'] = $postType;
 
       return $this->atributos;
    }
-   private function get_parametros($postType)
+   private function get_atributos($postType)
    {
       $parametros = [];
       if (is_user_logged_in()) {

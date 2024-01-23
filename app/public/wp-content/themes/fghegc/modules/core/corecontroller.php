@@ -184,23 +184,23 @@ class CoreController
             break;
 
          case 'comite':
-            $this->atributos = ComiteController::get_instance()->get_atributos($postType);
+            $this->atributos = ComiteController::get_instance()->atributos;
             break;
 
          case 'acta':
-            $this->atributos = ActaController::get_instance()->get_atributos($postType);
+            $this->atributos = ActaController::get_instance()->atributos;
             break;
 
          case 'acuerdo':
-            $this->atributos = AcuerdoController::get_instance()->get_atributos($postType);
+            $this->atributos = AcuerdoController::get_instance()->atributos;
             break;
 
          case 'miembro':
-            $this->atributos = MiembroController::get_instance()->get_atributos($postType);
+            $this->atributos = MiembroController::get_instance()->atributos;
             break;
 
          case 'puesto':
-            $this->atributos = PuestoController::get_instance()->get_atributos($postType);
+            $this->atributos = PuestoController::get_instance()->atributos;
             break;
 
          case 'evento':

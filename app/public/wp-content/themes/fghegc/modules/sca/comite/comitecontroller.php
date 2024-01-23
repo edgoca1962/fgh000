@@ -9,29 +9,25 @@ class ComiteController
    use Singleton;
    public $atributos;
 
-   private function __construct()
-   {
-      $this->atributos = [];
-   }
-   public function get_atributos($postType)
+   private function __construct($postType = 'comite')
    {
       $this->atributos['titulo'] = 'Comités';
-      $this->atributos['subtitulo'] = $this->get_parametros($postType)['subtitulo'];
+      $this->atributos['subtitulo'] = $this->get_atributos($postType)['subtitulo'];
       $this->atributos['div2'] = 'row';
       $this->atributos['div3'] = 'col-md-8';
-      $this->atributos['div4'] = $this->get_parametros($postType)['div4'];
+      $this->atributos['div4'] = $this->get_atributos($postType)['div4'];
       $this->atributos['div5'] = 'col-md-4';
-      $this->atributos['agregarpost'] = $this->get_parametros($postType)['agregarpost'];
-      $this->atributos['templatepart'] = $this->get_parametros($postType)['templatepart'];
+      $this->atributos['agregarpost'] = $this->get_atributos($postType)['agregarpost'];
+      $this->atributos['templatepart'] = $this->get_atributos($postType)['templatepart'];
+      $this->atributos['templatepartnone'] = 'modules/sca/' . $postType . '/view/' . $postType . '-none';
       $this->atributos['sidebar'] = 'modules/sca/acuerdo/view/sidebar-busquedas';
-      $this->atributos['miembros'] = $this->get_parametros($postType)['miembros'];
-      $this->atributos['actas'] = $this->get_parametros($postType)['actas'];
-      $this->atributos['acuerdos'] = $this->get_parametros($postType)['acuerdos'];
+      $this->atributos['miembros'] = $this->get_atributos($postType)['miembros'];
+      $this->atributos['actas'] = $this->get_atributos($postType)['actas'];
+      $this->atributos['acuerdos'] = $this->get_atributos($postType)['acuerdos'];
 
       return $this->atributos;
    }
-
-   private function get_parametros($postType)
+   public function get_atributos($postType)
    {
       $parametros = [];
       if (is_user_logged_in()) {

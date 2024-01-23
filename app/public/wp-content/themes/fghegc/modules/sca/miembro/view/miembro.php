@@ -6,9 +6,9 @@
  * @package FGHEGC
  */
 
-use FGHEGC\Modules\Sca\Miembro\MiembroController;
+use FGHEGC\Modules\Core\CoreController;
 
-$atributos = MiembroController::get_instance()->get_atributos(get_post_type());
+$atributos = CoreController::get_instance()->get_atributos(get_post_type());
 
 ?>
 <?php if ($atributos['userAdmin']) : ?>

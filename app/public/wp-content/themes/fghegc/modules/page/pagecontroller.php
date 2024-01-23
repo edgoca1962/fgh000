@@ -9,7 +9,7 @@ class PageController
    use Singleton;
    public $atributos;
 
-   public function __construct()
+   private function __construct()
    {
       $this->atributos['templatepartpage'] = $this->get_atributos()['templatepart'];
       $this->atributos['fullpage'] = $this->get_atributos()['fullpage'];
@@ -20,7 +20,7 @@ class PageController
       $this->atributos['div1'] = $this->get_atributos()['div1'];
       return $this->atributos;
    }
-   public function get_atributos()
+   private function get_atributos()
    {
       if (isset(get_post(get_the_ID())->post_name)) {
          $modulo = $this->getSlugModulo()['modulo'];
