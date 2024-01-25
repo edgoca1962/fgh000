@@ -68,9 +68,9 @@ class ActaController
 
          $datosAtributos['qryconsecutivo'] = $wpdb->get_var(
             "SELECT MAX(cast(t01.meta_value as unsigned))+1 consecutivo
-            FROM wp_posts
-            INNER JOIN wp_postmeta t01 ON (ID = t01.post_id)
-            INNER JOIN wp_postmeta t02 ON (ID = t02.post_id)
+            FROM $wpdb->posts
+            INNER JOIN $wpdb->postmeta t01 ON (ID = t01.post_id)
+            INNER JOIN $wpdb->postmeta t02 ON (ID = t02.post_id)
             WHERE 1=1
             AND (
             (t01.meta_key = '_n_acta')
@@ -80,9 +80,9 @@ class ActaController
          );
          $qry_n_actas = $wpdb->get_results(
             "SELECT t01.meta_value
-            FROM wp_posts
-            INNER JOIN wp_postmeta t01 ON (ID = t01.post_id)
-            INNER JOIN wp_postmeta t02 ON (ID = t02.post_id)
+            FROM $wpdb->posts
+            INNER JOIN $wpdb->postmeta t01 ON (ID = t01.post_id)
+            INNER JOIN $wpdb->postmeta t02 ON (ID = t02.post_id)
             WHERE 1 = 1
             AND (
             (t01.meta_key = '_n_acta' AND t01.meta_value != '')

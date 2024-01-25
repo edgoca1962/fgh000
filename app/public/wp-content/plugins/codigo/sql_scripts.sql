@@ -1,3 +1,78 @@
+/************************************************************
+ *
+ * Procedimiento de cambio del prefijo de la base de datos
+ *
+ ***********************************************************/
+;
+
+/* 1) Renombrar tablas con el administrador de la BD. */
+;
+
+RENAME TABLE wp_links TO xxxx_links;
+
+RENAME TABLE wp_commentmeta TO xxxx_commentmeta;
+
+RENAME TABLE wp_comments TO xxxx_comments;
+
+RENAME TABLE wp_options TO xxxx_options;
+
+RENAME TABLE wp_postmeta TO xxxx_postmeta;
+
+RENAME TABLE wp_posts TO xxxx_posts;
+
+RENAME TABLE wp_term_relationships TO xxxx_term_relationships;
+
+RENAME TABLE wp_term_taxonomy TO xxxx_term_taxonomy;
+
+RENAME TABLE wp_termmeta TO xxxx_termmeta;
+
+RENAME TABLE wp_terms TO xxxx_terms;
+
+RENAME TABLE wp_usermeta TO xxxx_usermeta;
+
+RENAME TABLE wp_users TO xxxx_users;
+
+/* 2) actualizar la tabla usermeta. */
+;
+
+UPDATE
+   xxxx_usermeta
+SET
+   meta_key = REPLACE(meta_key, 'wp_', 'xxxx_')
+WHERE
+   SUBSTRING(meta_key, 1, 3) = 'wp_';
+
+/* 3) actualizar la tabla de opciones. */
+;
+
+UPDATE
+   xxxx_options
+SET
+   option_name = REPLACE(option_name, 'wp_', 'xxxx_')
+WHERE
+   SUBSTRING(option_name, 1, 3) = 'wp_';
+
+/* 4) COMPROBAR REGISTROS: */
+;
+
+SELECT
+   *
+FROM
+   xxxx_options
+WHERE
+   SUBSTRING(option_name, 1, 3) = 'wp_';
+
+SELECT
+   *
+FROM
+   xxxx_usermeta
+WHERE
+   SUBSTRING(meta_key, 1, 3) = 'wp_';
+
+/* 5) Modificar la variable table_prefix en wp_config.php*/
+/***********************************************************/
+;
+
 SELECT
    t1.meta_value AS comite_id,
    CASE

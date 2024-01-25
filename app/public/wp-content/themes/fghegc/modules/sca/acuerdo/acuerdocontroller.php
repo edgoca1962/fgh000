@@ -148,10 +148,10 @@ class AcuerdoController
                     SELECT
                     MAX(cast(t01.meta_value as unsigned)) + 1 consecutivo
                     FROM
-                        wp_posts
-                        INNER JOIN wp_postmeta t01 ON (ID = t01.post_id)
-                        INNER JOIN wp_postmeta t02 ON (ID = t02.post_id)
-                        INNER JOIN wp_postmeta t03 ON (ID = t03.post_id)
+                        $wpdb->posts
+                        INNER JOIN $wpdb->postmeta t01 ON (ID = t01.post_id)
+                        INNER JOIN $wpdb->postmeta t02 ON (ID = t02.post_id)
+                        INNER JOIN $wpdb->postmeta t03 ON (ID = t03.post_id)
                     WHERE 1 = 1 
                         AND (
                             (t01.meta_key = '_n_acuerdo' AND t01.meta_value != '')
@@ -177,10 +177,10 @@ class AcuerdoController
                         SELECT
                         t01.meta_value
                         FROM
-                            wp_posts
-                            INNER JOIN wp_postmeta t01 ON (ID = t01.post_id)
-                            INNER JOIN wp_postmeta t02 ON (ID = t02.post_id)
-                            INNER JOIN wp_postmeta t03 ON (ID = t03.post_id)
+                            $wpdb->posts
+                            INNER JOIN $wpdb->postmeta t01 ON (ID = t01.post_id)
+                            INNER JOIN $wpdb->postmeta t02 ON (ID = t02.post_id)
+                            INNER JOIN $wpdb->postmeta t03 ON (ID = t03.post_id)
                         WHERE 1 = 1
                             AND(
                                 (t01.meta_key = '_n_acuerdo' AND t01.meta_value != '')
@@ -241,11 +241,11 @@ class AcuerdoController
            END AS etiqueta,
            count(ID) as total
         FROM
-           wp_posts
-           INNER JOIN wp_postmeta AS t1 ON (ID = t1.post_id)
-           INNER JOIN wp_postmeta AS t2 ON (ID = t2.post_id)
-           INNER JOIN wp_postmeta AS t3 ON (ID = t3.post_id)
-           INNER JOIN wp_postmeta AS t4 ON (ID = t4.post_id)
+           $wpdb->posts t0
+           INNER JOIN $wpdb->postmeta AS t1 ON (ID = t1.post_id)
+           INNER JOIN $wpdb->postmeta AS t2 ON (ID = t2.post_id)
+           INNER JOIN $wpdb->postmeta AS t3 ON (ID = t3.post_id)
+           INNER JOIN $wpdb->postmeta AS t4 ON (ID = t4.post_id)
         WHERE
            1 = 1
            AND (
@@ -268,10 +268,10 @@ class AcuerdoController
            )
            AND (
               (
-                 wp_posts.post_type = 'acuerdo'
+                 t0.post_type = 'acuerdo'
                  AND (
-                    wp_posts.post_status = 'publish'
-                    OR wp_posts.post_status = 'private'
+                    t0.post_status = 'publish'
+                    OR t0.post_status = 'private'
                  )
               )
            )
