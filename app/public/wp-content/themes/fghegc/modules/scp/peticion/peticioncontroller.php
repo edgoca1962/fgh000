@@ -8,22 +8,27 @@ class PeticionController
 {
    use Singleton;
    public $atributos;
-   private function __construct($postType = 'peticion')
+   private function __construct()
+   {
+      $this->atributos = [];
+   }
+
+   public function get_atributos($postType)
    {
       $this->atributos = [];
       $this->atributos['titulo'] = 'Peticiones';
-      $this->atributos['subtitulo'] = $this->get_atributos($postType)['subtitulo'];
+      $this->atributos['subtitulo'] = $this->get_datosAtributos($postType)['subtitulo'];
       $this->atributos['div2'] = 'row';
       $this->atributos['div3'] = 'col-md-9';
-      $this->atributos['div4'] = $this->get_atributos($postType)['div4'];
+      $this->atributos['div4'] = $this->get_datosAtributos($postType)['div4'];
       $this->atributos['div5'] = 'col-md-3';
-      $this->atributos['agregarpost'] = $this->get_atributos($postType)['agregarpost'];
-      $this->atributos['sidebar'] = $this->get_atributos($postType)['sidebar'];
-      $this->atributos['templatepart'] = $this->get_atributos($postType)['templatepart'];
-      $this->atributos['templatepartnone'] = $this->get_atributos($postType)['templatepartnone'];
+      $this->atributos['agregarpost'] = $this->get_datosAtributos($postType)['agregarpost'];
+      $this->atributos['sidebar'] = $this->get_datosAtributos($postType)['sidebar'];
+      $this->atributos['templatepart'] = $this->get_datosAtributos($postType)['templatepart'];
+      $this->atributos['templatepartnone'] = $this->get_datosAtributos($postType)['templatepartnone'];
       $this->atributos['regresar'] = $postType;
    }
-   private function get_atributos($postType)
+   private function get_datosAtributos($postType)
    {
       $datosAtributos['agregarpost'] = '';
       $datosAtributos['sidebar'] = '';
@@ -34,7 +39,6 @@ class PeticionController
             $datosAtributos['sidebar'] = 'modules/scp/' . $postType . '/view/' . $postType . '-busquedas';
          }
       }
-
       $datosAtributos['templatepart'] = 'modules/scp/' . $postType . '/view/' . $postType;
       $datosAtributos['subtitulo'] = '';
       $datosAtributos['div4'] = 'row row-cols-1 g-4 pb-3';

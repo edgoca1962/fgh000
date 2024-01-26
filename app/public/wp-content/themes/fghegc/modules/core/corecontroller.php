@@ -21,6 +21,9 @@ use FGHEGC\Modules\Sca\Miembro\MiembroController;
 use FGHEGC\Modules\Sca\Miembro\MiembroModel;
 use FGHEGC\Modules\Sca\Puesto\PuestoController;
 use FGHEGC\Modules\Sca\Puesto\PuestoModel;
+use FGHEGC\modules\scp\oracion\OracionModel;
+use FGHEGC\Modules\Scp\Peticion\PeticionController;
+use FGHEGC\Modules\Scp\Peticion\PeticionModel;
 use PHPMailer\PHPMailer\PHPMailer;
 
 class CoreController
@@ -39,6 +42,8 @@ class CoreController
       require_once WP_PLUGIN_DIR . '/getid3/getid3.php';
 
       CoreModel::get_instance();
+      PeticionModel::get_instance();
+      OracionModel::get_instance();
       ActaModel::get_instance();
       AcuerdoModel::get_instance();
       ComiteModel::get_instance();
@@ -217,7 +222,7 @@ class CoreController
             break;
 
          case 'peticion':
-            // $this->atributos = AtributosPeticion::get_instance()->get_atributos($postType);
+            $this->atributos = PeticionController::get_instance()->get_atributos($postType);
             break;
 
          default:
