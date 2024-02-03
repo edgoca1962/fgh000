@@ -1,5 +1,7 @@
 <h3>Pruebas Funcionales</h3>
 <?php
+
+/*
 $peticiones =
 
    get_posts([
@@ -8,7 +10,6 @@ $peticiones =
       'order' => 'DESC',
       'posts_per_page' => -1,
    ]);
-   /*
 foreach ($peticiones as $peticion) {
    $peticionCategories = wp_get_post_categories($peticion->ID);
    foreach ($peticionCategories as $value) {

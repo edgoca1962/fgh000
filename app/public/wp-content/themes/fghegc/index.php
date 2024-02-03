@@ -8,6 +8,8 @@
 
 use FGHEGC\Modules\Core\CoreController;
 
+$core = CoreController::get_instance();
+
 $atributos = CoreController::get_instance()->get_atributos(get_post_type());
 ?>
 <!DOCTYPE html>
@@ -43,7 +45,7 @@ $atributos = CoreController::get_instance()->get_atributos(get_post_type());
                      endwhile;
                      ?>
                   </div>
-                  <?php twenty_twenty_one_the_posts_navigation() ?>
+                  <?php ($core->atributos['verNavegacionPosts']) ? twenty_twenty_one_the_posts_navigation() : '' ?>
                   <?php get_template_part($atributos['btnregresar']) ?>
                </div>
             <?php else : ?>

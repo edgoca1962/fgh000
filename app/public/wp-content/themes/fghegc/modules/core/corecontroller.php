@@ -29,7 +29,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 class CoreController
 {
    use Singleton;
-   private $atributos;
+   public $atributos;
 
 
    private function __construct()
@@ -186,6 +186,7 @@ class CoreController
       $atributosCore['pag_ant'] = $this->get_pags()['pag_ant'];
       $atributosCore['piepagina'] = 'modules/core/view/core-piepagina';
       $atributosCore['comentarios'] = true;
+      $atributosCore['verNavegacionPosts'] = true;
 
       switch ($postType) {
          case 'page':
@@ -249,6 +250,14 @@ class CoreController
       $this->atributos = array_replace_recursive($atributosCore, $replacements);
 
       return $this->atributos;
+   }
+   public function set_atributo($parametro, $valor)
+   {
+      $this->atributos[$parametro] = $valor;
+   }
+   public function get_atributo($parametro)
+   {
+      return $this->atributos[$parametro];
    }
    private function get_usuario()
    {

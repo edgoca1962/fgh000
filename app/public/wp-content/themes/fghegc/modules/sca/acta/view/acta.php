@@ -6,6 +6,9 @@
  * @package FGHEGC
  */
 
+use FGHEGC\Modules\Core\CoreController;
+
+$core = CoreController::get_instance();
 $atributos = FGHEGC\modules\core\CoreController::get_instance()->get_atributos(get_post_type());
 
 ?>
@@ -40,4 +43,6 @@ $atributos = FGHEGC\modules\core\CoreController::get_instance()->get_atributos(g
          <?php endif; ?>
       </div>
    </div>
+<?php else : ?>
+   <?php $core->set_atributo('verNavegacionPosts', false) ?>
 <?php endif; ?>
