@@ -1,5 +1,9 @@
 <?php
 
+use FGHEGC\Modules\Core\CoreController;
+
+$atributos = CoreController::get_instance()->get_atributos(get_post_type());
+
 /************************************
  * Fecha Seguimiento y asignación
  ***********************************/
@@ -32,8 +36,8 @@ $byline = sprintf(
 /*********************************/
 
 ?>
-<div id="tarjeta" class="py-5">
-   <div class="card bg-transparent border-0 shadow">
+<div id="tarjeta" <?php echo $atributos['ocultarPeticiones'] ?>>
+   <div class="card bg-dark text-white border-0 shadow">
       <div class="card-header">
          <p>
             <?php

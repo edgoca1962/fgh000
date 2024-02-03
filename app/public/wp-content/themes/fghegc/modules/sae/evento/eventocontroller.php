@@ -28,11 +28,6 @@ class EventoController
       $this->atributos['periodos'] = ['2' => 'días', '3' => 'semanas', '4' => 'meses', '5' => 'años'];
       $this->atributos['monthName'] = ["January" => "Enero", "February" => "Febrero", "March" => "Marzo", "April" => "Abril", "May" => "Mayo", "June" => "Junio", "July" => "Julio", "August" => "Agosto", "September" => "Septiembre", "October" => "Octubre", "November" => "Noviembre", "December" => "Diciembre"];
       $this->atributos['diaSemanaPost'] = ['Monday' => 'Lunes', 'Tuesday' => 'Martes', 'Wednesday' => 'Miércoles', 'Thursday' => 'Jueves', 'Friday' => 'Viernes', 'Saturday' => 'Sábado', 'Sunday' => 'Domingo'];
-      if (in_array('useradmineventos', wp_get_current_user()->roles) || in_array('usercoordinaeventos', wp_get_current_user()->roles)) {
-         $this->atributos['userAdminEventos'] = true;
-      }
-      if (in_array('usercoordinaeventos', wp_get_current_user()->roles)) {
-      }
       $this->atributos['titulo'] = 'Eventos';
       $this->atributos['subtitulo'] = $this->get_subatributos()['subtitulo'];
       $this->atributos['subtitulo2'] = $this->get_subatributos()['subtitulo2'];
@@ -41,11 +36,14 @@ class EventoController
       $this->atributos['div5'] = 'col-xl-3';
       $this->atributos['templatepart'] = $this->get_templatepart($postType);
       $this->atributos['templatepartnone'] = 'modules/sae/' . $postType . '/view/' . $postType . '-none';
-      $this->atributos['agregarpost'] = '';
       $this->atributos['sidebar'] = 'modules/sae/' . $postType . '/view/' . $postType . '-calendario';
       $this->atributos['regresar'] = $postType;
       $this->atributos['imagen'] = FGHEGC_DIR_URI . '/assets/img/mano.jpeg';
 
+      $this->atributos['userAdminEventos'] = $this->get_tipoUsuario($postType)['userAdminEventos'];
+      $this->atributos['userAutorEventos'] = $this->get_tipoUsuario($postType)['userAutorEventos'];
+      $this->atributos['userColaboradorEventos'] = $this->get_tipoUsuario($postType)['userColaboradorEventos'];
+      $this->atributos['agregarpost'] = $this->get_tipoUsuario($postType)['agregarpost'];
       $this->atributos['mes'] = $this->get_subatributos()['mes'];
       $this->atributos['anno'] = $this->get_subatributos()['anno'];
       $this->atributos['espacios'] = $this->get_subatributos()['espacios'];
@@ -53,10 +51,10 @@ class EventoController
       $this->atributos['mesConsulta'] = $this->get_subatributos()['mesConsulta'];
       $this->atributos['mesConsultaLink'] = $this->get_subatributos()['mesConsultaLink'];
       $this->atributos['datos_evento'] = $this->get_datos_evento();
-      $this->atributos['evento_diario'] = 'modules/sae/evento/view/evento-diario';
-      $this->atributos['evento_semanal'] = 'modules/sae/evento/view/evento-semanal';
-      $this->atributos['evento_mensual'] = 'modules/sae/evento/view/evento-mensual';
-      $this->atributos['evento_anual'] = 'modules/sae/evento/view/evento-anual';
+      $this->atributos['evento_diario'] = 'modules/sae/' . $postType . '/view/' . $postType . '-diario';
+      $this->atributos['evento_semanal'] = 'modules/sae/' . $postType . '/view/' . $postType . '-semanal';
+      $this->atributos['evento_mensual'] = 'modules/sae/' . $postType . '/view/' . $postType . '-mensual';
+      $this->atributos['evento_anual'] = 'modules/sae/' . $postType . '/view/' . $postType . '-anual';
 
       return $this->atributos;
    }
@@ -115,7 +113,27 @@ class EventoController
       }
       return $templatepart;
    }
-
+   private function get_tipoUsuario($postType)
+   {
+      $tipoUsuario['userAdminEventos'] = false;
+      $tipoUsuario['userAutorEventos'] = false;
+      $tipoUsuario['userColaboradorEventos'] = false;
+      $tipoUsuario['agregarpost'] = '';
+      if (is_user_logged_in()) {
+         $usuarioRoles = wp_get_current_user()->roles;
+         if (in_array('administrator', $usuarioRoles) || in_array('useradmingeneral', $usuarioRoles) || in_array('useradmineventos', $usuarioRoles) || in_array('userautoreventos', $usuarioRoles) || in_array('usercolaboradoreventos', $usuarioRoles)) {
+            $tipoUsuario['agregarpost'] = 'modules/sae/' . $postType . '/view/' . $postType . '-agregar';
+            if (in_array('administrator', $usuarioRoles) || in_array('useradmingeneral', $usuarioRoles) || in_array('useradmineventos', $usuarioRoles)) {
+               $tipoUsuario['userAdminEventos'] = true;
+            } elseif (in_array('userautoreventos', $usuarioRoles)) {
+               $tipoUsuario['userAutorEventos'] = true;
+            } elseif (in_array('usercolaboradoreventos', $usuarioRoles)) {
+               $tipoUsuario['userColaboradorEventos'] = true;
+            }
+         }
+      }
+      return $tipoUsuario;
+   }
    public function sae_fechasevento($evento_ID, $finicio = '', $ffinal = '', $tipoevento = '', $npereventos = '', $opcionesquema = '', $diaordinalevento = '', $diasemanaevento = [], $mesConsulta = '', $anno = '', $fpe_param)
    {
       $diaordinal = ['1' => 'first', '2' => 'second', '3' => 'third', '4' => 'fourth', '5' => 'last'];

@@ -30,32 +30,34 @@ class MusicController
    }
    private function get_datosAtributos($postType)
    {
-      $parametros = [];
-      $parametros['agregarpost'] = '';
+      $datosAtributos = [];
+      $datosAtributos['agregarpost'] = '';
 
       if (is_user_logged_in()) {
          $usuarioRoles = wp_get_current_user()->roles;
+         $datosAtributos['userAdminMusic'] = false;
          if (in_array('administrator', $usuarioRoles) || in_array('useradmingeneral', $usuarioRoles) || in_array('useradminmusic', $usuarioRoles)) {
-            $parametros['agregarpost'] = 'modules/' . $postType . '/view/' . $postType . '-agregar';
+            $datosAtributos['userAdminMusic'] = true;
+            $datosAtributos['agregarpost'] = 'modules/' . $postType . '/view/' . $postType . '-agregar';
          }
       }
 
       if (is_single()) {
-         $parametros['templatepart'] = 'modules/' . $postType . '/view/' . $postType . '-single';
-         $parametros['subtitulo'] = get_the_title();
-         $parametros['div4'] = '';
+         $datosAtributos['templatepart'] = 'modules/' . $postType . '/view/' . $postType . '-single';
+         $datosAtributos['subtitulo'] = get_the_title();
+         $datosAtributos['div4'] = '';
       } else {
-         $parametros['templatepart'] = 'modules/' . $postType . '/view/' . $postType;
-         $parametros['subtitulo'] = '';
-         $parametros['div4'] = 'row row-cols-1 row-cols-md-4 g-4 pb-3';
+         $datosAtributos['templatepart'] = 'modules/' . $postType . '/view/' . $postType;
+         $datosAtributos['subtitulo'] = '';
+         $datosAtributos['div4'] = 'row row-cols-1 row-cols-md-4 g-4 pb-3';
       }
 
-      $parametros['sidebar'] = '';
+      $datosAtributos['sidebar'] = '';
       if (!isset($_GET['cpt'])) {
-         $parametros['sidebar'] = 'modules/' . $postType . '/view/' . $postType . '-sidebar';
+         $datosAtributos['sidebar'] = 'modules/' . $postType . '/view/' . $postType . '-sidebar';
       }
-      $parametros['templatepartnone'] = 'modules/' . $postType . '/view/' . $postType . '-none';
+      $datosAtributos['templatepartnone'] = 'modules/' . $postType . '/view/' . $postType . '-none';
 
-      return $parametros;
+      return $datosAtributos;
    }
 }

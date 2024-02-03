@@ -10,6 +10,8 @@ class PeticionModel
 
    public function __construct()
    {
+      add_action('init', [$this, 'set_peticion']);
+      add_action('init', [$this, 'set_taxonomia_peticion']);
       add_action('add_meta_boxes', [$this, 'set_campos']);
       add_action('save_post', [$this, 'fghegc_guardar_nombre']);
       add_action('save_post', [$this, 'fghegc_guardar_apellido']);
@@ -22,10 +24,50 @@ class PeticionModel
       add_action('save_post', [$this, 'fghegc_guardar_f_seguimiento']);
       add_action('save_post', [$this, 'fghegc_guardar_f_nacimiento']);
       add_action('save_post', [$this, 'fghegc_guardar_asignar_a']);
+
       $this->set_paginas();
-      add_action('init', [$this, 'set_peticion']);
-      add_action('pre_get_posts', [$this, 'scp_pre_get_posts']);
+
       // add_action('rest_api_init', [$this, 'show_acuerdo_meta_fields']);
+      // add_action('pre_get_posts', [$this, 'scp_pre_get_posts']);
+   }
+   public function set_taxonomia_peticion()
+   {
+
+      $labels = array(
+         'name'                       => _x('Motivos', 'Motivos de oración', 'text_domain'),
+         'singular_name'              => _x('Motivo', 'Motivo de oración', 'text_domain'),
+         'menu_name'                  => __('Motivos', 'text_domain'),
+         'all_items'                  => __('Todos los motivo', 'text_domain'),
+         'parent_item'                => __('Motivo Principal', 'text_domain'),
+         'parent_item_colon'          => __('Motivo Principal:', 'text_domain'),
+         'new_item_name'              => __('Nuevo Nombre de Motivo', 'text_domain'),
+         'add_new_item'               => __('Agregar Nuevo Motivo', 'text_domain'),
+         'edit_item'                  => __('Editar Motivo', 'text_domain'),
+         'update_item'                => __('Actualizar Motivo', 'text_domain'),
+         'view_item'                  => __('Ver Motivo', 'text_domain'),
+         'separate_items_with_commas' => __('Motivos separados por comas', 'text_domain'),
+         'add_or_remove_items'        => __('Agregar o Eliminar Motivos', 'text_domain'),
+         'choose_from_most_used'      => __('Seleccionar el más usado', 'text_domain'),
+         'popular_items'              => __('Motivos más frecuentes', 'text_domain'),
+         'search_items'               => __('Buscar Motivos', 'text_domain'),
+         'not_found'                  => __('Motivo No encontrado', 'text_domain'),
+         'no_terms'                   => __('No hay Motivos', 'text_domain'),
+         'items_list'                 => __('Listar Motivos', 'text_domain'),
+         'items_list_navigation'      => __('Lista Navegación Motivos', 'text_domain'),
+      );
+      $args = array(
+         'labels'                     => $labels,
+         'hierarchical'               => true,
+         'public'                     => true,
+         'show_ui'                    => true,
+         'show_admin_column'          => true,
+         'show_in_nav_menus'          => true,
+         'show_tagcloud'              => true,
+         'show_in_rest'               => true,
+         'query_var'                  => true,
+         'rewrite'                    => ['slug' => 'motivos']
+      );
+      register_taxonomy('motivo', ['peticion'], $args);
    }
    public function set_peticion()
    {
@@ -43,7 +85,6 @@ class PeticionModel
          'rest_base'                => 'peticiones',
          'menu_icon'                => 'dashicons-heart',
          'supports'                 => array('title', 'editor', 'comments'),
-         'taxonomies'               => ['category', 'post_tag'],
       );
 
       register_post_type($type, $args);
@@ -61,25 +102,25 @@ class PeticionModel
       $s_lower = strtolower($singular);
 
       $etiquetas = [
-         'name' => _x($plural, 'post type general name', 'fghmvc'),
-         'singular_name' => _x($singular, 'post type singular name', 'fghmvc'),
-         'menu_name' => _x($plural, 'admin menu', 'fghmvc'),
-         'name_admin_bar' => _x($singular, 'add new on admin bar', 'fghmvc'),
-         'add_new' => _x("Nuevo $singular", 'prayer', 'fghmvc'),
-         'add_new_item' => __("Agregar $singular", 'fghmvc'),
-         'new_item' => __("Nuevo $singular", 'fghmvc'),
-         'edit_item' => __("Editar $singular", 'fghmvc'),
-         'view_item' => __("Ver $singular", 'fghmvc'),
-         'view_items' => __("Ver $plural", 'fghmvc'),
-         'all_items' => __("Todos los $plural", 'fghmvc'),
-         'search_items' => __("Buscar $plural", 'fghmvc'),
-         'parent_item_colon' => __("$singular padre", 'fghmvc'),
-         'not_found' => __("No hay $p_lower", 'fghmvc'),
-         'not_found_in_trash' => __("No hay $p_lower borrados", 'fghmvc'),
-         'archives' => __("$singular achivado", 'fghmvc'),
-         'attributes' => __("Atributos del $singular", 'fghmvc'),
-         'insert_into_item' => __("Insertar $s_lower", 'fghmvc'),
-         'uploaded_to_this_item' => __("Adjuntar a un $s_lower", 'fghmvc'),
+         'name' => _x($plural, 'post type general name', 'fghegc'),
+         'singular_name' => _x($singular, 'post type singular name', 'fghegc'),
+         'menu_name' => _x($plural, 'admin menu', 'fghegc'),
+         'name_admin_bar' => _x($singular, 'add new on admin bar', 'fghegc'),
+         'add_new' => _x("Nuevo $singular", 'prayer', 'fghegc'),
+         'add_new_item' => __("Agregar $singular", 'fghegc'),
+         'new_item' => __("Nuevo $singular", 'fghegc'),
+         'edit_item' => __("Editar $singular", 'fghegc'),
+         'view_item' => __("Ver $singular", 'fghegc'),
+         'view_items' => __("Ver $plural", 'fghegc'),
+         'all_items' => __("Todas las $plural", 'fghegc'),
+         'search_items' => __("Buscar $plural", 'fghegc'),
+         'parent_item_colon' => __("$singular padre", 'fghegc'),
+         'not_found' => __("No hay $p_lower", 'fghegc'),
+         'not_found_in_trash' => __("No hay $p_lower borrados", 'fghegc'),
+         'archives' => __("$singular achivada", 'fghegc'),
+         'attributes' => __("Atributos de las $singular", 'fghegc'),
+         'insert_into_item' => __("Insertar $s_lower", 'fghegc'),
+         'uploaded_to_this_item' => __("Adjuntar a una $s_lower", 'fghegc'),
       ];
       return $etiquetas;
    }
@@ -677,11 +718,40 @@ class PeticionModel
    public function scp_pre_get_posts($query)
    {
       if ($query->is_main_query() && !is_admin()) {
+
          if ($query->is_tag() || $query->is_category()) {
             $query->set('post_type', ['post', 'peticion']);
          }
+         if (is_post_type_archive('peticion')) {
+            if (isset($_GET['asignado'])) {
+               $asignar_a = intval(sanitize_text_field($_GET['asignado']));
+               $asignar_a_mq =
+                  [
+                     'key' => '_asignar_a',
+                     'value' => $asignar_a
+                  ];
+            } else {
+               $asignar_a_mq =
+                  [
+                     'key' => '_asignar_a',
+                     'value' => get_current_user_id()
+                  ];
+            }
+            $query->set(
+               'meta_query',
+               [
+                  $asignar_a_mq,
+               ]
+            );
+         }
       }
    }
+   private function set_roles()
+   {
+      // remove_role('peticiones');
+      add_role('peticiones', 'Peticiones', get_role('subscriber')->capabilities);
+   }
+
    private function set_paginas()
    {
       $paginas = [

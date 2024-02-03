@@ -16,8 +16,10 @@ if (!$atributos['fullpage']) {
    } else {
       get_template_part($atributos['templatepartpage']);
    }
-   if (comments_open() || get_comments_number()) {
-      comments_template();
+   if ($atributos['comentarios']) {
+      if (comments_open() || get_comments_number()) {
+         comments_template();
+      }
    }
 } else {
    if (the_content()) {

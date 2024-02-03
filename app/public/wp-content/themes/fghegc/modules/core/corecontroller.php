@@ -41,6 +41,12 @@ class CoreController
       require_once FGHEGC_DIR_PATH . "/modules/core/view/core-comments.php";
       require_once WP_PLUGIN_DIR . '/getid3/getid3.php';
 
+      add_filter('manage_edit-motivo_columns', [$this, 'fghegc_id_column']);
+      add_filter('manage_motivo_custom_column', [$this, 'fghegc_id_column_content'], 10, 3);
+
+      add_filter('manage_edit-category_columns', [$this, 'custom_category_id_column']);
+      add_filter('manage_category_custom_column', [$this, 'custom_category_id_column_content'], 10, 3);
+
       CoreModel::get_instance();
       PeticionModel::get_instance();
       OracionModel::get_instance();
@@ -179,6 +185,7 @@ class CoreController
       $atributosCore['pag'] = $this->get_pags()['pag'];
       $atributosCore['pag_ant'] = $this->get_pags()['pag_ant'];
       $atributosCore['piepagina'] = 'modules/core/view/core-piepagina';
+      $atributosCore['comentarios'] = true;
 
       switch ($postType) {
          case 'page':
@@ -246,28 +253,15 @@ class CoreController
    private function get_usuario()
    {
       $usuario = [];
+      $usuario['userAdmin'] = false;
+      $usuario['usuario_id'] = '';
       if (is_user_logged_in()) {
          $user = wp_get_current_user();
          $usuario['usuario_id'] = $user->ID;
          $usuarioRoles = $user->roles;
          if (in_array('administrator', $usuarioRoles) || in_array('useradmingeneral', $usuarioRoles)) {
             $usuario['userAdmin'] = true;
-         } else {
-            $usuario['userAdmin'] = false;
-            if (in_array('useradmineventos', $usuarioRoles)) {
-               $usuario['useradmineventos'] = true;
-            } else {
-               $usuario['useradmineventos'] = false;
-            }
-            if (in_array('usercoordinaeventos', $usuarioRoles)) {
-               $usuario['usercoordinaeventos'] = true;
-            } else {
-               $usuario['usercoordinaeventos'] = false;
-            }
          }
-      } else {
-         $usuario['userAdmin'] = false;
-         $usuario['usuario_id'] = '';
       }
       return $usuario;
    }
@@ -337,10 +331,13 @@ class CoreController
    {
       $sca = ['comite', 'acta', 'acuerdo', 'miembro', 'puesto'];
       $sae = ['evento', 'inscripcion'];
+      $scp = ['peticion', 'oracion'];
       if (in_array($postType, $sca)) {
          $modulo = 'modules/sca/';
       } elseif (in_array($postType, $sae)) {
          $modulo = 'modules/sae/';
+      } elseif (in_array($postType, $scp)) {
+         $modulo = 'modules/scp/';
       } else {
          $modulo = 'modules/';
       }
@@ -381,4 +378,42 @@ class CoreController
       }
       return $banner;
    }
+   public function quitarDiacriticos($texto)
+   {
+      $texto = htmlentities($texto, ENT_COMPAT, 'UTF-8');
+      $texto = preg_replace('/&([a-zA-Z])(uml|acute|grave|circ|tilde);/', '$1', $texto);
+      $texto = html_entity_decode($texto, ENT_COMPAT, 'UTF-8');
+      $texto = strtolower($texto);
+      return $texto;
+   }
+   public function fghegc_id_column($columns)
+   {
+      $columns['term_id'] = 'Term ID';
+      return $columns;
+   }
+   public function fghegc_id_column_content($content, $column_name, $term_id)
+   {
+      if ($column_name == 'term_id') {
+         return $term_id;
+      }
+      return $content;
+   }
+   public function custom_category_id_column($columns)
+   {
+      $columns['category_id'] = 'Category ID';
+      return $columns;
+   }
+   public function custom_category_id_column_content($deprecated, $column_name, $term_id)
+   {
+      if ($column_name == 'category_id') {
+         return $term_id;
+      }
+      return $deprecated;
+   }
 }
+/*
+// Add a new column to the category list table
+
+// Display the ID in the new column
+
+*/

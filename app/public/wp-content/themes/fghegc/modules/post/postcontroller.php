@@ -20,11 +20,19 @@ class PostController
       $this->atributos['div4'] = $this->get_datosAtributos($postType)['div4'];
       $this->atributos['regresar'] = $postType;
       $this->atributos['templatepart'] = $this->get_datosAtributos($postType)['templatepart'];
+      $this->atributos['userAdminPost'] = $this->get_datosAtributos($postType)['userAdminPosts'];
 
       return $this->atributos;
    }
    private function get_datosAtributos($postType)
    {
+      if (is_user_logged_in()) {
+         $usuarioRoles = wp_get_current_user()->roles;
+         $datosAtributos['userAdminPosts'] = false;
+         if (in_array('administrator', $usuarioRoles) || in_array('useradmingeneral', $usuarioRoles) || in_array('useradminposts', $usuarioRoles)) {
+            $datosAtributos['userAdminPosts'] = true;
+         }
+      }
       if (is_single()) {
          $datosAtributos['templatepart'] = 'modules/' . $postType . '/view/' . $postType . '-single';
          $datosAtributos['div4'] = '';

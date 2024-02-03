@@ -83,7 +83,9 @@ $asignados =
       ]
    ];
 
+
 ?>
+
 <div class="row mb-3">
    <div class="position-relative">
       <form id="frmbuscar" class="d-flex">
@@ -180,7 +182,7 @@ $asignados =
                $conteoOraciones = new WP_Query(
                   [
                      'post_type' => 'oracion',
-                     'post_date' => $fecha_hoy->format('Y-m-d'),
+                     'post_date' => date('Y-m-d'),
                      'meta_query' => [
                         [
                            'key' => 'peticion',

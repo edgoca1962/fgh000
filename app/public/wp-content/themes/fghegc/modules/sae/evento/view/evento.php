@@ -146,3 +146,4 @@ $atributos = CoreController::get_instance()->get_atributos(get_post_type());
       </div>
    </div>
 </div>
+<?php

@@ -93,7 +93,6 @@ class MiembroModel
          'rest_base' => 'miembros',
          'menu_icon' => 'dashicons-book',
          'supports' => array('title', 'custom-fields'),
-         // 'taxonomies'               => ['category', 'post_tag'],
       );
 
       register_post_type($type, $args);

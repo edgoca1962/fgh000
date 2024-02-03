@@ -22,10 +22,13 @@ class PageController
       $this->atributos['subtitulo'] = $this->get_datosAtributos()['subtitulo'];
       $this->atributos['div0'] = $this->get_datosAtributos()['div0'];
       $this->atributos['div1'] = $this->get_datosAtributos()['div1'];
+      $this->atributos['comentarios'] = $this->get_datosAtributos()['comentarios'];
+
       return $this->atributos;
    }
    private function get_datosAtributos()
    {
+      $datosAtributos['comentarios'] = true;
       if (isset(get_post(get_the_ID())->post_name)) {
          $modulo = $this->getSlugModulo()['modulo'];
          $slug = $this->getSlugModulo()['slug'];
@@ -36,6 +39,9 @@ class PageController
             $datosAtributos['templatepart'] = 'modules/sca/' . $modulo . '/view/' . $slug;
          } elseif (in_array($modulo, $scp)) {
             $datosAtributos['templatepart'] = 'modules/scp/' . $modulo . '/view/' . $slug;
+            if (!is_single()) {
+               $datosAtributos['comentarios'] = false;
+            }
          } elseif (in_array($modulo, $sae)) {
             $datosAtributos['templatepart'] = 'modules/sae/' . $modulo . '/view/' . $slug;
          } else {

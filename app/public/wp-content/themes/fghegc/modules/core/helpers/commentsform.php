@@ -23,7 +23,7 @@ class CommentsForm extends Walker_Comment
             <div class="container my-3 py-3">
                <div class="row ">
                   <div class="col-md-12 col-lg-10 col-xl-8">
-                     <div class="card bg-transparent shadow">
+                     <div class="card bg-dark text-white shadow">
                         <div class="card-body">
                            <div class="d-flex flex-start align-items-center">
                               <div class="shadow-1-strong me-3">

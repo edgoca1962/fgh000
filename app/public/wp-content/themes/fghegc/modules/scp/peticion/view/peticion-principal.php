@@ -1,13 +1,14 @@
 <?php
-if (is_user_logged_in()) {
-   $class = "";
-} else {
-   $class = "d-flex justify-content-center";
-}
+
+use FGHEGC\Modules\Core\CoreController;
+
+$atributos = CoreController::get_instance()->get_atributos('peticion');
+
 ?>
-<div class="row <?php echo $class ?>">
-   <h2 class="mb-3 text-center">Envíanos tu Petición</h2>
+
+<div class="row <?php echo $atributos['peticionClass'] ?>">
    <div class="col col-md-6">
+      <h2 class="mb-3 text-center">Envíanos tu Petición</h2>
       <form id="peticiones" class="needs-validation" novalidate>
          <div class="form-group row">
             <div class="col-lg-6 mb-3">
@@ -40,103 +41,21 @@ if (is_user_logged_in()) {
          <div class="form-group">
             <h4 class="text-center">Motivos de oración</h4>
             <div class="table-responsive">
-               <table class="table text-reset align-middle table-sm">
+               <table class="table table-sm align-middle">
                   <tbody>
-                     <tr>
-                        <td class="fs-4">Salvación:</td>
-                        <td>
-                           <div class="form-check form-check-inline">
-                              <input class="form-check-input" name="cat1" type="checkbox" value="5">
-                              <label class="form-check-label">Personal</label>
-                           </div>
-                        </td>
-                        <td>
-                           <div class="form-check form-check-inline">
-                              <input class="form-check-input" name="cat2" type="checkbox" value="6">
-                              <label class="form-check-label">Familiares</label>
-                           </div>
-                        </td>
-                        <td>
-                           <div class="form-check form-check-inline">
-                              <input class="form-check-input" name="cat3" type="checkbox" value="7">
-                              <label class="form-check-label">Otros</label>
-                           </div>
-                        </td>
-                     </tr>
-                     <tr>
-                        <td class="fs-4">Salud:</td>
-                        <td>
-                           <div class="form-check form-check-inline">
-                              <input class="form-check-input" name="cat4" type="checkbox" value="8">
-                              <label class="form-check-label">Personal</label>
-                           </div>
-                        </td>
-                        <td>
-                           <div class="form-check form-check-inline">
-                              <input class="form-check-input" name="cat5" type="checkbox" value="9">
-                              <label class="form-check-label">Familiares</label>
-                           </div>
-                        </td>
-                        <td>
-                           <div class="form-check form-check-inline">
-                              <input class="form-check-input" name="cat6" type="checkbox" value="10">
-                              <label class="form-check-label">Otros</label>
-                           </div>
-                        </td>
-                     </tr>
-                     <tr>
-                        <td class="fs-4">Matrimonio:</td>
-                        <td>
-                           <div class="form-check form-check-inline">
-                              <input class="form-check-input" name="cat7" type="checkbox" value="11">
-                              <label class="form-check-label">Personal</label>
-                           </div>
-                        </td>
-                        <td>
-                           <div class="form-check form-check-inline">
-                              <input class="form-check-input" name="cat8" type="checkbox" value="12">
-                              <label class="form-check-label">Familiares</label>
-                           </div>
-                        </td>
-                        <td>
-                           <div class="form-check form-check-inline">
-                              <input class="form-check-input" name="cat9" type="checkbox" value="13">
-                              <label class="form-check-label">Otros</label>
-                           </div>
-                        </td>
-                        <td></td>
-                     </tr>
-                     <tr>
-                        <td class="fs-4">Provisión:</td>
-                        <td>
-                           <div class="form-check  form-check-inline">
-                              <input class="form-check-input" name="cat10" type="checkbox" value="14">
-                              <label class="form-check-label">Trabajo</label>
-                           </div>
-                        </td>
-                        <td>
-                           <div class="form-check  form-check-inline">
-                              <input class="form-check-input" name="cat11" type="checkbox" value="15">
-                              <label class="form-check-label">Manejo Finanzas</label>
-                           </div>
-                        </td>
-                        <td>
-                           <div class="form-check  form-check-inline">
-                              <input class="form-check-input" name="cat12" type="checkbox" value="16">
-                              <label class="form-check-label">Otro</label>
-                           </div>
-                        </td>
-                     </tr>
-                     <tr>
-                        <td class="fs-4">Otros:</td>
-                        <td>
-                           <div class="form-check  form-check-inline">
-                              <input class="form-check-input" name="cat13" type="checkbox" value="17">
-                              <label class="form-check-label">Favor detallar</label>
-                           </div>
-                        <td></td>
-                        <td></td>
-                     </tr>
+                     <?php foreach ($atributos['motivos'] as $motivos => $datos) : ?>
+                        <tr>
+                           <td class="text-white bg-transparent fs-4"><?php echo $motivos ?>:</td>
+                           <?php foreach ($datos as $dato) : ?>
+                              <td class="text-white bg-transparent">
+                                 <div class="form-check form-check-inline">
+                                    <input class="form-check-input" name="<?php echo $dato['name'] ?>" type="checkbox" value="<?php echo term_exists($dato['value'], 'motivo', '')['term_id']  ?>" <?php echo $dato['hidden'] ?>>
+                                    <label class="form-check-label"><?php echo $dato['label'] ?></label>
+                                 </div>
+                              </td>
+                           <?php endforeach; ?>
+                        </tr>
+                     <?php endforeach; ?>
                   </tbody>
                </table>
             </div>
@@ -156,11 +75,10 @@ if (is_user_logged_in()) {
             <input type="hidden" name="msgtxt" value="Gracias por enviarnos tu petición. Estaremos contactándote lo antes posible.">
          </div>
       </form>
-
    </div>
-   <?php if (is_user_logged_in()) : ?>
-      <div class="col col-md-6">
-         <?php get_template_part('modules/scp/peticion/view/peticion-busquedas') ?>
-      </div>
-   <?php endif; ?>
+   <div class="col col-md-6" <?php echo $atributos['ocultarSidebar'] ?>>
+      <?php get_template_part($atributos['sidebar'])
+      ?>
+   </div>
 </div>
+<?php

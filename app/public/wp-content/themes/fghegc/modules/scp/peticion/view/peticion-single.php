@@ -46,8 +46,14 @@ $posted_on = sprintf(
     '<span>' . $time_string . '</span>'
 );
 
-$nombreasignada = get_user_by('id', get_post_meta($post->ID, '_asignar_a', true));
-$asignada_a = '<a href="' . site_url('/asignado-' . get_post_meta($post->ID, '_asignar_a', true))  . '">' . $nombreasignada->display_name . '</a>';
+$nombreasignada = get_user_by('ID', get_post_meta($post->ID, '_asignar_a', true));
+if ($nombreasignada != null) {
+    $nombre_asginada = $nombreasignada->display_name;
+} else {
+    $nombre_asginada = '';
+}
+
+$asignada_a = '<a href="' . site_url('/asignado-' . get_post_meta($post->ID, '_asignar_a', true))  . '">' . $nombre_asginada . '</a>';
 $asignada = (get_post_meta($post->ID, '_asignar_a', true) == '') ? ' Sin asignar.' : $asignada_a;
 $byline = sprintf(
     /* translators: %s: post author. */
@@ -130,7 +136,7 @@ if ($conteoUsuario->found_posts) {
                     </p>
                 </div>
                 <div class="col-2">
-                    <button id="oracion" type="button" class="btn btn-outline-danger" data-oracion="<?php echo $oraciones ?>" data-url="<?php echo admin_url('admin-ajax.php') ?>" data-post_id="<?php echo get_the_ID() ?>" data-oracion_id="<?php echo $conteoUsuario->post->ID ?>">
+                    <button id="oracion" type="button" class="btn btn-outline-danger" data-oracion="<?php echo $oraciones ?>" data-url="<?php echo admin_url('admin-ajax.php') ?>" data-post_id="<?php echo get_the_ID() ?>" data-oracion_id="<?php echo isset($conteoUsuario->post->ID) ? $conteoUsuario->post->ID : 0 ?>">
                         <span><i class="fas fa-praying-hands"></i></span><span><?php echo ' ' . $conteoOraciones->found_posts ?></span>
                     </button>
                 </div>
@@ -429,4 +435,11 @@ if ($conteoUsuario->found_posts) {
         <input type="hidden" name="redireccion" value="<?php echo site_url('/') ?>">
         <input type="hidden" name="msgtxt" value="Datos actualizados correctamente.">
     </form>
+    <div id="comentarios" class="mt-3">
+        <?php
+        if (comments_open() || get_comments_number())
+            comments_template()
+        ?>
+    </div>
+
 </section><!-- #post-<?php the_ID(); ?> -->
