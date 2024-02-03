@@ -36,28 +36,29 @@ $byline = sprintf(
 /*********************************/
 
 ?>
-<div id="tarjeta" <?php echo $atributos['ocultarPeticiones'] ?>>
-   <div class="card bg-dark text-white border-0 shadow">
-      <div class="card-header">
-         <p>
-            <?php
-            echo '<span>' . $posted_on . '</span>';
-            echo '<span> ' . $byline . '</span>';
-            ?>
-         </p>
-      </div>
-      <div class="card-body">
+<?php if ($atributos['verPeticiones']) : ?>
+   <div id="tarjeta" <?php echo $atributos['ocultarPeticiones'] ?>>
+      <div class="card bg-dark text-white border-0 shadow">
+         <div class="card-header">
+            <p>
+               <?php
+               echo '<span>' . $posted_on . '</span>';
+               echo '<span> ' . $byline . '</span>';
+               ?>
+            </p>
+         </div>
+         <div class="card-body">
 
-         <?php the_title(
-            sprintf(
-               '<h4><a href="%s">',
-               esc_url(get_permalink())
-            ),
-            '</a></h4>'
-         );
-         ?>
-         <?php
-         /*
+            <?php the_title(
+               sprintf(
+                  '<h4><a href="%s">',
+                  esc_url(get_permalink())
+               ),
+               '</a></h4>'
+            );
+            ?>
+            <?php
+            /*
          $taxonomy = 'category';
 
          // Get the term IDs assigned to post.
@@ -87,34 +88,35 @@ $byline = sprintf(
             
          }
          */
-         $categorias = get_categories(['object_ids' => get_the_ID()]);
-         ?>
+            $categorias = get_categories(['object_ids' => get_the_ID()]);
+            ?>
 
-         <?php foreach ($categorias as $categoria) :
-         ?>
-            <a class="tag-cloud-link" href="<?php echo get_post_type_archive_link('peticion') . '?cat=' . $categoria->term_id ?>"><?php echo $categoria->name ?></a>
-         <?php endforeach; ?>
+            <?php foreach ($categorias as $categoria) :
+            ?>
+               <a class="tag-cloud-link" href="<?php echo get_post_type_archive_link('peticion') . '?cat=' . $categoria->term_id ?>"><?php echo $categoria->name ?></a>
+            <?php endforeach; ?>
 
-         <p class="card-text">
-            <?php
-            if (has_excerpt()) {
-               echo get_the_excerpt();
-            } else {
-               echo wp_trim_words(get_the_content(), 18);
-            } ?><a href="<?php the_permalink() ?>" class="nu gray"><span class="ps-3 pe-1 fs-4"><i class="fas fa-glasses"></i></span>Leer más</a>
-         </p>
-         <a href="tel:<?php echo get_post_meta($post->ID, '_telefono', true) ?>"><span class="pe-2"><i class="fas fa-phone-alt"></i></span><?php echo get_post_meta($post->ID, '_telefono', true) ?></a><br>
-         <a href="mailto:<?php echo get_post_meta($post->ID, '_email', true) ?>"><span class="pe-2"><i class="fas fa-envelope"></i></span><?php echo get_post_meta($post->ID, '_email', true) ?></a>
-      </div>
-      <div class="card-footer text-dark">
-         <small class="text-muted">
-            <?php if (has_tag()) {
-               echo get_the_tag_list('<p><span><i class="fas fa-tag"></i></span> Etiquetas: ', ', ', '</p>');
-            } else {
-               echo '<span><i class="fas fa-tag"></i></span> Sin etiquetas.';
-            } ?>
-         </small>
-      </div>
-      <input type="hidden" name="post_id" value="<?php the_ID()  ?>">
-   </div><!-- #post-<?php the_ID(); ?> -->
-</div>
+            <p class="card-text">
+               <?php
+               if (has_excerpt()) {
+                  echo get_the_excerpt();
+               } else {
+                  echo wp_trim_words(get_the_content(), 18);
+               } ?><a href="<?php the_permalink() ?>" class="nu gray"><span class="ps-3 pe-1 fs-4"><i class="fas fa-glasses"></i></span>Leer más</a>
+            </p>
+            <a href="tel:<?php echo get_post_meta($post->ID, '_telefono', true) ?>"><span class="pe-2"><i class="fas fa-phone-alt"></i></span><?php echo get_post_meta($post->ID, '_telefono', true) ?></a><br>
+            <a href="mailto:<?php echo get_post_meta($post->ID, '_email', true) ?>"><span class="pe-2"><i class="fas fa-envelope"></i></span><?php echo get_post_meta($post->ID, '_email', true) ?></a>
+         </div>
+         <div class="card-footer text-dark">
+            <small class="text-muted">
+               <?php if (has_tag()) {
+                  echo get_the_tag_list('<p><span><i class="fas fa-tag"></i></span> Etiquetas: ', ', ', '</p>');
+               } else {
+                  echo '<span><i class="fas fa-tag"></i></span> Sin etiquetas.';
+               } ?>
+            </small>
+         </div>
+         <input type="hidden" name="post_id" value="<?php the_ID()  ?>">
+      </div><!-- #post-<?php the_ID(); ?> -->
+   </div>
+<?php endif; ?>

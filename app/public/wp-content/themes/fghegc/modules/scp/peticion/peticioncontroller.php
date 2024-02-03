@@ -21,6 +21,7 @@ class PeticionController
       $this->atributos['div3'] = 'col-md-7';
       $this->atributos['div5'] = 'col-md-5';
       $this->atributos['regresar'] = $postType;
+
       $this->atributos['subtitulo'] = $this->get_datosAtributos($postType)['subtitulo'];
       $this->atributos['div4'] = $this->get_datosAtributos($postType)['div4'];
       $this->atributos['agregarpost'] = $this->get_datosAtributos($postType)['agregarpost'];
@@ -33,10 +34,13 @@ class PeticionController
       $this->atributos['adminPeticiones'] = $this->get_datosAtributos($postType)['adminPeticiones'];
       $this->atributos['verPeticiones'] = $this->get_datosAtributos($postType)['verPeticiones'];
       $this->atributos['motivos'] = $this->get_datosAtributos($postType)['motivos'];
+      $this->atributos['verPeticiones'] = $this->get_datosAtributos($postType)['verPeticiones'];
+
       $this->atributos['asignacion'] = $this->get_datosSidebar()['asignacion'];
       $this->atributos['seguimiento'] = $this->get_datosSidebar()['seguimiento'];
       $this->atributos['cumpleanos'] = $this->get_datosSidebar()['cumpleanos'];
       $this->atributos['peticionesAsignadas'] = $this->get_datosSidebar()['peticionesAsignadas'];
+
 
       return $this->atributos;
    }
@@ -54,50 +58,55 @@ class PeticionController
       $datosAtributos['adminPeticiones'] = false;
       $datosAtributos['verPeticiones'] = false;
       $datosAtributos['asignados'] = [];
+      $datosAtributos['verPeticiones'] = false;
       if (is_user_logged_in()) {
          $usuarioRoles = wp_get_current_user()->roles;
          $datosAtributos['peticionClass'] = '';
-         if (in_array('administrator', $usuarioRoles) || in_array('useradmingeneral', $usuarioRoles) || in_array('useradminpeticion', $usuarioRoles)) {
-            $datosAtributos['agregarpost'] = 'modules/scp/' . $postType . '/view/' . $postType . '-agregar';
-            $datosAtributos['sidebar'] = 'modules/scp/' . $postType . '/view/' . $postType . '-sidebar';
-            $datosAtributos['ocultarPeticiones'] = '';
-            $datosAtributos['ocultarSidebar'] = '';
-            $datosAtributos['adminPeticiones'] = true;
+
+         if (in_array('administrator', $usuarioRoles) || in_array('useradmingeneral', $usuarioRoles) || in_array('useradminpeticion', $usuarioRoles) || in_array('peticiones', $usuarioRoles)) {
             $datosAtributos['verPeticiones'] = true;
-         } else {
-            if (in_array('peticiones', $usuarioRoles)) {
+            if (in_array('administrator', $usuarioRoles) || in_array('useradmingeneral', $usuarioRoles) || in_array('useradminpeticion', $usuarioRoles)) {
+               $datosAtributos['agregarpost'] = 'modules/scp/' . $postType . '/view/' . $postType . '-agregar';
                $datosAtributos['sidebar'] = 'modules/scp/' . $postType . '/view/' . $postType . '-sidebar';
-               $datosAtributos['ocultarSidebar'] = '';
                $datosAtributos['ocultarPeticiones'] = '';
+               $datosAtributos['ocultarSidebar'] = '';
+               $datosAtributos['adminPeticiones'] = true;
                $datosAtributos['verPeticiones'] = true;
+            } else {
+               if (in_array('peticiones', $usuarioRoles)) {
+                  $datosAtributos['sidebar'] = 'modules/scp/' . $postType . '/view/' . $postType . '-sidebar';
+                  $datosAtributos['ocultarSidebar'] = '';
+                  $datosAtributos['ocultarPeticiones'] = '';
+                  $datosAtributos['verPeticiones'] = true;
+               }
             }
-         }
-         $asignados =
-            [
-               'post_type' => 'peticion',
-               'orderby' => '_f_seguimiento',
-               'order' => 'DESC',
-               'posts_per_page' => -1,
-               'meta_query' =>
+            $asignados =
                [
-                  'relation' => 'AND',
+                  'post_type' => 'peticion',
+                  'orderby' => '_f_seguimiento',
+                  'order' => 'DESC',
+                  'posts_per_page' => -1,
+                  'meta_query' =>
                   [
-                     'key' => '_vigente',
-                     'value' => 1,
-                  ],
-                  [
-                     'key' => '_f_seguimiento',
-                     'type' => 'DATE',
-                     'value' => date('Y-m-d'),
-                     'compare' => '<=',
-                  ],
-                  [
-                     'key' => '_asignar_a',
-                     'value' => wp_get_current_user()->ID,
-                  ],
-               ]
-            ];
-         $datosAtributos['asignados'] = get_posts($asignados);
+                     'relation' => 'AND',
+                     [
+                        'key' => '_vigente',
+                        'value' => 1,
+                     ],
+                     [
+                        'key' => '_f_seguimiento',
+                        'type' => 'DATE',
+                        'value' => date('Y-m-d'),
+                        'compare' => '<=',
+                     ],
+                     [
+                        'key' => '_asignar_a',
+                        'value' => wp_get_current_user()->ID,
+                     ],
+                  ]
+               ];
+            $datosAtributos['asignados'] = get_posts($asignados);
+         }
       }
 
       $datosAtributos['templatepart'] = 'modules/scp/' . $postType . '/view/' . $postType;

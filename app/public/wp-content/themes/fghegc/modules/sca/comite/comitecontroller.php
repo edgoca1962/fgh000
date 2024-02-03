@@ -34,12 +34,11 @@ class ComiteController
    private function get_datosAtributos($postType)
    {
       $datosAtributos = [];
+      $datosAtributos['agregarpost'] = '';
       if (is_user_logged_in()) {
          $usuarioRoles = wp_get_current_user()->roles;
          if (in_array('administrator', $usuarioRoles) || in_array('useradmingeneral', $usuarioRoles) || in_array('useradmincomite', $usuarioRoles)) {
             $datosAtributos['agregarpost'] = 'modules/sca/' . $postType . '/view/' . $postType . '-agregar';
-         } else {
-            $datosAtributos['agregarpost'] = '';
          }
       }
 
