@@ -13,6 +13,7 @@ class AcuerdoController
    private function __construct()
    {
       $this->atributos = [];
+      add_role('acuerdos', 'Sistema Control Acuerdos', get_role('subscriber')->capabilities);
    }
    public function get_atributos($postType)
    {
@@ -59,6 +60,7 @@ class AcuerdoController
       $this->atributos['comites'] = $this->get_datosComites()['comites'];
       $this->atributos['datosComite'] = $this->get_datosComites()['datosComite'];
       $this->atributos['totalAcuerdos'] = $this->get_totalAcuerdos();
+      $this->atributos['visualizar'] = $this->get_visualizar();
 
       return $this->atributos;
    }
@@ -466,70 +468,82 @@ class AcuerdoController
 
       return $acuerdosTotales;
    }
+   private function get_visualizar()
+   {
+      $visualizar = false;
+      if (is_user_logged_in()) {
+         $usuario = wp_get_current_user();
+         $usuarioRoles = $usuario->roles;
+         if (in_array('administrator', $usuarioRoles) || in_array('useradmingeneral', $usuarioRoles) || in_array('acuerdos', $usuarioRoles)) {
+            $vsualizar = true;
+         }
+      }
+      return $visualizar;
+   }
    public function get_verAcuerdos()
    {
-      $usuario = wp_get_current_user();
-      $verAcuerdosComite = [];
-
-      $comites = get_posts([
-         'post_type' => 'comite',
-         'numberposts' => -1,
-         'post_status' => 'publish',
-      ]);
-
-      $miembros = get_posts([
-         'post_type' => 'miembro',
-         'numberposts' => -1,
-         'post_status' => 'publish',
-         'meta_key' => '_usr_id',
-         'meta_value' => $usuario->ID,
-      ]);
 
       $userAdmin = false;
+      $verAcuerdosComite = [];
       if (is_user_logged_in()) {
          $usuario = wp_get_current_user();
          $usuarioRoles = $usuario->roles;
          if (in_array('administrator', $usuarioRoles) || in_array('useradmingeneral', $usuarioRoles)) {
             $userAdmin = true;
          }
-      }
 
-      if ($userAdmin) {
-         foreach ($comites as $comite) {
-            $verAcuerdosComite[$comite->ID] = 'todos';
-         }
-      } else {
-         $miembroJunta = false;
-         foreach ($miembros as $miembro) {
-            if (preg_match("/Junta/i", $miembro->post_title)) {
-               $miembroJunta = true;
-            }
-         }
-         if ($miembroJunta) {
+         $comites = get_posts([
+            'post_type' => 'comite',
+            'numberposts' => -1,
+            'post_status' => 'publish',
+         ]);
+
+         $miembros = get_posts([
+            'post_type' => 'miembro',
+            'numberposts' => -1,
+            'post_status' => 'publish',
+            'meta_key' => '_usr_id',
+            'meta_value' => $usuario->ID,
+         ]);
+
+         if ($userAdmin) {
             foreach ($comites as $comite) {
                $verAcuerdosComite[$comite->ID] = 'todos';
             }
          } else {
-            $coordinador = false;
+            $miembroJunta = false;
             foreach ($miembros as $miembro) {
-               if (preg_match("/Coordina/i", $miembro->post_title)) {
-                  $verAcuerdosComite[get_post_meta($miembro->ID, '_comite_id', true)] = 'todos';
-                  $coordinador = true;
+               if (preg_match("/Junta/i", $miembro->post_title)) {
+                  $miembroJunta = true;
                }
             }
-            if ($coordinador) {
+            if ($miembroJunta) {
                foreach ($comites as $comite) {
-                  if ($verAcuerdosComite[$comite->ID] == null) {
-                     $verAcuerdosComite[$comite->ID] = 'asignados';
-                  }
+                  $verAcuerdosComite[$comite->ID] = 'todos';
                }
             } else {
-               foreach ($comites as $comite) {
-                  $verAcuerdosComite[$comite->ID] = 'asignados';
+               $coordinador = false;
+               foreach ($miembros as $miembro) {
+                  if (preg_match("/Coordina/i", $miembro->post_title)) {
+                     $verAcuerdosComite[get_post_meta($miembro->ID, '_comite_id', true)] = 'todos';
+                     $coordinador = true;
+                  }
+               }
+               if ($coordinador) {
+                  foreach ($comites as $comite) {
+                     if ($verAcuerdosComite[$comite->ID] == null) {
+                        $verAcuerdosComite[$comite->ID] = 'asignados';
+                     }
+                  }
+               } else {
+                  foreach ($comites as $comite) {
+                     $verAcuerdosComite[$comite->ID] = 'asignados';
+                  }
                }
             }
          }
       }
+
       return $verAcuerdosComite;
    }
    public function get_vigencia_acuerdos($f_compromiso, $vigente)
@@ -551,26 +565,29 @@ class AcuerdoController
    public function get_miembroJunta()
    {
       $miembroJunta = false;
-      $usuario = wp_get_current_user();
+      if (is_user_logged_in()) {
 
-      $miembros = get_posts([
-         'post_type' => 'miembro',
-         'numberposts' => -1,
-         'post_status' => 'publish',
-         'meta_key' => '_usr_id',
-         'meta_value' => $usuario->ID,
-      ]);
+         $usuario = wp_get_current_user();
 
-      if (count($miembros)) {
-         foreach ($miembros as $miembro) {
-            if ($usuario->ID == get_post_meta($miembro->ID, '_usr_id', true)) {
-               if (preg_match("/Junta/i", $miembro->post_title)) {
-                  $miembroJunta = true;
+         $miembros = get_posts([
+            'post_type' => 'miembro',
+            'numberposts' => -1,
+            'post_status' => 'publish',
+            'meta_key' => '_usr_id',
+            'meta_value' => $usuario->ID,
+         ]);
+
+         if (count($miembros)) {
+            foreach ($miembros as $miembro) {
+               if ($usuario->ID == get_post_meta($miembro->ID, '_usr_id', true)) {
+                  if (preg_match("/Junta/i", $miembro->post_title)) {
+                     $miembroJunta = true;
+                  }
                }
             }
+         } else {
+            $miembroJunta = false;
          }
-      } else {
-         $miembroJunta = false;
       }
       return $miembroJunta;
    }
