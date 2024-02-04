@@ -468,14 +468,14 @@ class AcuerdoController
 
       return $acuerdosTotales;
    }
-   private function get_visualizar()
+   public function get_visualizar()
    {
       $visualizar = false;
       if (is_user_logged_in()) {
          $usuario = wp_get_current_user();
          $usuarioRoles = $usuario->roles;
          if (in_array('administrator', $usuarioRoles) || in_array('useradmingeneral', $usuarioRoles) || in_array('acuerdos', $usuarioRoles)) {
-            $vsualizar = true;
+            $visualizar = true;
          }
       }
       return $visualizar;

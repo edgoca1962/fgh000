@@ -7,9 +7,11 @@
  */
 
 use FGHEGC\Modules\Core\CoreController;
+use FGHEGC\Modules\Sca\Acuerdo\AcuerdoController;
 
 $atributos = CoreController::get_instance()->get_atributos('acuerdo');
 $graficos = $atributos['totalAcuerdos']['graficos'];
+
 
 ?>
 <?php if ($atributos['visualizar']) : ?>

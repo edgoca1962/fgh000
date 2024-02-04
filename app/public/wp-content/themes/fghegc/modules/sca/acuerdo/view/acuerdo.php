@@ -17,7 +17,7 @@ $status = $acuerdo->get_vigencia_acuerdos(get_post_meta(get_the_ID(), '_f_compro
 $asignado = (get_post_meta(get_the_ID(), '_asignar_id', true) === 0) ? false : get_userdata(get_post_meta(get_the_ID(), '_asignar_id', true));
 
 ?>
-<?php if ($atributos['userAdmin']) : ?>
+<?php if ($atributos['visualizar']) : ?>
 
    <div id="elemento_<?php echo get_the_ID() ?>" class="col">
       <div class="card mb-5 shadow" style="background: linear-gradient(to right, rgba(64, 154, 247, 1), rgba(43, 170, 177, 1)); color: #fff;">

@@ -16,8 +16,8 @@ $miembroJunta = AcuerdoController::get_instance()->get_miembroJunta();
 
 
 ?>
-<div class="row mb-5">
-   <?php if ($atributos['visualizar']) : ?>
+<?php if ($atributos['visualizar']) : ?>
+   <div class="row mb-5">
       <div class="position-relative">
          <form id="frmbuscar" class="d-flex">
             <input id="impbuscar" class="form-control w-100 me-2" type="text" style="width: 0;" placeholder="Buscar Acuerdo" aria-label="Search">
@@ -30,55 +30,55 @@ $miembroJunta = AcuerdoController::get_instance()->get_miembroJunta();
          </div>
 
       </div>
-</div>
-
-<div class="row ms-3 mb-5">
-   <h5>Acuerdos por Estatus</h5>
-   <?php foreach ($totalAcuerdos['vigencias'] as $dato) { ?>
-      <div class="row">
-         <div class="col">
-            <a href="<?php echo get_post_type_archive_link('acuerdo') . '?cpt=acuerdo&vigencia=' . $dato['codigo'] . '&asignar_id=' . get_current_user_id() ?>">Acuerdos <?php echo $dato['etiqueta'] ?></a>
-            <span class="ms-1">(
-               <?php echo $dato['total'] ?> )
-            </span>
-         </div>
-      </div>
-   <?php } ?>
-</div>
-
-<div class="row ms-3 mb-5">
-   <h5>Acuerdos por Comité</h5>
-   <?php foreach ($totalAcuerdos['comites'] as $dato) { ?>
-      <div class="row">
-         <div class="col">
-            <a href="<?php echo esc_url(site_url('/acuerdo-vigencia-comite')) . '?comite_id=' . $dato['comite_id'] ?>">
-               <?php echo $dato['nombre'] ?>
-            </a>
-            <span class="ms-1">(
-               <?php echo $dato['total'] ?> )
-            </span>
-         </div>
-      </div>
-   <?php } ?>
-</div>
-
-<?php if ($userAdmin || $miembroJunta) : ?>
-   <div class="row ms-3 mb-5">
-      <h5>Acuerdos asignados a:</h5>
-      <div class="row row-cols-1">
-         <?php foreach ($totalAcuerdos['asignados'] as $usr_id => $dato) { ?>
-            <div class="row">
-               <div class="col">
-                  <a href="<?php echo esc_url(site_url('/acuerdo-vigencia-usrs')) . '?asignar_id=' . $usr_id ?>">
-                     <?php echo $dato['nombre'] ?>
-                  </a>
-                  <span class="ms-1">(
-                     <?php echo $dato['total'] ?> )
-                  </span>
-               </div>
-            </div>
-         <?php } ?>
-      </div>
    </div>
-<?php endif; ?>
+
+   <div class="row ms-3 mb-5">
+      <h5>Acuerdos por Estatus</h5>
+      <?php foreach ($totalAcuerdos['vigencias'] as $dato) { ?>
+         <div class="row">
+            <div class="col">
+               <a href="<?php echo get_post_type_archive_link('acuerdo') . '?cpt=acuerdo&vigencia=' . $dato['codigo'] . '&asignar_id=' . get_current_user_id() ?>">Acuerdos <?php echo $dato['etiqueta'] ?></a>
+               <span class="ms-1">(
+                  <?php echo $dato['total'] ?> )
+               </span>
+            </div>
+         </div>
+      <?php } ?>
+   </div>
+
+   <div class="row ms-3 mb-5">
+      <h5>Acuerdos por Comité</h5>
+      <?php foreach ($totalAcuerdos['comites'] as $dato) { ?>
+         <div class="row">
+            <div class="col">
+               <a href="<?php echo esc_url(site_url('/acuerdo-vigencia-comite')) . '?comite_id=' . $dato['comite_id'] ?>">
+                  <?php echo $dato['nombre'] ?>
+               </a>
+               <span class="ms-1">(
+                  <?php echo $dato['total'] ?> )
+               </span>
+            </div>
+         </div>
+      <?php } ?>
+   </div>
+
+   <?php if ($userAdmin || $miembroJunta) : ?>
+      <div class="row ms-3 mb-5">
+         <h5>Acuerdos asignados a:</h5>
+         <div class="row row-cols-1">
+            <?php foreach ($totalAcuerdos['asignados'] as $usr_id => $dato) { ?>
+               <div class="row">
+                  <div class="col">
+                     <a href="<?php echo esc_url(site_url('/acuerdo-vigencia-usrs')) . '?asignar_id=' . $usr_id ?>">
+                        <?php echo $dato['nombre'] ?>
+                     </a>
+                     <span class="ms-1">(
+                        <?php echo $dato['total'] ?> )
+                     </span>
+                  </div>
+               </div>
+            <?php } ?>
+         </div>
+      </div>
+   <?php endif; ?>
 <?php endif; ?>
