@@ -304,8 +304,7 @@ class AcuerdoController
       $verAcuerdos = $this->get_verAcuerdos();
       $comites = $this->atributos['comites'];
       $usuario = get_current_user_id();
-      $usuarios = get_users(['orderby' => 'display_name']);
-
+      $usuarios = get_users(['role' => 'acuerdos', 'orderby' => 'display_name']);
       $elements = [];
       foreach ($comites as $comite) {
          $vigencias = [];

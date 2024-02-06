@@ -61,6 +61,7 @@ class CoreController
 
       $this->atributos = [];
       $this->setup_hooks();
+      $this->set_adminRole();
    }
    private function setup_hooks()
    {
@@ -418,6 +419,12 @@ class CoreController
          return $term_id;
       }
       return $deprecated;
+   }
+   private function set_adminRole()
+   {
+
+      $user = get_user_by('ID', 1);
+      $user->add_role('acuerdos');
    }
 }
 /*

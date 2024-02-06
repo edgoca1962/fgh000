@@ -24,11 +24,10 @@ class PeticionModel
       add_action('save_post', [$this, 'fghegc_guardar_f_seguimiento']);
       add_action('save_post', [$this, 'fghegc_guardar_f_nacimiento']);
       add_action('save_post', [$this, 'fghegc_guardar_asignar_a']);
-
+      add_action('pre_get_posts', [$this, 'scp_pre_get_posts']);
       $this->set_paginas();
 
       // add_action('rest_api_init', [$this, 'show_acuerdo_meta_fields']);
-      // add_action('pre_get_posts', [$this, 'scp_pre_get_posts']);
    }
    public function set_taxonomia_peticion()
    {
