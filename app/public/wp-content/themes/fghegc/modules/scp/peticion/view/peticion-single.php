@@ -5,8 +5,14 @@
  *
  * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
  *
- * @package semillacr
+ * @package FGHEGC
  */
+
+use FGHEGC\Modules\Core\CoreController;
+
+$core = CoreController::get_instance();
+$atributos = $core->get_atributos(get_post_type());
+
 $oracion_id = $post->ID;
 $usuario = wp_get_current_user();
 $editores = [1, 14];
@@ -439,7 +445,7 @@ if ($conteoUsuario->found_posts) {
         <div id="comentarios" class="mt-3">
             <?php
             if (comments_open() || get_comments_number())
-                comments_template()
+                comments_template('/modules/scp/peticion/view/peticion-comments-single.php');
             ?>
         </div>
 

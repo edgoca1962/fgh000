@@ -82,6 +82,12 @@ $peticiones = PeticionController::get_instance();
    </div>
    <div class="row">
       <h4>Comentarios de seguimiento</h4>
+      <div id="comentarios" class="mt-3">
+         <?php
+         if (comments_open() || get_comments_number())
+            comments_template('/modules/scp/peticion/view/peticion-comments-sidebar.php')
+         ?>
+      </div>
    </div>
    <div class="row">
       <div class="col">

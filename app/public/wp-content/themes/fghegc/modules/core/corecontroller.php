@@ -39,6 +39,7 @@ class CoreController
       require_once FGHEGC_DIR_PATH . '/modules/core/helpers/twentytwentyone/template-tags.php';
       require_once FGHEGC_DIR_PATH . "/modules/core/helpers/walker.php";
       require_once FGHEGC_DIR_PATH . "/modules/core/view/core-comments.php";
+      require_once FGHEGC_DIR_PATH . "/modules/scp/peticion/view/peticion-comments-single-function.php";
       require_once WP_PLUGIN_DIR . '/getid3/getid3.php';
 
       add_filter('manage_edit-motivo_columns', [$this, 'fghegc_id_column']);

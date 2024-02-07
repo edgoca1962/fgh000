@@ -15,6 +15,9 @@
  * entered the password we will return early without loading the comments.
  */
 
+$commentcbk = 'fghegc_get_comments';
+// $commentcbk = 'fghegc_get_comments_peticion';
+
 if (post_password_required()) {
    return;
 }
@@ -46,7 +49,7 @@ if (post_password_required()) {
                'walker'             => null,
                'max_depth'          => '',
                'style'              => 'ol',
-               'callback'           => 'fghegc_get_comments',
+               'callback'           => $commentcbk,
                'end-callback'       => null,
                'type'               => 'all',
                'replay_text'        => 'Comentar',

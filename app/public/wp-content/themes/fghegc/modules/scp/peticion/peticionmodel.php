@@ -718,9 +718,9 @@ class PeticionModel
    {
       if ($query->is_main_query() && !is_admin()) {
 
-         if ($query->is_tag() || $query->is_category()) {
-            $query->set('post_type', ['post', 'peticion']);
-         }
+         // if ($query->is_tag() || $query->is_category()) {
+         //    $query->set('post_type', ['post', 'peticion']);
+         // }
          if (is_post_type_archive('peticion')) {
             if (isset($_GET['asignado'])) {
                $asignar_a = intval(sanitize_text_field($_GET['asignado']));
@@ -730,11 +730,20 @@ class PeticionModel
                      'value' => $asignar_a
                   ];
             } else {
-               $asignar_a_mq =
-                  [
-                     'key' => '_asignar_a',
-                     'value' => get_current_user_id()
-                  ];
+               if (get_current_user_id() == 1) {
+                  $asignar_a_mq =
+                     [
+                        'key' => '_asignar_a',
+                        'value' => '',
+                        'compare' => '!='
+                     ];
+               } else {
+                  $asignar_a_mq =
+                     [
+                        'key' => '_asignar_a',
+                        'value' => get_current_user_id()
+                     ];
+               }
             }
             $query->set(
                'meta_query',
