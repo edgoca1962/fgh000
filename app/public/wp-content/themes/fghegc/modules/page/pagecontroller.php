@@ -35,6 +35,7 @@ class PageController
          $sca = ['comite', 'acta', 'acuerdo', 'miembro', 'puesto'];
          $scp = ['peticion', 'oracion'];
          $sae = ['evento', 'inscripcion'];
+         $scc = ['beneficiario', 'comedor'];
          if (in_array($modulo, $sca)) {
             $datosAtributos['templatepart'] = 'modules/sca/' . $modulo . '/view/' . $slug;
          } elseif (in_array($modulo, $scp)) {
@@ -44,6 +45,8 @@ class PageController
             }
          } elseif (in_array($modulo, $sae)) {
             $datosAtributos['templatepart'] = 'modules/sae/' . $modulo . '/view/' . $slug;
+         } elseif (in_array($modulo, $scc)) {
+            $datosAtributos['templatepart'] = 'modules/scc/' . $modulo . '/view/' . $slug;
          } else {
             $datosAtributos['templatepart'] = 'modules/' . $modulo . '/view/' . $slug;
          }
