@@ -24,7 +24,7 @@ function autoloader($resource)
    $directory = '';
    $file_name = '';
    if ('modules' === $path[0]) {
-      $modulos = ['sae', 'sca', 'scp'];
+      $modulos = ['sae', 'sca', 'scp', 'scc'];
       if (in_array($path[1], $modulos)) {
          $directory = $path[1] . '/' . $path[2];
          $file_name = trim(strtolower($path[3]));

@@ -21,6 +21,8 @@ use FGHEGC\Modules\Sca\Miembro\MiembroController;
 use FGHEGC\Modules\Sca\Miembro\MiembroModel;
 use FGHEGC\Modules\Sca\Puesto\PuestoController;
 use FGHEGC\Modules\Sca\Puesto\PuestoModel;
+use FGHEGC\Modules\Scc\Beneficiario\BeneficiarioController;
+use FGHEGC\Modules\Scc\Beneficiario\BeneficiarioModel;
 use FGHEGC\modules\scp\oracion\OracionModel;
 use FGHEGC\Modules\Scp\Peticion\PeticionController;
 use FGHEGC\Modules\Scp\Peticion\PeticionModel;
@@ -42,12 +44,6 @@ class CoreController
       require_once FGHEGC_DIR_PATH . "/modules/scp/peticion/view/peticion-comments-single-function.php";
       require_once WP_PLUGIN_DIR . '/getid3/getid3.php';
 
-      add_filter('manage_edit-motivo_columns', [$this, 'fghegc_id_column']);
-      add_filter('manage_motivo_custom_column', [$this, 'fghegc_id_column_content'], 10, 3);
-
-      add_filter('manage_edit-category_columns', [$this, 'custom_category_id_column']);
-      add_filter('manage_category_custom_column', [$this, 'custom_category_id_column_content'], 10, 3);
-
       CoreModel::get_instance();
       PeticionModel::get_instance();
       OracionModel::get_instance();
@@ -59,6 +55,7 @@ class CoreController
       EventoModel::get_instance();
       InscripcionModel::get_instance();
       MusicModel::get_instance();
+      BeneficiarioModel::get_instance();
 
       $this->atributos = [];
       $this->setup_hooks();
@@ -69,6 +66,11 @@ class CoreController
       add_action('after_setup_theme', [$this, 'fghegc_theme_functionality']);
       add_action('wp_enqueue_scripts', [$this, 'fghegc_register_scripts_styles']);
       add_action('phpmailer_init', [$this, 'fghegc_smtpconfig']);
+
+      add_filter('manage_edit-motivo_columns', [$this, 'fghegc_id_column']);
+      add_filter('manage_motivo_custom_column', [$this, 'fghegc_id_column_content'], 10, 3);
+      add_filter('manage_edit-category_columns', [$this, 'custom_category_id_column']);
+      add_filter('manage_category_custom_column', [$this, 'custom_category_id_column_content'], 10, 3);
    }
    public function fghegc_theme_functionality()
    {
@@ -233,6 +235,10 @@ class CoreController
 
          case 'peticion':
             $this->atributos = PeticionController::get_instance()->get_atributos($postType);
+            break;
+
+         case 'beneficiario':
+            $this->atributos = BeneficiarioController::get_instance()->get_atributos($postType);
             break;
 
          default:
