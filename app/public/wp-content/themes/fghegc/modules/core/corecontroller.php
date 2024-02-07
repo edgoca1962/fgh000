@@ -23,6 +23,7 @@ use FGHEGC\Modules\Sca\Puesto\PuestoController;
 use FGHEGC\Modules\Sca\Puesto\PuestoModel;
 use FGHEGC\Modules\Scc\Beneficiario\BeneficiarioController;
 use FGHEGC\Modules\Scc\Beneficiario\BeneficiarioModel;
+use FGHEGC\Modules\Scc\DivPolCri\DivPolCriModel;
 use FGHEGC\modules\scp\oracion\OracionModel;
 use FGHEGC\Modules\Scp\Peticion\PeticionController;
 use FGHEGC\Modules\Scp\Peticion\PeticionModel;
@@ -56,6 +57,7 @@ class CoreController
       InscripcionModel::get_instance();
       MusicModel::get_instance();
       BeneficiarioModel::get_instance();
+      DivPolCriModel::get_instance();
 
       $this->atributos = [];
       $this->setup_hooks();

@@ -20,12 +20,14 @@ class BeneficiarioController
       $this->atributos['div5'] = 'col-md-4';
       $this->atributos['templatepartnone'] = 'modules/scc/' . $postType . '/view/' . $postType . '-none';
       $this->atributos['sidebar'] = 'modules/scc/acuerdo/view/beneficiario-sidebar';
+      $this->atributos['imagen'] = FGHEGC_DIR_URI . '/assets/img/scclogotransparente.png';
 
       $this->atributos['subtitulo'] = $this->get_datosAtributos($postType)['subtitulo'];
       $this->atributos['div4'] = $this->get_datosAtributos($postType)['div4'];
       $this->atributos['agregarpost'] = $this->get_datosAtributos($postType)['agregarpost'];
       $this->atributos['templatepart'] = $this->get_datosAtributos($postType)['templatepart'];
-      $this->atributos['imagen'] = FGHEGC_DIR_URI . '/assets/img/scclogo.jpeg';
+
+      return $this->atributos;
    }
    private function get_datosAtributos($postType)
    {
