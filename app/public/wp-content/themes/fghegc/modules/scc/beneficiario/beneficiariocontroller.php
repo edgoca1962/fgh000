@@ -58,4 +58,73 @@ class BeneficiarioController
 
       return $datosAtributos;
    }
+   public function get_provincias()
+   {
+      global $wpdb;
+
+      $sql =
+         "SELECT DISTINCT t1.meta_value AS ID, t2.meta_value AS provincia
+      FROM $wpdb->posts
+      INNER JOIN $wpdb->postmeta t1
+         ON (ID = t1.post_id)
+      INNER JOIN $wpdb->postmeta t2
+         ON (ID = t2.post_id)
+      WHERE post_type = 'divpolcri'
+         AND (t1.meta_key = '_provincia_id' AND t1.meta_value !='')
+         AND (t2.meta_key = '_provincia' AND t2.meta_value !='')
+      ORDER BY t2.meta_value
+      ";
+
+      $provincias = $wpdb->get_results($sql, ARRAY_A);
+
+      return $provincias;
+   }
+   public function get_cantones($provincia_id = 2)
+   {
+      global $wpdb;
+
+      $sql =
+         "SELECT DISTINCT t1.meta_value AS ID, t2.meta_value AS canton
+      FROM $wpdb->posts
+      INNER JOIN $wpdb->postmeta t1
+         ON (ID = t1.post_id)
+      INNER JOIN $wpdb->postmeta t2
+         ON (ID = t2.post_id)
+      INNER JOIN $wpdb->postmeta t3
+         ON (ID = t3.post_id)
+      WHERE post_type = 'divpolcri'
+         AND (t1.meta_key = '_canton_id' AND t1.meta_value !='')
+         AND (t2.meta_key = '_canton' AND t2.meta_value !='')
+         AND (t3.meta_key = '_provincia_id' AND t3.meta_value =$provincia_id)
+      ORDER BY t2.meta_value
+      ";
+
+      $cantones = $wpdb->get_results($sql, ARRAY_A);
+
+      return $cantones;
+   }
+   public function get_distritos($canton_id = 507)
+   {
+      global $wpdb;
+
+      $sql =
+         "SELECT DISTINCT t1.meta_value AS ID, t2.meta_value AS distrito
+      FROM $wpdb->posts
+      INNER JOIN $wpdb->postmeta t1
+         ON (ID = t1.post_id)
+      INNER JOIN $wpdb->postmeta t2
+         ON (ID = t2.post_id)
+      INNER JOIN $wpdb->postmeta t3
+         ON (ID = t3.post_id)
+      WHERE post_type = 'divpolcri'
+         AND (t1.meta_key = '_distrito_id' AND t1.meta_value !='')
+         AND (t2.meta_key = '_distrito' AND t2.meta_value !='')
+         AND (t3.meta_key = '_canton_id' AND t3.meta_value = $canton_id)
+      ORDER BY t2.meta_value
+      ";
+
+      $distritos = $wpdb->get_results($sql, ARRAY_A);
+
+      return $distritos;
+   }
 }

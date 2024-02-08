@@ -27,7 +27,7 @@ class BeneficiarioModel
          'show_in_rest' => true,
          'rest_base' => 'beneficiarios',
          'menu_icon' => 'dashicons-book',
-         'supports' => array('title'),
+         'supports' => array('title', 'editor', 'custom-fields', 'comments'),
       );
 
       register_post_type($type, $args);
