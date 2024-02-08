@@ -19,8 +19,9 @@ class BeneficiarioController
       $this->atributos['div3'] = 'col-md-8';
       $this->atributos['div5'] = 'col-md-4';
       $this->atributos['templatepartnone'] = 'modules/scc/' . $postType . '/view/' . $postType . '-none';
-      $this->atributos['sidebar'] = 'modules/scc/acuerdo/view/beneficiario-sidebar';
-      $this->atributos['imagen'] = FGHEGC_DIR_URI . '/assets/img/scclogotransparente.png';
+      $this->atributos['sidebar'] = 'modules/scc/beneficiario/view/beneficiario-sidebar';
+      $this->atributos['imagen'] = FGHEGC_DIR_URI . '/assets/img/manosorando.jpeg';
+      $this->atributos['regresar'] = $postType;
 
       $this->atributos['subtitulo'] = $this->get_datosAtributos($postType)['subtitulo'];
       $this->atributos['div4'] = $this->get_datosAtributos($postType)['div4'];
@@ -53,7 +54,7 @@ class BeneficiarioController
       } else {
          $datosAtributos['templatepart'] = 'modules/scc/' . $postType . '/view/' . $postType;
          $datosAtributos['subtitulo'] = '';
-         $datosAtributos['div4'] = 'row row-cols-1 row-cols-md-2 g-4 pb-3';
+         $datosAtributos['div4'] = '';
       }
 
       return $datosAtributos;

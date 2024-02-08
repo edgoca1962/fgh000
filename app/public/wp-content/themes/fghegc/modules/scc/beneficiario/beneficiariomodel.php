@@ -11,6 +11,26 @@ class BeneficiarioModel
    public function __construct()
    {
       $this->set_paginas();
+      add_action('init', [$this, 'set_beneficiario']);
+      add_action('add_meta_boxes', [$this, 'set_campos']);
+      add_action('save_post', [$this, 'save_nombre']);
+      add_action('save_post', [$this, 'save_p_apellido']);
+      add_action('save_post', [$this, 'save_s_apellido']);
+      add_action('save_post', [$this, 'save_f_nacimiento']);
+      add_action('save_post', [$this, 'save_f_ingreso']);
+      add_action('save_post', [$this, 'save_f_salida']);
+      add_action('save_post', [$this, 'save_peso']);
+      add_action('save_post', [$this, 'save_estatura']);
+      add_action('save_post', [$this, 'save_provincia_id']);
+      add_action('save_post', [$this, 'save_canton_id']);
+      add_action('save_post', [$this, 'save_distrito_id']);
+      add_action('save_post', [$this, 'save_direccion']);
+      add_action('save_post', [$this, 'save_email']);
+      add_action('save_post', [$this, 'save_t_principal']);
+      add_action('save_post', [$this, 'save_t_otros']);
+      add_action('save_post', [$this, 'save_n_madre']);
+      add_action('save_post', [$this, 'save_n_padre']);
+      add_action('pre_get_posts', [$this, 'set_pre_get_posts']);
    }
    public function set_beneficiario()
    {
@@ -89,9 +109,697 @@ class BeneficiarioModel
       ];
       return $capacidades;
    }
+
+   public function set_campos()
+   {
+      add_meta_box(
+         '_nombre',
+         'Nombre',
+         [$this, 'set_nombre_cbk'],
+         'beneficiario',
+         'normal',
+         'default'
+      );
+      add_meta_box(
+         '_p_apellido',
+         'Primer Apellido',
+         [$this, 'set_p_apellido_cbk'],
+         'beneficiario',
+         'normal',
+         'default'
+      );
+      add_meta_box(
+         '_s_apellido',
+         'Segundo Apellido',
+         [$this, 'set_s_apellido_cbk'],
+         'beneficiario',
+         'normal',
+         'default'
+      );
+      add_meta_box(
+         '_f_nacimiento',
+         'Fecha de Nacimiento',
+         [$this, 'set_f_nacimiento_cbk'],
+         'beneficiario',
+         'normal',
+         'default'
+      );
+      add_meta_box(
+         '_f_ingreso',
+         'Fecha de Ingreso',
+         [$this, 'set_f_ingreso_cbk'],
+         'beneficiario',
+         'normal',
+         'default'
+      );
+      add_meta_box(
+         '_f_salida',
+         'Fecha de Salida',
+         [$this, 'set_f_salida_cbk'],
+         'beneficiario',
+         'normal',
+         'default'
+      );
+      add_meta_box(
+         '_peso',
+         'Peso en Kilos',
+         [$this, 'set_peso_cbk'],
+         'beneficiario',
+         'normal',
+         'default'
+      );
+      add_meta_box(
+         '_estatura',
+         'Estatura en',
+         [$this, 'set_estatura_cbk'],
+         'beneficiario',
+         'normal',
+         'default'
+      );
+      add_meta_box(
+         '_provincia_id',
+         'Provincia ID',
+         [$this, 'set_provincia_id_cbk'],
+         'beneficiario',
+         'normal',
+         'default'
+      );
+      add_meta_box(
+         '_canton_id',
+         'Cantón ID',
+         [$this, 'set_canton_id_cbk'],
+         'beneficiario',
+         'normal',
+         'default'
+      );
+      add_meta_box(
+         '_distrito_id',
+         'Distrito ID',
+         [$this, 'set_distrito_id_cbk'],
+         'beneficiario',
+         'normal',
+         'default'
+      );
+      add_meta_box(
+         '_direccion',
+         'Dirección',
+         [$this, 'set_direccion_cbk'],
+         'beneficiario',
+         'normal',
+         'default'
+      );
+      add_meta_box(
+         '_email',
+         'e-mail',
+         [$this, 'set_email_cbk'],
+         'beneficiario',
+         'normal',
+         'default'
+      );
+      add_meta_box(
+         '_t_principal',
+         'Teléfono Principal',
+         [$this, 'set_t_principal_cbk'],
+         'beneficiario',
+         'normal',
+         'default'
+      );
+      add_meta_box(
+         '_t_otros',
+         'Otros Teléfonos',
+         [$this, 'set_t_otros_cbk'],
+         'beneficiario',
+         'normal',
+         'default'
+      );
+      add_meta_box(
+         '_n_madre',
+         'Nombre de la Madre o Tutor',
+         [$this, 'set_n_madre_cbk'],
+         'beneficiario',
+         'normal',
+         'default'
+      );
+      add_meta_box(
+         '_n_padre',
+         'Nombre del Padre',
+         [$this, 'set_n_padre_cbk'],
+         'beneficiario',
+         'normal',
+         'default'
+      );
+   }
+   public function set_nombre_cbk($post)
+   {
+      wp_nonce_field('nombre_nonce', 'nombre_nonce');
+      $nombre = get_post_meta($post->ID, '_nombre', true);
+      echo '<input type="text" style="width:20%" id="nombre" name="nombre" value="' . esc_attr($nombre) . '" ></input>';
+   }
+   public function save_nombre($post_id)
+   {
+      if (!isset($_POST['nombre_nonce'])) {
+         return;
+      }
+      if (!wp_verify_nonce($_POST['nombre_nonce'], 'nombre_nonce')) {
+         return;
+      }
+      if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+         return;
+      }
+      if (isset($_POST['post_type']) && 'page' == $_POST['post_type']) {
+         if (!current_user_can('edit_page', $post_id)) {
+            return;
+         }
+      } else {
+         if (!current_user_can('edit_post', $post_id)) {
+            return;
+         }
+      }
+      if (!isset($_POST['nombre'])) {
+         return;
+      }
+      $nombre = sanitize_text_field($_POST['nombre']);
+      update_post_meta($post_id, '_nombre', $nombre);
+   }
+   public function set_p_apellido_cbk($post)
+   {
+      wp_nonce_field('p_apellido_nonce', 'p_apellido_nonce');
+      $p_apellido = get_post_meta($post->ID, '_p_apellido', true);
+      echo '<input type="text" style="width:20%" id="p_apellido" name="p_apellido" value="' . esc_attr($p_apellido) . '" ></input>';
+   }
+   public function save_p_apellido($post_id)
+   {
+      if (!isset($_POST['p_apellido_nonce'])) {
+         return;
+      }
+      if (!wp_verify_nonce($_POST['p_apellido_nonce'], 'p_apellido_nonce')) {
+         return;
+      }
+      if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+         return;
+      }
+      if (isset($_POST['post_type']) && 'page' == $_POST['post_type']) {
+         if (!current_user_can('edit_page', $post_id)) {
+            return;
+         }
+      } else {
+         if (!current_user_can('edit_post', $post_id)) {
+            return;
+         }
+      }
+      if (!isset($_POST['p_apellido'])) {
+         return;
+      }
+      $p_apellido = sanitize_text_field($_POST['p_apellido']);
+      update_post_meta($post_id, '_p_apellido', $p_apellido);
+   }
+   public function set_s_apellido_cbk($post)
+   {
+      wp_nonce_field('s_apellido_nonce', 's_apellido_nonce');
+      $s_apellido = get_post_meta($post->ID, '_s_apellido', true);
+      echo '<input type="text" style="width:20%" id="s_apellido" name="s_apellido" value="' . esc_attr($s_apellido) . '" ></input>';
+   }
+   public function save_s_apellido($post_id)
+   {
+      if (!isset($_POST['s_apellido_nonce'])) {
+         return;
+      }
+      if (!wp_verify_nonce($_POST['s_apellido_nonce'], 's_apellido_nonce')) {
+         return;
+      }
+      if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+         return;
+      }
+      if (isset($_POST['post_type']) && 'page' == $_POST['post_type']) {
+         if (!current_user_can('edit_page', $post_id)) {
+            return;
+         }
+      } else {
+         if (!current_user_can('edit_post', $post_id)) {
+            return;
+         }
+      }
+      if (!isset($_POST['s_apellido'])) {
+         return;
+      }
+      $s_apellido = sanitize_text_field($_POST['s_apellido']);
+      update_post_meta($post_id, '_s_apellido', $s_apellido);
+   }
+   public function set_f_nacimiento_cbk($post)
+   {
+      wp_nonce_field('f_nacimiento_nonce', 'f_nacimiento_nonce');
+      $f_nacimiento = get_post_meta($post->ID, '_f_nacimiento', true);
+      echo '<input type="date" style="width:20%" id="f_nacimiento" name="f_nacimiento" value="' . esc_attr($f_nacimiento) . '" ></input>';
+   }
+   public function save_f_nacimiento($post_id)
+   {
+      if (!isset($_POST['f_nacimiento_nonce'])) {
+         return;
+      }
+      if (!wp_verify_nonce($_POST['f_nacimiento_nonce'], 'f_nacimiento_nonce')) {
+         return;
+      }
+      if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+         return;
+      }
+      if (isset($_POST['post_type']) && 'page' == $_POST['post_type']) {
+         if (!current_user_can('edit_page', $post_id)) {
+            return;
+         }
+      } else {
+         if (!current_user_can('edit_post', $post_id)) {
+            return;
+         }
+      }
+      if (!isset($_POST['f_nacimiento'])) {
+         return;
+      }
+      $f_nacimiento = sanitize_text_field($_POST['f_nacimiento']);
+      update_post_meta($post_id, '_f_nacimiento', $f_nacimiento);
+   }
+   public function set_f_ingreso_cbk($post)
+   {
+      wp_nonce_field('f_ingreso_nonce', 'f_ingreso_nonce');
+      $f_ingreso = get_post_meta($post->ID, '_f_ingreso', true);
+      echo '<input type="date" style="width:20%" id="f_ingreso" name="f_ingreso" value="' . esc_attr($f_ingreso) . '" ></input>';
+   }
+   public function save_f_ingreso($post_id)
+   {
+      if (!isset($_POST['f_ingreso_nonce'])) {
+         return;
+      }
+      if (!wp_verify_nonce($_POST['f_ingreso_nonce'], 'f_ingreso_nonce')) {
+         return;
+      }
+      if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+         return;
+      }
+      if (isset($_POST['post_type']) && 'page' == $_POST['post_type']) {
+         if (!current_user_can('edit_page', $post_id)) {
+            return;
+         }
+      } else {
+         if (!current_user_can('edit_post', $post_id)) {
+            return;
+         }
+      }
+      if (!isset($_POST['f_ingreso'])) {
+         return;
+      }
+      $f_ingreso = sanitize_text_field($_POST['f_ingreso']);
+      update_post_meta($post_id, '_f_ingreso', $f_ingreso);
+   }
+   public function set_f_salida_cbk($post)
+   {
+      wp_nonce_field('f_salida_nonce', 'f_salida_nonce');
+      $f_salida = get_post_meta($post->ID, '_f_salida', true);
+      echo '<input type="date" style="width:20%" id="f_salida" name="f_salida" value="' . esc_attr($f_salida) . '" ></input>';
+   }
+   public function save_f_salida($post_id)
+   {
+      if (!isset($_POST['f_salida_nonce'])) {
+         return;
+      }
+      if (!wp_verify_nonce($_POST['f_salida_nonce'], 'f_salida_nonce')) {
+         return;
+      }
+      if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+         return;
+      }
+      if (isset($_POST['post_type']) && 'page' == $_POST['post_type']) {
+         if (!current_user_can('edit_page', $post_id)) {
+            return;
+         }
+      } else {
+         if (!current_user_can('edit_post', $post_id)) {
+            return;
+         }
+      }
+      if (!isset($_POST['f_salida'])) {
+         return;
+      }
+      $f_salida = sanitize_text_field($_POST['f_salida']);
+      update_post_meta($post_id, '_f_salida', $f_salida);
+   }
+   public function set_peso_cbk($post)
+   {
+      wp_nonce_field('peso_nonce', 'peso_nonce');
+      $peso = get_post_meta($post->ID, '_peso', true);
+      echo '<input type="text" style="width:20%" id="peso" name="peso" value="' . esc_attr($peso) . '" ></input>';
+   }
+   public function save_peso($post_id)
+   {
+      if (!isset($_POST['peso_nonce'])) {
+         return;
+      }
+      if (!wp_verify_nonce($_POST['peso_nonce'], 'peso_nonce')) {
+         return;
+      }
+      if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+         return;
+      }
+      if (isset($_POST['post_type']) && 'page' == $_POST['post_type']) {
+         if (!current_user_can('edit_page', $post_id)) {
+            return;
+         }
+      } else {
+         if (!current_user_can('edit_post', $post_id)) {
+            return;
+         }
+      }
+      if (!isset($_POST['peso'])) {
+         return;
+      }
+      $peso = sanitize_text_field($_POST['peso']);
+      update_post_meta($post_id, '_peso', $peso);
+   }
+   public function set_estatura_cbk($post)
+   {
+      wp_nonce_field('estatura_nonce', 'estatura_nonce');
+      $estatura = get_post_meta($post->ID, '_estatura', true);
+      echo '<input type="text" style="width:20%" id="estatura" name="estatura" value="' . esc_attr($estatura) . '" ></input>';
+   }
+   public function save_estatura($post_id)
+   {
+      if (!isset($_POST['estatura_nonce'])) {
+         return;
+      }
+      if (!wp_verify_nonce($_POST['estatura_nonce'], 'estatura_nonce')) {
+         return;
+      }
+      if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+         return;
+      }
+      if (isset($_POST['post_type']) && 'page' == $_POST['post_type']) {
+         if (!current_user_can('edit_page', $post_id)) {
+            return;
+         }
+      } else {
+         if (!current_user_can('edit_post', $post_id)) {
+            return;
+         }
+      }
+      if (!isset($_POST['estatura'])) {
+         return;
+      }
+      $estatura = sanitize_text_field($_POST['estatura']);
+      update_post_meta($post_id, '_estatura', $estatura);
+   }
+   public function set_provincia_id_cbk($post)
+   {
+      wp_nonce_field('provincia_id_nonce', 'provincia_id_nonce');
+      $provincia_id = get_post_meta($post->ID, '_provincia_id', true);
+      echo '<input type="text" style="width:20%" id="provincia_id" name="provincia_id" value="' . esc_attr($provincia_id) . '" ></input>';
+   }
+   public function save_provincia_id($post_id)
+   {
+      if (!isset($_POST['provincia_id_nonce'])) {
+         return;
+      }
+      if (!wp_verify_nonce($_POST['provincia_id_nonce'], 'provincia_id_nonce')) {
+         return;
+      }
+      if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+         return;
+      }
+      if (isset($_POST['post_type']) && 'page' == $_POST['post_type']) {
+         if (!current_user_can('edit_page', $post_id)) {
+            return;
+         }
+      } else {
+         if (!current_user_can('edit_post', $post_id)) {
+            return;
+         }
+      }
+      if (!isset($_POST['provincia_id'])) {
+         return;
+      }
+      $provincia_id = sanitize_text_field($_POST['provincia_id']);
+      update_post_meta($post_id, '_provincia_id', $provincia_id);
+   }
+   public function set_canton_id_cbk($post)
+   {
+      wp_nonce_field('canton_id_nonce', 'canton_id_nonce');
+      $canton_id = get_post_meta($post->ID, '_canton_id', true);
+      echo '<input type="text" style="width:20%" id="canton_id" name="canton_id" value="' . esc_attr($canton_id) . '" ></input>';
+   }
+   public function save_canton_id($post_id)
+   {
+      if (!isset($_POST['canton_id_nonce'])) {
+         return;
+      }
+      if (!wp_verify_nonce($_POST['canton_id_nonce'], 'canton_id_nonce')) {
+         return;
+      }
+      if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+         return;
+      }
+      if (isset($_POST['post_type']) && 'page' == $_POST['post_type']) {
+         if (!current_user_can('edit_page', $post_id)) {
+            return;
+         }
+      } else {
+         if (!current_user_can('edit_post', $post_id)) {
+            return;
+         }
+      }
+      if (!isset($_POST['canton_id'])) {
+         return;
+      }
+      $canton_id = sanitize_text_field($_POST['canton_id']);
+      update_post_meta($post_id, '_canton_id', $canton_id);
+   }
+   public function set_distrito_id_cbk($post)
+   {
+      wp_nonce_field('distrito_id_nonce', 'distrito_id_nonce');
+      $distrito_id = get_post_meta($post->ID, '_distrito_id', true);
+      echo '<input type="text" style="width:20%" id="distrito_id" name="distrito_id" value="' . esc_attr($distrito_id) . '" ></input>';
+   }
+   public function save_distrito_id($post_id)
+   {
+      if (!isset($_POST['distrito_id_nonce'])) {
+         return;
+      }
+      if (!wp_verify_nonce($_POST['distrito_id_nonce'], 'distrito_id_nonce')) {
+         return;
+      }
+      if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+         return;
+      }
+      if (isset($_POST['post_type']) && 'page' == $_POST['post_type']) {
+         if (!current_user_can('edit_page', $post_id)) {
+            return;
+         }
+      } else {
+         if (!current_user_can('edit_post', $post_id)) {
+            return;
+         }
+      }
+      if (!isset($_POST['distrito_id'])) {
+         return;
+      }
+      $distrito_id = sanitize_text_field($_POST['distrito_id']);
+      update_post_meta($post_id, '_distrito_id', $distrito_id);
+   }
+   public function set_direccion_cbk($post)
+   {
+      wp_nonce_field('direccion_nonce', 'direccion_nonce');
+      $direccion = get_post_meta($post->ID, '_direccion', true);
+      echo '<input type="text" style="width:50%" id="direccion" name="direccion" value="' . esc_attr($direccion) . '" ></input>';
+   }
+   public function save_direccion($post_id)
+   {
+      if (!isset($_POST['direccion_nonce'])) {
+         return;
+      }
+      if (!wp_verify_nonce($_POST['direccion_nonce'], 'direccion_nonce')) {
+         return;
+      }
+      if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+         return;
+      }
+      if (isset($_POST['post_type']) && 'page' == $_POST['post_type']) {
+         if (!current_user_can('edit_page', $post_id)) {
+            return;
+         }
+      } else {
+         if (!current_user_can('edit_post', $post_id)) {
+            return;
+         }
+      }
+      if (!isset($_POST['direccion'])) {
+         return;
+      }
+      $direccion = sanitize_text_field($_POST['direccion']);
+      update_post_meta($post_id, '_direccion', $direccion);
+   }
+   public function set_email_cbk($post)
+   {
+      wp_nonce_field('email_nonce', 'email_nonce');
+      $email = get_post_meta($post->ID, '_email', true);
+      echo '<input type="email" style="width:20%" id="email" name="email" value="' . esc_attr($email) . '" ></input>';
+   }
+   public function save_email($post_id)
+   {
+      if (!isset($_POST['email_nonce'])) {
+         return;
+      }
+      if (!wp_verify_nonce($_POST['email_nonce'], 'email_nonce')) {
+         return;
+      }
+      if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+         return;
+      }
+      if (isset($_POST['post_type']) && 'page' == $_POST['post_type']) {
+         if (!current_user_can('edit_page', $post_id)) {
+            return;
+         }
+      } else {
+         if (!current_user_can('edit_post', $post_id)) {
+            return;
+         }
+      }
+      if (!isset($_POST['email'])) {
+         return;
+      }
+      $email = sanitize_text_field($_POST['email']);
+      update_post_meta($post_id, '_email', $email);
+   }
+   public function set_t_principal_cbk($post)
+   {
+      wp_nonce_field('t_principal_nonce', 't_principal_nonce');
+      $t_principal = get_post_meta($post->ID, '_t_principal', true);
+      echo '<input type="text" style="width:20%" id="t_principal" name="t_principal" value="' . esc_attr($t_principal) . '" ></input>';
+   }
+   public function save_t_principal($post_id)
+   {
+      if (!isset($_POST['t_principal_nonce'])) {
+         return;
+      }
+      if (!wp_verify_nonce($_POST['t_principal_nonce'], 't_principal_nonce')) {
+         return;
+      }
+      if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+         return;
+      }
+      if (isset($_POST['post_type']) && 'page' == $_POST['post_type']) {
+         if (!current_user_can('edit_page', $post_id)) {
+            return;
+         }
+      } else {
+         if (!current_user_can('edit_post', $post_id)) {
+            return;
+         }
+      }
+      if (!isset($_POST['t_principal'])) {
+         return;
+      }
+      $t_principal = sanitize_text_field($_POST['t_principal']);
+      update_post_meta($post_id, '_t_principal', $t_principal);
+   }
+   public function set_t_otros_cbk($post)
+   {
+      wp_nonce_field('t_otros_nonce', 't_otros_nonce');
+      $t_otros = get_post_meta($post->ID, '_t_otros', true);
+      echo '<input type="text" style="width:20%" id="t_otros" name="t_otros" value="' . esc_attr($t_otros) . '" ></input>';
+   }
+   public function save_t_otros($post_id)
+   {
+      if (!isset($_POST['t_otros_nonce'])) {
+         return;
+      }
+      if (!wp_verify_nonce($_POST['t_otros_nonce'], 't_otros_nonce')) {
+         return;
+      }
+      if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+         return;
+      }
+      if (isset($_POST['post_type']) && 'page' == $_POST['post_type']) {
+         if (!current_user_can('edit_page', $post_id)) {
+            return;
+         }
+      } else {
+         if (!current_user_can('edit_post', $post_id)) {
+            return;
+         }
+      }
+      if (!isset($_POST['t_otros'])) {
+         return;
+      }
+      $t_otros = sanitize_text_field($_POST['t_otros']);
+      update_post_meta($post_id, '_t_otros', $t_otros);
+   }
+   public function set_n_madre_cbk($post)
+   {
+      wp_nonce_field('n_madre_nonce', 'n_madre_nonce');
+      $n_madre = get_post_meta($post->ID, '_n_madre', true);
+      echo '<input type="text" style="width:20%" id="n_madre" name="n_madre" value="' . esc_attr($n_madre) . '" ></input>';
+   }
+   public function save_n_madre($post_id)
+   {
+      if (!isset($_POST['n_madre_nonce'])) {
+         return;
+      }
+      if (!wp_verify_nonce($_POST['n_madre_nonce'], 'n_madre_nonce')) {
+         return;
+      }
+      if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+         return;
+      }
+      if (isset($_POST['post_type']) && 'page' == $_POST['post_type']) {
+         if (!current_user_can('edit_page', $post_id)) {
+            return;
+         }
+      } else {
+         if (!current_user_can('edit_post', $post_id)) {
+            return;
+         }
+      }
+      if (!isset($_POST['n_madre'])) {
+         return;
+      }
+      $n_madre = sanitize_text_field($_POST['n_madre']);
+      update_post_meta($post_id, '_n_madre', $n_madre);
+   }
+   public function set_n_padre_cbk($post)
+   {
+      wp_nonce_field('n_padre_nonce', 'n_padre_nonce');
+      $n_padre = get_post_meta($post->ID, '_n_padre', true);
+      echo '<input type="text" style="width:20%" id="n_padre" name="n_padre" value="' . esc_attr($n_padre) . '" ></input>';
+   }
+   public function save_n_padre($post_id)
+   {
+      if (!isset($_POST['n_padre_nonce'])) {
+         return;
+      }
+      if (!wp_verify_nonce($_POST['n_padre_nonce'], 'n_padre_nonce')) {
+         return;
+      }
+      if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+         return;
+      }
+      if (isset($_POST['post_type']) && 'page' == $_POST['post_type']) {
+         if (!current_user_can('edit_page', $post_id)) {
+            return;
+         }
+      } else {
+         if (!current_user_can('edit_post', $post_id)) {
+            return;
+         }
+      }
+      if (!isset($_POST['n_padre'])) {
+         return;
+      }
+      $n_padre = sanitize_text_field($_POST['n_padre']);
+      update_post_meta($post_id, '_n_padre', $n_padre);
+   }
+
    public function set_pre_get_posts($query)
    {
       if (!is_admin() && is_post_type_archive() && $query->is_main_query()) {
+         $query->set('posts_per_page', 20);
+         $query->set('orderby', 'post_title');
+         $query->set('order', 'ASC');
       }
    }
    private function set_paginas()
