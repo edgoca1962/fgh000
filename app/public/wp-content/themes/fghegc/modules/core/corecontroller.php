@@ -3,6 +3,7 @@
 namespace FGHEGC\Modules\Core;
 
 use FGHEGC\Modules\Core\Singleton;
+use FGHEGC\Modules\DivPolCri\DivPolCriModel;
 use FGHEGC\Modules\Music\MusicController;
 use FGHEGC\Modules\Music\MusicModel;
 use FGHEGC\Modules\Page\PageController;
@@ -23,7 +24,6 @@ use FGHEGC\Modules\Sca\Puesto\PuestoController;
 use FGHEGC\Modules\Sca\Puesto\PuestoModel;
 use FGHEGC\Modules\Scc\Beneficiario\BeneficiarioController;
 use FGHEGC\Modules\Scc\Beneficiario\BeneficiarioModel;
-use FGHEGC\Modules\Scc\DivPolCri\DivPolCriModel;
 use FGHEGC\modules\scp\oracion\OracionModel;
 use FGHEGC\Modules\Scp\Peticion\PeticionController;
 use FGHEGC\Modules\Scp\Peticion\PeticionModel;

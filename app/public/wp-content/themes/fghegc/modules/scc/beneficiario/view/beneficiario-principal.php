@@ -5,7 +5,7 @@ use FGHEGC\Modules\Scc\Beneficiario\BeneficiarioController;
 
 $core = CoreController::get_instance();
 $atributos = $core->get_atributos('beneficiario');
-$divpolcri = BeneficiarioController::get_instance();
+$provincias = BeneficiarioController::get_instance()->scc_get_provincias();
 
 ?>
 
@@ -86,7 +86,7 @@ $divpolcri = BeneficiarioController::get_instance();
                <label class="form-label">Provincia</label>
                <select id="provincia" name="provincia" class="form-select" aria-label="Provincias">
                   <option selected>Seleccionar Provincia</option>
-                  <?php foreach ($divpolcri->get_provincias() as $provincia) : ?>
+                  <?php foreach ($provincias as $provincia) : ?>
                      <option value="<?php echo $provincia['ID'] ?> "><?php echo $provincia['provincia'] ?></option>
                   <?php endforeach; ?>
                </select>

@@ -1,6 +1,6 @@
 <?php
 
-namespace FGHEGC\Modules\Scc\DivPolCri;
+namespace FGHEGC\Modules\DivPolCri;
 
 use FGHEGC\Modules\Core\Singleton;
 
@@ -20,6 +20,7 @@ class DivPolCriModel
       add_action('save_post', [$this, 'save_distrito']);
       add_action('wp_ajax_beneficiario_csvfile', [$this, 'fghegc_beneficiario_csvfile']);
       $this->set_paginas();
+      add_action('wp_ajax_provincia', [$this, 'dpc_get_provincia']);
       add_action('wp_ajax_canton', [$this, 'dpc_get_canton']);
       add_action('wp_ajax_distrito', [$this, 'dpc_get_distrito']);
    }
@@ -417,24 +418,29 @@ class DivPolCriModel
    }
    public function dpc_get_provincia()
    {
-      global $wpdb;
+      if (!wp_verify_nonce($_POST['nonce'], 'provincias')) {
+         wp_send_json_error('Error de seguridad', 401);
+         wp_die();
+      } else {
 
-      $sql =
-         "SELECT DISTINCT t1.meta_value AS ID, t2.meta_value AS provincia
-      FROM $wpdb->posts
-      INNER JOIN $wpdb->postmeta t1
-         ON (ID = t1.post_id)
-      INNER JOIN $wpdb->postmeta t2
-         ON (ID = t2.post_id)
-      WHERE post_type = 'divpolcri'
-         AND (t1.meta_key = '_provincia_id' AND t1.meta_value !='')
-         AND (t2.meta_key = '_provincia' AND t2.meta_value !='')
-      ORDER BY t2.meta_value
-      ";
+         global $wpdb;
 
-      $provincias = $wpdb->get_results($sql, ARRAY_A);
+         $sql =
+            "SELECT DISTINCT t1.meta_value AS ID, t2.meta_value AS provincia
+            FROM $wpdb->posts
+            INNER JOIN $wpdb->postmeta t1
+               ON (ID = t1.post_id)
+            INNER JOIN $wpdb->postmeta t2
+               ON (ID = t2.post_id)
+            WHERE post_type = 'divpolcri'
+               AND (t1.meta_key = '_provincia_id' AND t1.meta_value !='')
+               AND (t2.meta_key = '_provincia' AND t2.meta_value !='')
+            ORDER BY t2.meta_value
+            ";
 
-      return $provincias;
+         $provincias = $wpdb->get_results($sql, ARRAY_A);
+         wp_send_json_success($provincias);
+      }
    }
    public function dpc_get_canton()
    {
@@ -443,7 +449,6 @@ class DivPolCriModel
          wp_die();
       } else {
          $provincia_id = sanitize_text_field($_POST['provincia_id']);
-
          global $wpdb;
 
          $sql =
@@ -458,7 +463,7 @@ class DivPolCriModel
             WHERE post_type = 'divpolcri'
                AND (t1.meta_key = '_canton_id' AND t1.meta_value !='')
                AND (t2.meta_key = '_canton' AND t2.meta_value !='')
-               AND (t3.meta_key = '_provincia_id' AND t3.meta_value =$provincia_id)
+               AND (t3.meta_key = '_provincia_id' AND t3.meta_value = $provincia_id)
             ORDER BY t2.meta_value
             ";
 
@@ -466,7 +471,7 @@ class DivPolCriModel
          wp_send_json_success($cantones);
       }
    }
-   public function dpc_get_distrito($canton_id)
+   public function dpc_get_distrito()
    {
       if (!wp_verify_nonce($_POST['nonce'], 'distritos')) {
          wp_send_json_error('Error de seguridad', 401);
@@ -477,19 +482,19 @@ class DivPolCriModel
 
          $sql =
             "SELECT DISTINCT t1.meta_value AS ID, t2.meta_value AS distrito
-      FROM $wpdb->posts
-      INNER JOIN $wpdb->postmeta t1
-         ON (ID = t1.post_id)
-      INNER JOIN $wpdb->postmeta t2
-         ON (ID = t2.post_id)
-      INNER JOIN $wpdb->postmeta t3
-         ON (ID = t3.post_id)
-      WHERE post_type = 'divpolcri'
-         AND (t1.meta_key = '_distrito_id' AND t1.meta_value !='')
-         AND (t2.meta_key = '_distrito' AND t2.meta_value !='')
-         AND (t3.meta_key = '_canton_id' AND t3.meta_value = $canton_id)
-      ORDER BY t2.meta_value
-      ";
+            FROM $wpdb->posts
+            INNER JOIN $wpdb->postmeta t1
+               ON (ID = t1.post_id)
+            INNER JOIN $wpdb->postmeta t2
+               ON (ID = t2.post_id)
+            INNER JOIN $wpdb->postmeta t3
+               ON (ID = t3.post_id)
+            WHERE post_type = 'divpolcri'
+               AND (t1.meta_key = '_distrito_id' AND t1.meta_value != '')
+               AND (t2.meta_key = '_distrito' AND t2.meta_value != '')
+               AND (t3.meta_key = '_canton_id' AND t3.meta_value = $canton_id)
+            ORDER BY t2.meta_value
+            ";
 
          $distritos = $wpdb->get_results($sql, ARRAY_A);
          wp_send_json_success($distritos);

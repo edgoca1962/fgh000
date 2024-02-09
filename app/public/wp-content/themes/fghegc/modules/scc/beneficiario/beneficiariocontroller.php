@@ -27,7 +27,6 @@ class BeneficiarioController
       $this->atributos['div4'] = $this->get_datosAtributos($postType)['div4'];
       $this->atributos['agregarpost'] = $this->get_datosAtributos($postType)['agregarpost'];
       $this->atributos['templatepart'] = $this->get_datosAtributos($postType)['templatepart'];
-
       return $this->atributos;
    }
    private function get_datosAtributos($postType)
@@ -59,7 +58,7 @@ class BeneficiarioController
 
       return $datosAtributos;
    }
-   public function get_provincias()
+   public function scc_get_provincias()
    {
       global $wpdb;
 
@@ -80,51 +79,66 @@ class BeneficiarioController
 
       return $provincias;
    }
-   public function get_cantones($provincia_id = 2)
+   public function get_provincias($provincia_id)
    {
       global $wpdb;
 
       $sql =
-         "SELECT DISTINCT t1.meta_value AS ID, t2.meta_value AS canton
+         "SELECT t2.meta_value AS provincia
       FROM $wpdb->posts
       INNER JOIN $wpdb->postmeta t1
          ON (ID = t1.post_id)
       INNER JOIN $wpdb->postmeta t2
          ON (ID = t2.post_id)
-      INNER JOIN $wpdb->postmeta t3
-         ON (ID = t3.post_id)
       WHERE post_type = 'divpolcri'
-         AND (t1.meta_key = '_canton_id' AND t1.meta_value !='')
-         AND (t2.meta_key = '_canton' AND t2.meta_value !='')
-         AND (t3.meta_key = '_provincia_id' AND t3.meta_value =$provincia_id)
+         AND (t1.meta_key = '_provincia_id' AND t1.meta_value !=$provincia_id)
+         AND (t2.meta_key = '_provincia' AND t2.meta_value !='')
       ORDER BY t2.meta_value
       ";
 
-      $cantones = $wpdb->get_results($sql, ARRAY_A);
+      $provincias = $wpdb->get_var($sql);
+
+      return $provincias;
+   }
+   public function get_cantones($canton_id)
+   {
+      global $wpdb;
+
+      $sql =
+         "SELECT t2.meta_value AS canton
+      FROM $wpdb->posts
+      INNER JOIN $wpdb->postmeta t1
+         ON (ID = t1.post_id)
+      INNER JOIN $wpdb->postmeta t2
+         ON (ID = t2.post_id)
+      WHERE post_type = 'divpolcri'
+         AND (t1.meta_key = '_canton_id' AND t1.meta_value !='')
+         AND (t2.meta_key = '_canton' AND t2.meta_value !=$canton_id)
+      ORDER BY t2.meta_value
+      ";
+
+      $cantones = $wpdb->get_var($sql);
 
       return $cantones;
    }
-   public function get_distritos($canton_id = 507)
+   public function get_distritos($distrito_id)
    {
       global $wpdb;
 
       $sql =
-         "SELECT DISTINCT t1.meta_value AS ID, t2.meta_value AS distrito
+         "SELECT t2.meta_value AS distrito
       FROM $wpdb->posts
       INNER JOIN $wpdb->postmeta t1
          ON (ID = t1.post_id)
       INNER JOIN $wpdb->postmeta t2
          ON (ID = t2.post_id)
-      INNER JOIN $wpdb->postmeta t3
-         ON (ID = t3.post_id)
       WHERE post_type = 'divpolcri'
-         AND (t1.meta_key = '_distrito_id' AND t1.meta_value !='')
+         AND (t1.meta_key = '_distrito_id' AND t1.meta_value !=$distrito_id)
          AND (t2.meta_key = '_distrito' AND t2.meta_value !='')
-         AND (t3.meta_key = '_canton_id' AND t3.meta_value = $canton_id)
       ORDER BY t2.meta_value
       ";
 
-      $distritos = $wpdb->get_results($sql, ARRAY_A);
+      $distritos = $wpdb->get_var($sql);
 
       return $distritos;
    }

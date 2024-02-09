@@ -1,6 +1,6 @@
 <?php
 
-namespace FGHEGC\Modules\Scc\DivPolCri;
+namespace FGHEGC\Modules\DivPolCri;
 
 use FGHEGC\Modules\Core\Singleton;
 
