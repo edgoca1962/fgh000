@@ -1,4 +1,4 @@
-<div class="d-flex justify-content-center">
+<div class="container d-flex justify-content-center">
    <div class="row">
       <h4 class="text-center">CSV File Import</h4>
       <form class="needs-validation g-3" id="comedorescsv" enctype="multipart/form-data">

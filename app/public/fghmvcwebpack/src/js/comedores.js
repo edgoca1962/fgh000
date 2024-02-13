@@ -18,19 +18,36 @@ if (document.getElementById('beneficiario')) {
    const nonce_distrito = document.getElementById('nonce_distrito').value
    const action_distrito = document.getElementById('action_distrito').value
 
-   document.getElementById('beneficiario_imagen_editar').addEventListener('change', function () {
-      const imagen = this.files[0]
-      if (imagen) {
-         const reader = new FileReader()
-         document.getElementById('imagennueva_editar').display = 'block'
-         reader.addEventListener('load', function () {
-            document.getElementById('imagennueva_editar').setAttribute('src', this.result)
-         })
-         reader.readAsDataURL(imagen)
-      } else {
-         console.log('por definir')
-      }
-   })
+   if (document.getElementById('beneficiario_imagen')) {
+      document.getElementById('beneficiario_imagen').addEventListener('change', function () {
+         const imagen = this.files[0]
+         if (imagen) {
+            const reader = new FileReader()
+            document.getElementById('imagennueva').display = 'block'
+            reader.addEventListener('load', function () {
+               document.getElementById('imagennueva').setAttribute('src', this.result)
+            })
+            reader.readAsDataURL(imagen)
+         } else {
+            console.log('por definir')
+         }
+      })
+   }
+   if (document.getElementById('beneficiario_imagen_editar')) {
+      document.getElementById('beneficiario_imagen_editar').addEventListener('change', function () {
+         const imagen = this.files[0]
+         if (imagen) {
+            const reader = new FileReader()
+            document.getElementById('imagennueva_editar').display = 'block'
+            reader.addEventListener('load', function () {
+               document.getElementById('imagennueva_editar').setAttribute('src', this.result)
+            })
+            reader.readAsDataURL(imagen)
+         } else {
+            console.log('por definir')
+         }
+      })
+   }
    f_nacimiento.addEventListener('change', () => {
       var fecha_actual = new Date()
       var f_nacimiento_val = new Date(f_nacimiento.value)
