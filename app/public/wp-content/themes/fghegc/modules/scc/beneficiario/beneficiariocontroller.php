@@ -63,7 +63,7 @@ class BeneficiarioController
       }
 
       $datosAtributos['carrusel'] = [
-         'imagen01' => FGHEGC_DIR_URI . '/assets/img/comedores01.jpeg',
+         'imagen01' => FGHEGC_DIR_URI . '/assets/img/comedores01.png',
          'imagen02' => FGHEGC_DIR_URI . '/assets/img/comedores02.jpeg',
          'imagen03' => FGHEGC_DIR_URI . '/assets/img/comedores03.jpeg',
          'imagen04' => FGHEGC_DIR_URI . '/assets/img/comedores04.jpeg',
