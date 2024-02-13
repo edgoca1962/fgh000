@@ -22,11 +22,15 @@ class BeneficiarioController
       $this->atributos['sidebar'] = 'modules/scc/beneficiario/view/beneficiario-sidebar';
       $this->atributos['imagen'] = FGHEGC_DIR_URI . '/assets/img/manosorando.jpeg';
       $this->atributos['regresar'] = $postType;
+      $this->atributos['displaysub'] = 'fs-4';
+      $this->atributos['displaysub2'] = 'fs-5';
 
       $this->atributos['subtitulo'] = $this->get_datosAtributos($postType)['subtitulo'];
+      $this->atributos['subtitulo2'] = $this->get_datosAtributos($postType)['subtitulo2'];
       $this->atributos['div4'] = $this->get_datosAtributos($postType)['div4'];
       $this->atributos['agregarpost'] = $this->get_datosAtributos($postType)['agregarpost'];
       $this->atributos['templatepart'] = $this->get_datosAtributos($postType)['templatepart'];
+      $this->atributos['carrusel'] = $this->get_datosAtributos($postType)['carrusel'];
       return $this->atributos;
    }
    private function get_datosAtributos($postType)
@@ -48,13 +52,22 @@ class BeneficiarioController
 
       if (is_single()) {
          $datosAtributos['templatepart'] = 'modules/scc/' . $postType . '/view/' . $postType . '-single';
-         $datosAtributos['subtitulo'] = get_the_title();
+         $datosAtributos['subtitulo'] = '<figcaption class="blockquote-footer fs-4 fw-bold"><cite title="Source Title">Pero Jesús Dijo: Dejad a los niños venir a mi, y no se lo inpidáis; porque de los tales es el reino de los cielos.</cite></figcaption>';
+         $datosAtributos['subtitulo2'] = get_the_title();
          $datosAtributos['div4'] = '';
       } else {
          $datosAtributos['templatepart'] = 'modules/scc/' . $postType . '/view/' . $postType;
-         $datosAtributos['subtitulo'] = '';
+         $datosAtributos['subtitulo'] = 'Pero Jesús Dijo: Dejad a los niños venir a mi, y no se lo inpidáis; porque de los tales es el reino de los cielos.';
+         $datosAtributos['subtitulo2'] = 'Mateo 19:14 (RVR1960)';
          $datosAtributos['div4'] = '';
       }
+
+      $datosAtributos['carrusel'] = [
+         'imagen01' => FGHEGC_DIR_URI . '/assets/img/comedores01.jpeg',
+         'imagen02' => FGHEGC_DIR_URI . '/assets/img/comedores02.jpeg',
+         'imagen03' => FGHEGC_DIR_URI . '/assets/img/comedores03.jpeg',
+         'imagen04' => FGHEGC_DIR_URI . '/assets/img/comedores04.jpeg',
+      ];
 
       return $datosAtributos;
    }
@@ -141,5 +154,14 @@ class BeneficiarioController
       $distritos = $wpdb->get_var($sql);
 
       return $distritos;
+   }
+   public function get_avatar($post_id)
+   {
+      if (get_post_meta($post_id, '_sexo', true) == '2') {
+         $avatar = FGHEGC_DIR_URI . '/assets/img/avatar_femenino.png';
+      } else {
+         $avatar = FGHEGC_DIR_URI . '/assets/img/avatar_masculino.png';
+      }
+      return $avatar;
    }
 }

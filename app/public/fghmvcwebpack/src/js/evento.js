@@ -21,7 +21,6 @@ if (document.getElementById('evento')) {
    f_inicio.addEventListener('change', function () {
       document.getElementById('numerodiaeventomes').value = f_inicio.value.slice(8, 10)
    })
-
    document.getElementById('numerodiaeventoanno').value = dia_evento
    f_inicio.addEventListener('change', function () {
       document.getElementById('numerodiaeventoanno').value = f_inicio.value.slice(8, 10)

@@ -1,4 +1,3 @@
-
 if (document.getElementById('comedorescsv')) {
    document.getElementById('csvfile').addEventListener('change', function () {
       const csvfile = document.getElementById('csvfile').value
@@ -18,6 +17,20 @@ if (document.getElementById('beneficiario')) {
    const action_canton = document.getElementById('action_canton').value
    const nonce_distrito = document.getElementById('nonce_distrito').value
    const action_distrito = document.getElementById('action_distrito').value
+
+   document.getElementById('beneficiario_imagen_editar').addEventListener('change', function () {
+      const imagen = this.files[0]
+      if (imagen) {
+         const reader = new FileReader()
+         document.getElementById('imagennueva_editar').display = 'block'
+         reader.addEventListener('load', function () {
+            document.getElementById('imagennueva_editar').setAttribute('src', this.result)
+         })
+         reader.readAsDataURL(imagen)
+      } else {
+         console.log('por definir')
+      }
+   })
    f_nacimiento.addEventListener('change', () => {
       var fecha_actual = new Date()
       var f_nacimiento_val = new Date(f_nacimiento.value)
@@ -88,6 +101,8 @@ if (document.getElementById('beneficiario')) {
       }
       buscar_distrito()
    })
+
+
 }
 if (document.getElementById('beneficiario_single')) {
    const formulario = document.getElementById('beneficiario_single')
@@ -96,7 +111,6 @@ if (document.getElementById('beneficiario_single')) {
    elementosConEditar.forEach(function (elemento) {
       elemento.setAttribute('disabled', '');
    });
-
    if (datos.get('f_nacimiento') !== undefined || datos.get('f_nacimiento') !== null) {
       var fecha_actual = new Date()
       var f_nacimiento_val = new Date(datos.get('f_nacimiento'))
@@ -104,11 +118,9 @@ if (document.getElementById('beneficiario_single')) {
       document.getElementById('editar_edad').value = edad_calc
       datos.set('edad', edad_calc)
    }
-
    document.getElementById('btn_cancelar').addEventListener('click', () => {
       location.reload()
    })
-
    document.getElementById('btn_editar_beneficiario').addEventListener('click', () => {
       document.getElementById('beneficiario_single').setAttribute('hidden', '')
       const post_id = document.getElementById('btn_editar_beneficiario').dataset.scc_post_id
@@ -119,23 +131,27 @@ if (document.getElementById('beneficiario_single')) {
       datos.append('endpoint', endpoint)
       datos.append('action', action)
       datos.append('nonce', nonce)
-
+      /*
       for (var pair of datos.entries()) {
          var nombre = pair[0];
          var valor = pair[1];
          console.log("Nombre:", nombre, "Valor:", valor);
       }
-
+      */
       document.getElementById('nombre').value = datos.get('nombre')
       document.getElementById('p_apellido').value = datos.get('p_apellido')
       document.getElementById('s_apellido').value = datos.get('s_apellido')
+      if (datos.get('sexo') == '2') {
+         document.getElementById('femenino').setAttribute('checked', '')
+      } else {
+         document.getElementById('masculino').setAttribute('checked', '')
+      }
       document.getElementById('f_nacimiento').value = datos.get('f_nacimiento')
       document.getElementById('f_ingreso').value = datos.get('f_ingreso')
       document.getElementById('f_salida').value = datos.get('f_salida')
       document.getElementById('edad').value = datos.get('edad')
       document.getElementById('peso').value = datos.get('peso')
       document.getElementById('estatura').value = datos.get('estatura')
-
       datos_provincias()
       function datos_provincias() {
          const provincia = document.getElementById('provincia')
@@ -240,8 +256,8 @@ if (document.getElementById('beneficiario_single')) {
          }
          get_distritos()
       }
-
       document.getElementById('direccion').value = datos.get('direccion')
+      document.getElementById('email').value = datos.get('email')
       document.getElementById('t_principal').value = datos.get('t_principal')
       document.getElementById('t_otros').value = datos.get('t_otros')
       document.getElementById('n_madre').value = datos.get('n_madre')
@@ -250,4 +266,49 @@ if (document.getElementById('beneficiario_single')) {
 
       document.getElementById('beneficiario').removeAttribute('hidden')
    })
+
+   /*document.getElementById('btn_asistencia').addEventListener('click', () => {
+      document.getElementById('asistencia').removeAttribute('hidden')
+      document.getElementById('btn_asistencia').setAttribute('hidden', '')
+   })*/
+
+   document.getElementById('btn_actualizar_asistencia').addEventListener('click', () => {
+      document.getElementById('asistencia').setAttribute('hidden', '')
+      document.getElementById('btn_asistencia').removeAttribute('hidden')
+
+   })
+}
+
+document.addEventListener('click', funcion_beneficiario)
+function funcion_beneficiario(e) {
+   if (e.target.getAttribute('data-b_id')) {
+      e.preventDefault();
+      e.stopPropagation();
+      const post_id = e.target.dataset.b_id
+      const formulario = document.getElementById(post_id)
+      const datos = new FormData(formulario)
+
+      async function save_f_u_actualizacion() {
+         const request = new Request(
+            datos.get('endpoint'), {
+            method: 'POST',
+            body: datos,
+         })
+         try {
+            const response = await fetch(request)
+            const data = await response.json()
+            if (data.success) {
+               console.log(data.data)
+            } else {
+               console.log(data)
+            }
+         } catch (error) {
+            console.log('Error: ', error)
+         }
+      }
+      save_f_u_actualizacion()
+
+      document.getElementById(post_id).setAttribute('hidden', '')
+   }
+
 }

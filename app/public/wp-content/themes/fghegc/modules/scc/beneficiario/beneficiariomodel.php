@@ -16,6 +16,7 @@ class BeneficiarioModel
       add_action('save_post', [$this, 'save_nombre']);
       add_action('save_post', [$this, 'save_p_apellido']);
       add_action('save_post', [$this, 'save_s_apellido']);
+      add_action('save_post', [$this, 'save_sexo']);
       add_action('save_post', [$this, 'save_f_nacimiento']);
       add_action('save_post', [$this, 'save_f_ingreso']);
       add_action('save_post', [$this, 'save_f_salida']);
@@ -31,6 +32,8 @@ class BeneficiarioModel
       add_action('save_post', [$this, 'save_n_madre']);
       add_action('save_post', [$this, 'save_n_padre']);
       add_action('pre_get_posts', [$this, 'set_pre_get_posts']);
+      add_action('wp_ajax_f_u_actualizacion', [$this, 'f_u_actualizacion']);
+      add_action('wp_ajax_editar_beneficiario', [$this, 'editar_beneficiario']);
    }
    public function set_beneficiario()
    {
@@ -47,7 +50,7 @@ class BeneficiarioModel
          'show_in_rest' => true,
          'rest_base' => 'beneficiarios',
          'menu_icon' => 'dashicons-book',
-         'supports' => array('title', 'editor', 'custom-fields', 'comments'),
+         'supports' => array('title', 'editor', 'thumbnail', 'custom-fields', 'comments'),
       );
 
       register_post_type($type, $args);
@@ -132,6 +135,14 @@ class BeneficiarioModel
          '_s_apellido',
          'Segundo Apellido',
          [$this, 'set_s_apellido_cbk'],
+         'beneficiario',
+         'normal',
+         'default'
+      );
+      add_meta_box(
+         '_sexo',
+         'Sexo',
+         [$this, 'set_sexo_cbk'],
          'beneficiario',
          'normal',
          'default'
@@ -248,6 +259,14 @@ class BeneficiarioModel
          'normal',
          'default'
       );
+      add_meta_box(
+         '_f_u_actualizacion',
+         'Fecha Última Actualización',
+         [$this, 'set_f_u_actualizacion_cbk'],
+         'beneficiario',
+         'normal',
+         'default'
+      );
    }
    public function set_nombre_cbk($post)
    {
@@ -344,6 +363,38 @@ class BeneficiarioModel
       }
       $s_apellido = sanitize_text_field($_POST['s_apellido']);
       update_post_meta($post_id, '_s_apellido', $s_apellido);
+   }
+   public function set_sexo_cbk($post)
+   {
+      wp_nonce_field('sexo_nonce', 'sexo_nonce');
+      $sexo = get_post_meta($post->ID, '_sexo', true);
+      echo '<input type="number" min="1" max="2" style="width:5%" id="sexo" name="sexo" value="' . esc_attr($sexo) . '" ></input> (1=masculino,2=femenino)';
+   }
+   public function save_sexo($post_id)
+   {
+      if (!isset($_POST['sexo_nonce'])) {
+         return;
+      }
+      if (!wp_verify_nonce($_POST['sexo_nonce'], 'sexo_nonce')) {
+         return;
+      }
+      if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+         return;
+      }
+      if (isset($_POST['post_type']) && 'page' == $_POST['post_type']) {
+         if (!current_user_can('edit_page', $post_id)) {
+            return;
+         }
+      } else {
+         if (!current_user_can('edit_post', $post_id)) {
+            return;
+         }
+      }
+      if (!isset($_POST['sexo'])) {
+         return;
+      }
+      $sexo = sanitize_text_field($_POST['sexo']);
+      update_post_meta($post_id, '_sexo', $sexo);
    }
    public function set_f_nacimiento_cbk($post)
    {
@@ -793,13 +844,75 @@ class BeneficiarioModel
       $n_padre = sanitize_text_field($_POST['n_padre']);
       update_post_meta($post_id, '_n_padre', $n_padre);
    }
+   public function set_f_u_actualizacion_cbk($post)
+   {
+      wp_nonce_field('f_u_actualizacion_nonce', 'f_u_actualizacion_nonce');
+      $f_u_actualizacion = get_post_meta($post->ID, '_f_u_actualizacion', true);
+      echo '<input type="date" style="width:20%" id="f_u_actualizacion" name="f_u_actualizacion" value="' . esc_attr($f_u_actualizacion) . '" ></input>';
+   }
+   public function save_f_u_actualizacion($post_id)
+   {
+      if (!isset($_POST['f_u_actualizacion_nonce'])) {
+         return;
+      }
+      if (!wp_verify_nonce($_POST['f_u_actualizacion_nonce'], 'f_u_actualizacion_nonce')) {
+         return;
+      }
+      if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+         return;
+      }
+      if (isset($_POST['post_type']) && 'page' == $_POST['post_type']) {
+         if (!current_user_can('edit_page', $post_id)) {
+            return;
+         }
+      } else {
+         if (!current_user_can('edit_post', $post_id)) {
+            return;
+         }
+      }
+      if (!isset($_POST['f_u_actualizacion'])) {
+         return;
+      }
+      $f_u_actualizacion = sanitize_text_field($_POST['f_u_actualizacion']);
+      update_post_meta($post_id, '_f_u_actualizacion', $f_u_actualizacion);
+   }
+   public function f_u_actualizacion()
+   {
+      if (!wp_verify_nonce($_POST['nonce'], 'f_u_actualizacion')) {
+         wp_send_json_error('Error de seguridad', 401);
+         wp_die();
+      } else {
+         $post_id = sanitize_text_field($_POST['post_id']);
+         $f_u_actualizacion = sanitize_text_field($_POST['f_actualizacion']);
+         if (get_post_meta($post_id, '_f_u_actualizacion', true)) {
+         } else {
+            add_post_meta($post_id, '_f_u_actualizacion', $f_u_actualizacion, true);
+         }
+         wp_send_json_success($f_u_actualizacion);
+      }
+   }
 
    public function set_pre_get_posts($query)
    {
       if (!is_admin() && is_post_type_archive() && $query->is_main_query()) {
-         $query->set('posts_per_page', 20);
-         $query->set('orderby', 'post_title');
-         $query->set('order', 'ASC');
+
+         if (is_post_type_archive('beneficiario')) {
+            $query->set('posts_per_page', 20);
+            $query->set('orderby', 'post_title');
+            $query->set('order', 'ASC');
+            $query->set('meta_query', [
+               'relation' => 'OR',
+               [
+                  'key' => '_f_u_actualizacion',
+                  'value' => date('Y-m-d'),
+                  'compare' => '!='
+               ],
+               [
+                  'key' => '_f_u_actualizacion',
+                  'compare' => 'NOT EXISTS',
+               ],
+            ]);
+         }
       }
    }
    private function set_paginas()
@@ -819,6 +932,11 @@ class BeneficiarioModel
          [
             'slug' => 'beneficiario-usuario',
             'titulo' => 'Usuarios'
+         ],
+         'acerca' =>
+         [
+            'slug' => 'beneficiario-acerca',
+            'titulo' => 'Acerca de Nosotros'
          ]
       ];
       foreach ($paginas as $pagina) {
@@ -846,5 +964,31 @@ class BeneficiarioModel
       // remove_role('usercoordinaeventos');
       add_role('useradminbeneficiarios', 'Administrador(a) Beneficiarios', get_role('subscriber')->capabilities);
       add_role('beneficiarios', 'Beneficiarios', get_role('subscriber')->capabilities);
+   }
+   public function editar_beneficiario()
+   {
+      $post_id = sanitize_text_field($_POST['post_id']);
+
+      require_once(ABSPATH . "wp-admin" . '/includes/image.php');
+      require_once(ABSPATH . "wp-admin" . '/includes/file.php');
+      require_once(ABSPATH . "wp-admin" . '/includes/media.php');
+
+      $imagen = $_FILES['beneficiario_imagen_editar']['tmp_name'];
+      if (get_post_thumbnail_id($post_id)) {
+         $post_attached_id = 'remplazar imagen';
+      } else {
+         $post_attached_id = 'No tiene imagen';
+      }
+
+      $attach_id = media_handle_upload('beneficiario_imagen_editar', $post_id);
+      if (is_wp_error($attach_id)) {
+         $attach_id = '';
+      }
+      // set_post_thumbnail($post_id, $attach_id);
+
+      wp_send_json_success(['titulo' => 'Actualizado', 'msg' => 'Los datos fueron actualizados correctamente.', 'imagen' => $post_attached_id]);
+   }
+   public function borrar_beneficiario()
+   {
    }
 }
