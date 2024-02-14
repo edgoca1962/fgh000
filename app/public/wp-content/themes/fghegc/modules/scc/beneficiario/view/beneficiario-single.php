@@ -2,11 +2,10 @@
 
 use FGHEGC\Modules\Core\CoreController;
 use FGHEGC\Modules\Scc\Beneficiario\BeneficiarioController;
-use FGHEGC\Modules\DivPolCri\DivPolCriModel;
 
 $atributos = CoreController::get_instance()->get_atributos(get_post_type());
 $beneficiario = BeneficiarioController::get_instance();
-$provincias = BeneficiarioController::get_instance()->scc_get_provincias();
+
 ?>
 <!-- Plantilla Single -->
 <section>
@@ -94,7 +93,7 @@ $provincias = BeneficiarioController::get_instance()->scc_get_provincias();
             <label class="form-label">Fecha Salida</label>
             <input name="f_salida" type="text" class="form-control border-0 bg-secondary text-white" value="<?php echo get_post_meta(get_the_ID(), '_f_salida', true) ?>" editar>
          </div>
-      </div><!-- fecha nacimiento, ingreso y salida -->
+      </div><!-- Sexo, fecha nacimiento, ingreso y salida -->
       <div class="form-group row">
          <div class="col-md-4 mb-3">
             <label class="form-label">Edad</label>
@@ -169,7 +168,7 @@ $provincias = BeneficiarioController::get_instance()->scc_get_provincias();
 </section>
 <!-- Formulario de edición -->
 <section>
-   <form id="beneficiario" enctype="multipart/form-data" class="needs-validation" novalidate hidden>
+   <form id="beneficiario_single_editar" enctype="multipart/form-data" class="needs-validation" novalidate hidden>
       <div class="col d-flex justify-content-center align-items-center my-3">
          <div class="card">
             <img id="imagennueva_editar" src="<?php echo (get_the_post_thumbnail_url()) ? get_the_post_thumbnail_url() : $beneficiario->get_avatar(get_the_ID()) ?>" class="object-fit-cover rounded" alt="Imágen del beneficiario" style="width: 200px;">

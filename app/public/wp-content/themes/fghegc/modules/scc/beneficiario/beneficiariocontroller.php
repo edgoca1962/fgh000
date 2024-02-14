@@ -104,7 +104,7 @@ class BeneficiarioController
       INNER JOIN $wpdb->postmeta t2
          ON (ID = t2.post_id)
       WHERE post_type = 'divpolcri'
-         AND (t1.meta_key = '_provincia_id' AND t1.meta_value !=$provincia_id)
+         AND (t1.meta_key = '_provincia_id' AND t1.meta_value = $provincia_id)
          AND (t2.meta_key = '_provincia' AND t2.meta_value !='')
       ORDER BY t2.meta_value
       ";
@@ -125,8 +125,8 @@ class BeneficiarioController
       INNER JOIN $wpdb->postmeta t2
          ON (ID = t2.post_id)
       WHERE post_type = 'divpolcri'
-         AND (t1.meta_key = '_canton_id' AND t1.meta_value !='')
-         AND (t2.meta_key = '_canton' AND t2.meta_value !=$canton_id)
+         AND (t1.meta_key = '_canton_id' AND t1.meta_value = $canton_id)
+         AND (t2.meta_key = '_canton' AND t2.meta_value !='')
       ORDER BY t2.meta_value
       ";
 
@@ -146,7 +146,7 @@ class BeneficiarioController
       INNER JOIN $wpdb->postmeta t2
          ON (ID = t2.post_id)
       WHERE post_type = 'divpolcri'
-         AND (t1.meta_key = '_distrito_id' AND t1.meta_value !=$distrito_id)
+         AND (t1.meta_key = '_distrito_id' AND t1.meta_value = $distrito_id)
          AND (t2.meta_key = '_distrito' AND t2.meta_value !='')
       ORDER BY t2.meta_value
       ";

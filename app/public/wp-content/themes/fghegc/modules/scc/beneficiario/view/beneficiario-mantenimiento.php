@@ -49,24 +49,35 @@ $provincias = BeneficiarioController::get_instance()->scc_get_provincias();
             </div><!-- Nombre y apellidos -->
             <div class="form-group row">
                <div class="col-md-4 mb-3">
+                  <div class="mb-3">Sexo</div>
+                  <div class="form-check form-check-inline">
+                     <input class="form-check-input" type="radio" name="sexo" id="masculino" value="1" checked>
+                     <label class="form-check-label" for="masculino">Masculino</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                     <input class="form-check-input" type="radio" name="sexo" id="femenino" value="2">
+                     <label class="form-check-label" for="femenino">Femenino</label>
+                  </div>
+               </div>
+               <div class="col-md mb-3">
                   <label class="form-label">Fecha Nacimiento</label>
-                  <input type="date" name="f_nacimiento" placeholder="Fecha de Nacimiento" class="form-control" id="f_nacimiento" required>
+                  <input id="f_nacimiento" type="date" name="f_nacimiento" placeholder="Fecha de Nacimiento" class="form-control" required>
                   <div class="invalid-feedback">
                      Por favor indicar la fecha de nacimiento.
                   </div>
                </div>
-               <div class="col-md-4 mb-3">
+               <div class="col-md mb-3">
                   <label class="form-label">Fecha Ingreso</label>
-                  <input type="date" name="f_ingreso" placeholder="Fecha de Ingreso" class="form-control" required>
+                  <input id="f_ingreso" type="date" name="f_ingreso" placeholder="Fecha de Ingreso" class="form-control" required>
                   <div class="invalid-feedback">
                      Por favor indicar la fecha de ingreso.
                   </div>
                </div>
-               <div class="col-md-4 mb-3">
+               <div class="col-md mb-3">
                   <label class="form-label">Fecha Salida</label>
-                  <input type="date" name="f_salida" placeholder="Fecha de Salida" class="form-control">
+                  <input id="f_salida" type="date" name="f_salida" placeholder="Fecha de Salida" class="form-control">
                </div>
-            </div><!-- fecha nacimiento, ingreso y salida -->
+            </div><!-- Sexo, fecha nacimiento, ingreso y salida -->
             <div class="form-group row">
                <div class="col-md-4 mb-3">
                   <label class="form-label">Edad</label>
@@ -157,6 +168,7 @@ $provincias = BeneficiarioController::get_instance()->scc_get_provincias();
                   <button type="submit" class="btn btn-warning mb-3"><span><i class="fa-solid fa-floppy-disk"></i></span> Guardar</button>
                </div>
             </div>
+            <input type="hidden" name="post_id" value="<?php the_ID() ?>">
             <input type="hidden" name="action" value="beneficiario">
             <input type="hidden" name="nonce" value="<?php echo wp_create_nonce('beneficiarios') ?>">
             <input id="endpoint" type="hidden" name="endpoint" value="<?php echo admin_url('admin-ajax.php') ?>">

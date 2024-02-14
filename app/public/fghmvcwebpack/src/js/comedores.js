@@ -6,7 +6,7 @@ if (document.getElementById('comedorescsv')) {
       document.getElementById('lbl_csvfile').innerHTML = csvfile2[2]
    })
 }
-if (document.getElementById('beneficiario')) {
+if (document.getElementById('beneficiario_single')) {
    const endpoint = document.getElementById('endpoint').value
    const f_nacimiento = document.getElementById('f_nacimiento')
    const edad = document.getElementById('edad')
@@ -118,10 +118,8 @@ if (document.getElementById('beneficiario')) {
       }
       buscar_distrito()
    })
-
-
 }
-if (document.getElementById('beneficiario_single')) {
+if (document.getElementById('beneficiario_single_editar')) {
    const formulario = document.getElementById('beneficiario_single')
    const datos = new FormData(formulario)
    const elementosConEditar = document.querySelectorAll('[editar]');
@@ -169,7 +167,6 @@ if (document.getElementById('beneficiario_single')) {
       document.getElementById('edad').value = datos.get('edad')
       document.getElementById('peso').value = datos.get('peso')
       document.getElementById('estatura').value = datos.get('estatura')
-      datos_provincias()
       function datos_provincias() {
          const provincia = document.getElementById('provincia')
          const datos_provincias = new FormData()
@@ -203,7 +200,7 @@ if (document.getElementById('beneficiario_single')) {
          }
          get_provincias()
       }
-      datos_cantones()
+      datos_provincias()
       function datos_cantones() {
          const canton = document.getElementById('canton')
          const datos_cantones = new FormData()
@@ -238,7 +235,7 @@ if (document.getElementById('beneficiario_single')) {
          }
          get_cantones()
       }
-      datos_distritos()
+      datos_cantones()
       function datos_distritos() {
          const distrito = document.getElementById('distrito')
          const datos_distritos = new FormData()
@@ -273,6 +270,7 @@ if (document.getElementById('beneficiario_single')) {
          }
          get_distritos()
       }
+      datos_distritos()
       document.getElementById('direccion').value = datos.get('direccion')
       document.getElementById('email').value = datos.get('email')
       document.getElementById('t_principal').value = datos.get('t_principal')
@@ -281,7 +279,7 @@ if (document.getElementById('beneficiario_single')) {
       document.getElementById('n_padre').value = datos.get('n_padre')
       document.getElementById('content').value = datos.get('content')
 
-      document.getElementById('beneficiario').removeAttribute('hidden')
+      document.getElementById('beneficiario_single_editar').removeAttribute('hidden')
    })
 
    /*document.getElementById('btn_asistencia').addEventListener('click', () => {
