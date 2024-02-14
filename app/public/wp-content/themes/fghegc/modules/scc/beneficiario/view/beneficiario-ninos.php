@@ -12,7 +12,7 @@ $provincias = BeneficiarioController::get_instance()->scc_get_provincias();
    <div class="row">
       <div class="col-md-8">
          <h2 class="mb-3 text-center">Información del beneficiario(a)</h2>
-         <form id="beneficiario" enctype="multipart/form-data" class="needs-validation" novalidate>
+         <form id="beneficiario_ninos" enctype="multipart/form-data" class="needs-validation" novalidate>
             <div class="col d-flex justify-content-center align-items-center my-3">
                <div style="height: 205px; overflow:hidden; ">
                   <div class="card h-100">
@@ -169,7 +169,7 @@ $provincias = BeneficiarioController::get_instance()->scc_get_provincias();
                </div>
             </div>
             <input type="hidden" name="post_id" value="<?php the_ID() ?>">
-            <input type="hidden" name="action" value="beneficiario">
+            <input type="hidden" name="action" value="beneficiario_ninos">
             <input type="hidden" name="nonce" value="<?php echo wp_create_nonce('beneficiarios') ?>">
             <input id="endpoint" type="hidden" name="endpoint" value="<?php echo admin_url('admin-ajax.php') ?>">
          </form>

@@ -1,24 +1,33 @@
 1. Eliminar carpetas de módulos no utilizados.
 2. Cambiar dominio FGHEGC por SCC
 3. corecontroller: 
-   1. Eliminar getID3.
+   1. Eliminar require getID3 y peticion_comments.
    2. Eliminar módulos no utilizados (controllers y models).
    3. get_banner function incluir is_page('beneficiario-principal') para banner = ''.
 4. core->view->navbar: 
    1. Eliminar validación de login y userAdmin en el menú normal y administrador.
    2. Cambiar clase "container-fluid" por "container".
-5. pagecontroller: modificar frontpage->fullpage=true.
-6. WP-Admin:
-   1. Modificar menú (en caso necesario).
-   2. Modificar Home Page en Settings -> Reading.
-7. Modificación Container:
-   1. pagecontroller: atributo div1 = ''
-   2. core->view -> incluir clase container en:
+   3. incluir img logo class = "rounded-circle bg-white"
+5. Modificación para Container:
+   1. pagecontroller: 
+      1. atributo div1 = ''
+      2. incluir logica en get_datosAtributos()
+      if (is_page('beneficiario-acerca')) {
+         $datosAtributos['div0'] = 'background-blend';
+      } else {
+         $datosAtributos['div0'] = 'background-blend pt-5';
+      }
+   2. core->view:
       1. core-cambio-clave
       2. core-csv-files
-   3. beneficiario->view: Incluir container en todos menos en beneficiario-acerca
-8. Cambiar beneficiario-principal:
+   3. beneficiario->view: 
+      1. beneficiario-mantenimiento
+      2. beneficiario-csv
+6. Cambiar beneficiario-principal:
    1. Incluir código de banner
    2. Cargar los atributos de Beneficiario
    3. Inlcuir codigo de logo de navbar
    4. Modificar Título y subtítulos.
+7. WP-Admin:
+   1. Modificar menú (en caso necesario).
+   2. Modificar Home Page en Settings -> Reading.

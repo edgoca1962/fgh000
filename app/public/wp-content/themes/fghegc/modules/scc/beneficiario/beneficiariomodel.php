@@ -34,6 +34,7 @@ class BeneficiarioModel
       add_action('pre_get_posts', [$this, 'set_pre_get_posts']);
       add_action('wp_ajax_f_u_actualizacion', [$this, 'f_u_actualizacion']);
       add_action('wp_ajax_editar_beneficiario', [$this, 'editar_beneficiario']);
+      add_action('wp_ajax_beneficiario_ninos', [$this, 'agregar_beneficiario_ninos']);
    }
    public function set_beneficiario()
    {
@@ -925,8 +926,8 @@ class BeneficiarioModel
          ],
          'mantenimiento' =>
          [
-            'slug' => 'beneficiario-mantenimiento',
-            'titulo' => 'Mantenimiento de Beneficiarios'
+            'slug' => 'beneficiario-ninos',
+            'titulo' => 'Mantenimiento Niños(as)'
          ],
          'usuario' =>
          [
@@ -965,6 +966,10 @@ class BeneficiarioModel
       add_role('useradminbeneficiarios', 'Administrador(a) Beneficiarios', get_role('subscriber')->capabilities);
       add_role('beneficiarios', 'Beneficiarios', get_role('subscriber')->capabilities);
    }
+   public function agregar_beneficiario_ninos()
+   {
+      wp_send_json_success(['titulo' => 'Información Actualizada', 'msg' => 'La información del niño(a) se actualizó correctamente.']);
+   }
    public function editar_beneficiario()
    {
       $post_id = sanitize_text_field($_POST['post_id']);
@@ -986,7 +991,7 @@ class BeneficiarioModel
       }
       // set_post_thumbnail($post_id, $attach_id);
 
-      wp_send_json_success(['titulo' => 'Actualizado', 'msg' => 'Los datos fueron actualizados correctamente.', 'imagen' => $post_attached_id]);
+      wp_send_json_success(['titulo' => 'Actualizado', 'msg' => 'Los datos fueron actualizados correctamente.']);
    }
    public function borrar_beneficiario()
    {
