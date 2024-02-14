@@ -320,7 +320,6 @@ if (document.getElementById('beneficiario_ninos')) {
          }
       })
    }
-
    f_nacimiento.addEventListener('change', () => {
       var fecha_actual = new Date()
       var f_nacimiento_val = new Date(f_nacimiento.value)
@@ -334,6 +333,11 @@ if (document.getElementById('beneficiario_ninos')) {
       datos.append('action', action_canton)
       datos.append('nonce', nonce_canton)
       datos.append('provincia_id', provincia_id)
+      for (var pair of datos.entries()) {
+         var nombre = pair[0];
+         var valor = pair[1];
+         console.log("Nombre:", nombre, "Valor:", valor);
+      }
       async function buscar_canton() {
          const request = new Request(
             datos.get('endpoint'), {
@@ -366,6 +370,11 @@ if (document.getElementById('beneficiario_ninos')) {
       datos.append('action', action_distrito)
       datos.append('nonce', nonce_distrito)
       datos.append('canton_id', canton_id)
+      for (var pair of datos.entries()) {
+         var nombre = pair[0];
+         var valor = pair[1];
+         console.log("Nombre:", nombre, "Valor:", valor);
+      }
       async function buscar_distrito() {
          const request = new Request(
             datos.get('endpoint'), {

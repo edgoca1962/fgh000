@@ -14,7 +14,7 @@ $provincias = BeneficiarioController::get_instance()->scc_get_provincias();
          <h2 class="mb-3 text-center">Información del beneficiario(a)</h2>
          <form id="beneficiario_ninos" enctype="multipart/form-data" class="needs-validation" novalidate>
             <div class="col d-flex justify-content-center align-items-center my-3">
-               <div style="height: 205px; overflow:hidden; ">
+               <div style="width: 200px; overflow:hidden; ">
                   <div class="card h-100">
                      <img id="imagennueva" src="<?php echo FGHEGC_DIR_URI . '/assets/img/avatar03.png' ?>" class="card-img h-100" alt="Imágen del beneficiario">
                      <div class="card-img-overlay d-flex justify-content-center align-items-center">

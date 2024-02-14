@@ -1,5 +1,11 @@
+Para comprimir tema a partir de WP 6.4:
+ zip -vr tema.zip tema/
 1. Eliminar carpetas de módulos no utilizados.
-2. Cambiar dominio FGHEGC por SCC
+2. Cambiar dominio 
+   1. FGHEGC por SCC
+   2. FGHEGC_ por SCC_
+   3. fghegc por SCC
+   4. fghegc_ por SCC
 3. corecontroller: 
    1. Eliminar require getID3 y peticion_comments.
    2. Eliminar módulos no utilizados (controllers y models).
