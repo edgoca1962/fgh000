@@ -924,10 +924,15 @@ class BeneficiarioModel
             'slug' => 'beneficiario-principal',
             'titulo' => 'Sistema Comedores'
          ],
-         'mantenimiento' =>
+         'ninos' =>
          [
             'slug' => 'beneficiario-ninos',
             'titulo' => 'Mantenimiento Niños(as)'
+         ],
+         'adultos' =>
+         [
+            'slug' => 'beneficiario-adultos',
+            'titulo' => 'Mantenimiento Adultos'
          ],
          'usuario' =>
          [

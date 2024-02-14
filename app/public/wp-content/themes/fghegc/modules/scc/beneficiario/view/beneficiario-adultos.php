@@ -11,8 +11,8 @@ $provincias = BeneficiarioController::get_instance()->scc_get_provincias();
 <div class="container">
    <div class="row">
       <div class="col-md-8">
-         <h2 class="mb-3 text-center">Información del Niño(a)</h2>
-         <form id="beneficiario_ninos" enctype="multipart/form-data" class="needs-validation" novalidate>
+         <h2 class="mb-3 text-center">Información del Adulto(a)</h2>
+         <form id="beneficiario_adultos" enctype="multipart/form-data" class="needs-validation" novalidate>
             <div class="col d-flex justify-content-center align-items-center my-3">
                <div style="width: 200px; overflow:hidden; ">
                   <div class="card h-100">
@@ -25,26 +25,30 @@ $provincias = BeneficiarioController::get_instance()->scc_get_provincias();
                </div>
             </div><!-- Foto beneficiario -->
             <div class="form-group row">
-               <div class="col-md-4 mb-3">
-                  <label class="form-label">Nombre</label>
+               <div class="col-md-6 mb-3">
+                  <label class="form-label">Nombre Completo</label>
                   <input type="text" name="nombre" placeholder="Nombre" class="form-control" required>
                   <div class="invalid-feedback">
                      Por favor indicar un nombre.
                   </div>
                </div>
-               <div class="col-md-4 mb-3">
-                  <label class="form-label">Primer Apellido</label>
-                  <input type="text" name="p_apellido" placeholder="Primer Apellido" class="form-control" required>
+               <div class="col-md-2 mb-3">
+                  <label class="form-label">Fecha Nacimiento</label>
+                  <input id="f_nacimiento" type="date" name="f_nacimiento" placeholder="Fecha de Nacimiento" class="form-control" required>
                   <div class="invalid-feedback">
-                     Por favor indicar un apellido.
+                     Por favor indicar la fecha de nacimiento.
                   </div>
                </div>
-               <div class="col-md-4 mb-3">
-                  <label class="form-label">Segundo Apellido</label>
-                  <input type="text" name="s_apellido" placeholder="Segundo Apellido" class="form-control" required>
+               <div class="col-md-2 mb-3">
+                  <label class="form-label">Fecha Ingreso</label>
+                  <input id="f_ingreso" type="date" name="f_ingreso" placeholder="Fecha de Ingreso" class="form-control" required>
                   <div class="invalid-feedback">
-                     Por favor indicar un apellido.
+                     Por favor indicar la fecha de ingreso.
                   </div>
+               </div>
+               <div class="col-md-2 mb-3">
+                  <label class="form-label">Fecha Salida</label>
+                  <input id="f_salida" type="date" name="f_salida" placeholder="Fecha de Salida" class="form-control">
                </div>
             </div><!-- Nombre y apellidos -->
             <div class="form-group row">
@@ -59,39 +63,26 @@ $provincias = BeneficiarioController::get_instance()->scc_get_provincias();
                      <label class="form-check-label" for="femenino">Femenino</label>
                   </div>
                </div>
-               <div class="col-md mb-3">
-                  <label class="form-label">Fecha Nacimiento</label>
-                  <input id="f_nacimiento" type="date" name="f_nacimiento" placeholder="Fecha de Nacimiento" class="form-control" required>
-                  <div class="invalid-feedback">
-                     Por favor indicar la fecha de nacimiento.
+               <div class="col-md-6 mb-3">
+                  <div class="mb-3">Condición</div>
+                  <div class="form-check form-check-inline">
+                     <input class="form-check-input" type="radio" name="condicion" id="adultomayor" value="2" checked>
+                     <label class="form-check-label" for="masculino">Aldulto(a) Mayor</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                     <input class="form-check-input" type="radio" name="condicion" id="embarazada" value="3">
+                     <label class="form-check-label" for="femenino">Embarazada</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                     <input class="form-check-input" type="radio" name="condicion" id="lactancia" value="4">
+                     <label class="form-check-label" for="femenino">En Lactancia</label>
                   </div>
                </div>
-               <div class="col-md mb-3">
-                  <label class="form-label">Fecha Ingreso</label>
-                  <input id="f_ingreso" type="date" name="f_ingreso" placeholder="Fecha de Ingreso" class="form-control" required>
-                  <div class="invalid-feedback">
-                     Por favor indicar la fecha de ingreso.
-                  </div>
-               </div>
-               <div class="col-md mb-3">
-                  <label class="form-label">Fecha Salida</label>
-                  <input id="f_salida" type="date" name="f_salida" placeholder="Fecha de Salida" class="form-control">
-               </div>
-            </div><!-- Sexo, fecha nacimiento, ingreso y salida -->
-            <div class="form-group row">
-               <div class="col-md-4 mb-3">
+               <div class="col-md-2 mb-3">
                   <label class="form-label">Edad</label>
-                  <input type="text" name="edad" placeholder="Edad (este dato se calcula)" class="form-control" id="edad" disabled>
+                  <input type="text" name="edad" placeholder="Edad" class="form-control" id="edad" disabled>
                </div>
-               <div class="col-md-4 mb-3">
-                  <label class="form-label">Peso (kg)</label>
-                  <input type="text" name="peso" placeholder="Peso en kilos" class="form-control">
-               </div>
-               <div class="col-md-4 mb-3">
-                  <label class="form-label">Estatura (m)</label>
-                  <input type="text" name="estatura" placeholder="Estatura en metros" class="form-control">
-               </div>
-            </div><!-- Edad, peso y estatura -->
+            </div><!-- Sexo, Condición y Edad -->
             <div class="form-group row">
                <div class="col-md-4 mb-3">
                   <label class="form-label">Provincia</label>
@@ -125,13 +116,6 @@ $provincias = BeneficiarioController::get_instance()->scc_get_provincias();
             </div><!-- dirección detallada -->
             <div class="form-group row">
                <div class="col-md-4 mb-3">
-                  <label class="form-label">e-mail</label>
-                  <input type="email" name="email" placeholder="e-mail" class="form-control" required>
-                  <div class="invalid-feedback">
-                     Por favor indicar un correo válido.
-                  </div>
-               </div>
-               <div class="col-md-4 mb-3">
                   <label class="form-label">Teléfono Principal</label>
                   <input type="text" name="t_principal" placeholder="Teléfono principal" class="form-control" required>
                   <div class="invalid-feedback">
@@ -142,23 +126,7 @@ $provincias = BeneficiarioController::get_instance()->scc_get_provincias();
                   <label class="form-label">Otros Teléfonos</label>
                   <input type="text" name="t_otros" placeholder="Otros Teléfonos" class="form-control">
                </div>
-            </div><!-- correo y teléfono -->
-            <div class="form-group row">
-               <div class="col-md-4 mb-3">
-                  <label class="form-label">Nombre de la Madre o Tutor(a)</label>
-                  <input type="text" name="n_madre" placeholder="Nombre de la madre o tutor(a)" class="form-control" required>
-                  <div class="invalid-feedback">
-                     Por favor indicar un nombre de la madre o tutor.
-                  </div>
-               </div>
-               <div class="col-md-4 mb-3">
-                  <label class="form-label">Nombre del Padre</label>
-                  <input type="text" name="n_padre" placeholder="Nombre del padre" class="form-control" required>
-                  <div class="invalid-feedback">
-                     Por favor indicar un nombre del padre.
-                  </div>
-               </div>
-            </div><!-- Madre, Tutor, Padre -->
+            </div><!-- teléfonos -->
             <div class="form-group mb-3">
                <label for="content" class="form-label fs-4">Rerseña</label>
                <textarea name="content" cols="30" rows="5" class="form-control" placeholder="Reseña del beneficiario"></textarea>
@@ -167,9 +135,9 @@ $provincias = BeneficiarioController::get_instance()->scc_get_provincias();
                <div class="col">
                   <button type="submit" class="btn btn-warning mb-3"><span><i class="fa-solid fa-floppy-disk"></i></span> Guardar</button>
                </div>
-            </div>
+            </div><!-- Butón submit -->
             <input type="hidden" name="post_id" value="<?php the_ID() ?>">
-            <input type="hidden" name="action" value="beneficiario_ninos">
+            <input type="hidden" name="action" value="beneficiario_adultos">
             <input type="hidden" name="nonce" value="<?php echo wp_create_nonce('beneficiarios') ?>">
             <input id="endpoint" type="hidden" name="endpoint" value="<?php echo admin_url('admin-ajax.php') ?>">
          </form>
