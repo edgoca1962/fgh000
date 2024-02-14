@@ -5,7 +5,7 @@
    2. Eliminar módulos no utilizados (controllers y models).
    3. get_banner function incluir is_page('beneficiario-principal') para banner = ''.
 4. core->view->navbar: 
-   1. Eliminar validación de login en el menú.
+   1. Eliminar validación de login y userAdmin en el menú normal y administrador.
    2. Cambiar clase "container-fluid" por "container".
 5. pagecontroller: modificar frontpage->fullpage=true.
 6. WP-Admin:
@@ -13,11 +13,10 @@
    2. Modificar Home Page en Settings -> Reading.
 7. Modificación Container:
    1. pagecontroller: atributo div1 = ''
-   2. core->view -> incluir clase contaner en:
+   2. core->view -> incluir clase container en:
       1. core-cambio-clave
       2. core-csv-files
-   3. beneficiario->view -> incluir container en:
-      1. todos menos en beneficiario-acerca
+   3. beneficiario->view: Incluir container en todos menos en beneficiario-acerca
 8. Cambiar beneficiario-principal:
    1. Incluir código de banner
    2. Cargar los atributos de Beneficiario
