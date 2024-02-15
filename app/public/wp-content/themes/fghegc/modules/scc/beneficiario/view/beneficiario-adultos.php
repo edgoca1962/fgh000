@@ -25,30 +25,26 @@ $provincias = BeneficiarioController::get_instance()->scc_get_provincias();
                </div>
             </div><!-- Foto beneficiario -->
             <div class="form-group row">
-               <div class="col-md-6 mb-3">
-                  <label class="form-label">Nombre Completo</label>
+               <div class="col-md-4 mb-3">
+                  <label class="form-label">Nombre</label>
                   <input type="text" name="nombre" placeholder="Nombre" class="form-control" required>
                   <div class="invalid-feedback">
                      Por favor indicar un nombre.
                   </div>
                </div>
-               <div class="col-md-2 mb-3">
-                  <label class="form-label">Fecha Nacimiento</label>
-                  <input id="f_nacimiento" type="date" name="f_nacimiento" placeholder="Fecha de Nacimiento" class="form-control" required>
+               <div class="col-md-4 mb-3">
+                  <label class="form-label">Primer Apellido</label>
+                  <input type="text" name="p_apellido" placeholder="Primer Apellido" class="form-control" required>
                   <div class="invalid-feedback">
-                     Por favor indicar la fecha de nacimiento.
+                     Por favor indicar un apellido.
                   </div>
                </div>
-               <div class="col-md-2 mb-3">
-                  <label class="form-label">Fecha Ingreso</label>
-                  <input id="f_ingreso" type="date" name="f_ingreso" placeholder="Fecha de Ingreso" class="form-control" required>
+               <div class="col-md-4 mb-3">
+                  <label class="form-label">Segundo Apellido</label>
+                  <input type="text" name="s_apellido" placeholder="Segundo Apellido" class="form-control" required>
                   <div class="invalid-feedback">
-                     Por favor indicar la fecha de ingreso.
+                     Por favor indicar un apellido.
                   </div>
-               </div>
-               <div class="col-md-2 mb-3">
-                  <label class="form-label">Fecha Salida</label>
-                  <input id="f_salida" type="date" name="f_salida" placeholder="Fecha de Salida" class="form-control">
                </div>
             </div><!-- Nombre y apellidos -->
             <div class="form-group row">
@@ -63,6 +59,26 @@ $provincias = BeneficiarioController::get_instance()->scc_get_provincias();
                      <label class="form-check-label" for="femenino">Femenino</label>
                   </div>
                </div>
+               <div class="col-md mb-3">
+                  <label class="form-label">Fecha Nacimiento</label>
+                  <input id="f_nacimiento" type="date" name="f_nacimiento" placeholder="Fecha de Nacimiento" class="form-control" required>
+                  <div class="invalid-feedback">
+                     Por favor indicar la fecha de nacimiento.
+                  </div>
+               </div>
+               <div class="col-md mb-3">
+                  <label class="form-label">Fecha Ingreso</label>
+                  <input id="f_ingreso" type="date" name="f_ingreso" placeholder="Fecha de Ingreso" class="form-control" required>
+                  <div class="invalid-feedback">
+                     Por favor indicar la fecha de ingreso.
+                  </div>
+               </div>
+               <div class="col-md mb-3">
+                  <label class="form-label">Fecha Salida</label>
+                  <input id="f_salida" type="date" name="f_salida" placeholder="Fecha de Salida" class="form-control">
+               </div>
+            </div><!-- Sexo, fecha nacimiento, ingreso y salida -->
+            <div class="form-group row">
                <div class="col-md-6 mb-3">
                   <div class="mb-3">Condición</div>
                   <div class="form-check form-check-inline">

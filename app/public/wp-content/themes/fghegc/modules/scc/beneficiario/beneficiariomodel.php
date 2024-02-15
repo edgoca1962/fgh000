@@ -31,6 +31,7 @@ class BeneficiarioModel
       add_action('save_post', [$this, 'save_t_otros']);
       add_action('save_post', [$this, 'save_n_madre']);
       add_action('save_post', [$this, 'save_n_padre']);
+      add_action('save_post', [$this, 'save_condicion']);
       add_action('pre_get_posts', [$this, 'set_pre_get_posts']);
       add_action('wp_ajax_f_u_actualizacion', [$this, 'f_u_actualizacion']);
       add_action('wp_ajax_editar_beneficiario', [$this, 'editar_beneficiario']);
@@ -113,7 +114,6 @@ class BeneficiarioModel
       ];
       return $capacidades;
    }
-
    public function set_campos()
    {
       add_meta_box(
@@ -264,6 +264,14 @@ class BeneficiarioModel
          '_f_u_actualizacion',
          'Fecha Última Actualización',
          [$this, 'set_f_u_actualizacion_cbk'],
+         'beneficiario',
+         'normal',
+         'default'
+      );
+      add_meta_box(
+         '_condicion',
+         'Condición',
+         [$this, 'set_condicion_cbk'],
          'beneficiario',
          'normal',
          'default'
@@ -892,7 +900,43 @@ class BeneficiarioModel
          wp_send_json_success($f_u_actualizacion);
       }
    }
-
+   public function set_condicion_cbk($post)
+   {
+      wp_nonce_field('condicion_nonce', 'condicion_nonce');
+      $condicion = get_post_meta($post->ID, '_condicion', true);
+      echo '<input type="number" min="1" max="4" style="width:5%" id="condicion" name="condicion" value="' . esc_attr($condicion) . '" ></input> (1=niño,2=Adulto Mayor,3=Embarazada,4=En Lactancia)';
+   }
+   public function save_condicion($post_id)
+   {
+      if (!isset($_POST['condicion_nonce'])) {
+         return;
+      }
+      if (!wp_verify_nonce($_POST['condicion_nonce'], 'condicion_nonce')) {
+         return;
+      }
+      if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+         return;
+      }
+      if (isset($_POST['post_type']) && 'page' == $_POST['post_type']) {
+         if (!current_user_can('edit_page', $post_id)) {
+            return;
+         }
+      } else {
+         if (!current_user_can('edit_post', $post_id)) {
+            return;
+         }
+      }
+      if (!isset($_POST['condicion'])) {
+         return;
+      }
+      $condicion = sanitize_text_field($_POST['condicion']);
+      update_post_meta($post_id, '_condicion', $condicion);
+   }
+   /**
+    * 
+    * Fin definición post beneficiario 
+    * 
+    * */
    public function set_pre_get_posts($query)
    {
       if (!is_admin() && is_post_type_archive() && $query->is_main_query()) {
