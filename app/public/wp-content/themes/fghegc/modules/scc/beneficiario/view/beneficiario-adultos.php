@@ -98,7 +98,7 @@ $provincias = BeneficiarioController::get_instance()->scc_get_provincias();
                   <label class="form-label">Edad</label>
                   <input type="text" name="edad" placeholder="Edad" class="form-control" id="edad" disabled>
                </div>
-            </div><!-- Sexo, Condición y Edad -->
+            </div><!-- Condición y Edad -->
             <div class="form-group row">
                <div class="col-md-4 mb-3">
                   <label class="form-label">Provincia</label>
