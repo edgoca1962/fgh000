@@ -22,8 +22,10 @@ use FGHEGC\Modules\Sca\Miembro\MiembroController;
 use FGHEGC\Modules\Sca\Miembro\MiembroModel;
 use FGHEGC\Modules\Sca\Puesto\PuestoController;
 use FGHEGC\Modules\Sca\Puesto\PuestoModel;
+use FGHEGC\Modules\Scc\Asistencia\AsistenciaModel;
 use FGHEGC\Modules\Scc\Beneficiario\BeneficiarioController;
 use FGHEGC\Modules\Scc\Beneficiario\BeneficiarioModel;
+use FGHEGC\Modules\Scc\Comedor\ComedorModel;
 use FGHEGC\modules\scp\oracion\OracionModel;
 use FGHEGC\Modules\Scp\Peticion\PeticionController;
 use FGHEGC\Modules\Scp\Peticion\PeticionModel;
@@ -56,8 +58,10 @@ class CoreController
       EventoModel::get_instance();
       InscripcionModel::get_instance();
       MusicModel::get_instance();
-      BeneficiarioModel::get_instance();
       DivPolCriModel::get_instance();
+      BeneficiarioModel::get_instance();
+      AsistenciaModel::get_instance();
+      ComedorModel::get_instance();
 
       $this->atributos = [];
       $this->setup_hooks();
@@ -100,9 +104,15 @@ class CoreController
    }
    public function fghegc_register_scripts_styles()
    {
+
       wp_enqueue_style('styles', FGHEGC_DIR_STYLE, array(), microtime(), 'all');
-      wp_enqueue_script('scripts', FGHEGC_DIR_URI . '/assets/main.js', array('jquery'), microtime(), true);
+
+      wp_enqueue_script('google-maps-api', 'https://maps.googleapis.com/maps/api/js?key=AIzaSyA31KJuZkm9rzF8_4zW4y9TneM5BI00lME&ibraries=places&callback=initMap', array(), null, ['in_footer' => true, 'strategy'  => 'async']);
+      wp_enqueue_script('mapas', FGHEGC_DIR_URI . '/assets/mapas.js', array(), null, true);
+
+      wp_enqueue_script('scripts', FGHEGC_DIR_URI . '/assets/main.js', array('jquery'), null, true);
    }
+
    public function fghegc_smtpconfig(PHPMailer $phpmailer)
    {
       $phpmailer->isSMTP();
@@ -436,9 +446,3 @@ class CoreController
       $user->add_role('acuerdos');
    }
 }
-/*
-// Add a new column to the category list table
-
-// Display the ID in the new column
-
-*/

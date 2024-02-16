@@ -24,6 +24,7 @@
   "type": "module",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.5.1",
+    "@googlemaps/js-api-loader": "^1.16.3",
     "@popperjs/core": "^2.11.8",
     "animate.css": "^4.1.1",
     "axios": "^1.6.5",
