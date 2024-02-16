@@ -37,7 +37,7 @@ $beneficiario = BeneficiarioController::get_instance();
                <div class="col-md-3 mb-3">
                   <div class="input-group mb-3">
                      <input type="number" class="form-control" step="1" id="q_alimentacion" name="q_alimentación" placeholder="Cantidad" value="1">
-                     <span class="input-group-text" id="q_alimentacion">Cantidad</span>
+                     <span class="input-group-text" id="q_alimentacion">Q</span>
                   </div>
                </div>
                <div class="col mb-3">

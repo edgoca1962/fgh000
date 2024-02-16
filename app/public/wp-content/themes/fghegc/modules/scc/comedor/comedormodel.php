@@ -163,14 +163,6 @@ class ComedorModel
          'normal',
          'default'
       );
-      add_meta_box(
-         '_localizacion',
-         'Google Maps Location',
-         [$this, 'set_localizacion_cbk'],
-         'comedor',
-         'normal',
-         'default'
-      );
    }
    public function set_nombre_cbk($post)
    {
@@ -427,25 +419,5 @@ class ComedorModel
       }
       $contacto_id = sanitize_text_field($_POST['contacto_id']);
       update_post_meta($post_id, '_contacto_id', $contacto_id);
-   }
-   public function set_localizacion_cbk($post)
-   {
-      // Obtiene la dirección almacenada en el meta
-      $address = get_post_meta($post->ID, '_localizacion', true);
-
-      // Muestra un campo de texto para la dirección
-      echo '<label for="localizacion">Dirección:</label>';
-      echo '<input type="text" name="localizacion" id="localizacion" value="' . esc_attr($address) . '" />';
-
-      // Muestra un div para el mapa
-      echo '<div id="custom-google-map" style="height: 300px;"></div>';
-   }
-   public function save_localizacion($post_id)
-   {
-      if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
-
-      if (isset($_POST['localizacion'])) {
-         update_post_meta($post_id, '_localizacion', sanitize_text_field($_POST['localizacion']));
-      }
    }
 }

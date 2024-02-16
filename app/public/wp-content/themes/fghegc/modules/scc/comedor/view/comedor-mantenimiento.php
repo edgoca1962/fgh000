@@ -95,8 +95,7 @@ $encargados = get_users(['role' => 'comedores', 'orderby' => 'nicename']);
          </form>
       </div>
       <div class="col-md-4">
-         <?php get_template_part($atributos['sidebar'])
-         ?>
+         <?php get_template_part($atributos['sidebar']); ?>
       </div>
    </div>
 </section>
