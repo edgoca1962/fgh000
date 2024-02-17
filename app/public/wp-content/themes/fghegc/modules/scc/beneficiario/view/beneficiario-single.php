@@ -5,10 +5,11 @@ use FGHEGC\Modules\Scc\Beneficiario\BeneficiarioController;
 
 $atributos = CoreController::get_instance()->get_atributos(get_post_type());
 $beneficiario = BeneficiarioController::get_instance();
-
+$asistencias = get_posts(['post_type' => 'asistencia', 'post_per_page' => -1, 'post_parent' => get_the_id()]);
+$comedores = get_posts(['post_type' => 'comedor', 'post_per_page' => -1]);
 ?>
 <!-- Plantilla Single -->
-<section>
+<section id="seccion_beneficiario_single">
    <form id="beneficiario_single">
       <div class="form-group mb-3">
          <div id="asistencia">
@@ -16,27 +17,27 @@ $beneficiario = BeneficiarioController::get_instance();
             <h3>Actualizar Asistencia: </h3>
             <div class="row row-cols-auto mb-3 aling-middle">
                <div class="col mb-3">
-                  <input id="f_actualizacion" type="date" class="form-control" id="" value="<?php echo get_post_meta(get_the_ID(), '_f_u_actualizacion', true) ?>">
+                  <input id="f_actualizacion" type="date" class="form-control" id="" value="<?php echo date('Y-m-d') ?>">
                </div>
                <div class="col mb-3">
                   <div class="form-check">
-                     <input id="reflexion" class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                     <label class="form-check-label" for="flexCheckDefault">
+                     <input id="reflexion" name="reflexion" class="form-check-input" type="checkbox" value="No" id="reflexion">
+                     <label class="form-check-label" for="reflexion">
                         Reflexión
                      </label>
                   </div>
                </div>
                <div class="col mb-3">
                   <div class="form-check">
-                     <input id="aliemntacion" class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                     <label class="form-check-label" for="flexCheckDefault">
+                     <input id="alimentacion" name="alimentacion" class="form-check-input" type="checkbox" value="No" id="alimentacion">
+                     <label class="form-check-label" for="alimentacion">
                         Alimentación
                      </label>
                   </div>
                </div>
                <div class="col-md-3 mb-3">
                   <div class="input-group mb-3">
-                     <input type="number" class="form-control" step="1" id="q_alimentacion" name="q_alimentación" placeholder="Cantidad" value="1">
+                     <input type="number" class="form-control" step="1" id="q_alimentacion" name="q_alimentacion" placeholder="Cantidad" value="1">
                      <span class="input-group-text" id="q_alimentacion">Q</span>
                   </div>
                </div>
@@ -115,7 +116,6 @@ $beneficiario = BeneficiarioController::get_instance();
             <input type="hidden" name="provincia_id" value="<?php echo get_post_meta(get_the_ID(), '_provincia_id', true) ?>">
             <input id="nonce_provincia_single" type="hidden" name="nonce_provincia" value="<?php echo wp_create_nonce('provincias') ?>">
             <input id="action_provincia_single" type="hidden" name="action_provincia" value="provincia">
-
          </div>
          <div class="col-md-4 mb-3">
             <label class="form-label">Cantón</label>
@@ -159,16 +159,47 @@ $beneficiario = BeneficiarioController::get_instance();
             <label class="form-label">Nombre del Padre</label>
             <input name="n_padre" type="text" class="form-control border-0 bg-secondary text-white" value="<?php echo get_post_meta(get_the_ID(), '_n_padre', true) ?>" editar>
          </div>
-      </div><!-- Madre, Tutor, Padre -->
+         <div class="col-md-4 mb-3">
+            <label class="form-label">Comedor</label>
+            <input name="comedor" type="text" class="form-control border-0 bg-secondary text-white" value="<?php echo (wp_get_post_parent_id(get_the_ID())) ? get_post(wp_get_post_parent_id(get_the_ID()))->post_title : 'Sin asignar' ?>" editar>
+            <input type="hidden" name="post_parent" value="<?php echo wp_get_post_parent_id(get_the_ID()) ?>">
+            <input id="nonce_comedor" type="hidden" name="nonce_comedor" value="<?php echo wp_create_nonce('comedores') ?>">
+            <input id="action_comedor" type="hidden" name="action_comedor" value="comedores">
+         </div>
+      </div><!-- Madre, Tutor, Padre y Comedor -->
       <div class="form-group mb-3">
          <label class="form-label fs-4">Reseña</label>
          <textarea id="content_single" name="content" cols="30" rows="10" class="form-control border-0 bg-secondary text-white" placeholder="Reseña del beneficiario" editar><?php echo get_the_content() ?></textarea>
       </div><!-- Reseña -->
    </form>
+   <div id="asistencia">
+      <h4>Bitácora de Asistencia</h4>
+      <hr>
+      <div class="row mb-3">
+         <div class="col">fecha</div>
+         <div class="col">Reflexion</div>
+         <div class="col">Alimentación</div>
+         <div class="col">Cantidad</div>
+      </div>
+      <hr>
+      <?php if ($asistencias) : ?>
+         <?php foreach ($asistencias as $asistencia) : ?>
+            <div class="row">
+               <div class="col"><?php echo get_post_meta($asistencia->ID, '_f_asistencia', true) ?></div>
+               <div class="col"><?php echo get_post_meta($asistencia->ID, '_reflexion', true) ?></div>
+               <div class="col"><?php echo get_post_meta($asistencia->ID, '_alimentacion', true) ?></div>
+               <div class="col"><?php echo get_post_meta($asistencia->ID, '_q_alimentacion', true) ?></div>
+            </div>
+         <?php endforeach; ?>
+      <?php else : ?>
+         <h5>No hay una bitácora de asistencia registrada</h5>
+      <?php endif; ?>
+   </div>
+   <hr>
 </section>
 <!-- Formulario de edición -->
-<section>
-   <form id="beneficiario_single_editar" enctype="multipart/form-data" class="needs-validation" novalidate hidden>
+<section id="seccion_beneficiario_single_editar" hidden>
+   <form id="beneficiario_single_editar" enctype="multipart/form-data" class="needs-validation" novalidate>
       <div class="col d-flex justify-content-center align-items-center my-3">
          <div class="card">
             <img id="imagennueva_editar" src="<?php echo (get_the_post_thumbnail_url()) ? get_the_post_thumbnail_url() : $beneficiario->get_avatar(get_the_ID()) ?>" class="object-fit-cover rounded" alt="Imágen del beneficiario" style="width: 200px;">
@@ -306,8 +337,14 @@ $beneficiario = BeneficiarioController::get_instance();
                Por favor indicar un nombre del padre.
             </div>
          </div>
-      </div><!-- Madre, Tutor, Padre -->
-      <div class="form-group mb-3">
+         <div class="col-md-4 mb-3">
+            <label class="form-label">Comedor</label>
+            <select id="comedor" name="post_parent" class="form-select" aria-label="Comedores">
+
+            </select>
+         </div>
+      </div><!-- Madre, Tutor, Padre y Comedor -->
+      <div class=" form-group mb-3">
          <label for="content" class="form-label fs-4">Reseña</label>
          <textarea id="content" name="content" cols="30" rows="5" class="form-control" placeholder="Reseña del beneficiario"></textarea>
       </div><!-- Reseña -->

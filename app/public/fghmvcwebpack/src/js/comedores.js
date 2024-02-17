@@ -7,116 +7,19 @@ if (document.getElementById('comedorescsv')) {
    })
 }
 if (document.getElementById('beneficiario_single')) {
-   const endpoint = document.getElementById('endpoint').value
-   const f_nacimiento = document.getElementById('f_nacimiento')
-   const edad = document.getElementById('edad')
-   const provincia = document.getElementById('provincia')
-   const canton = document.getElementById('canton')
-   const distrito = document.getElementById('distrito')
-   const nonce_canton = document.getElementById('nonce_canton').value
-   const action_canton = document.getElementById('action_canton').value
-   const nonce_distrito = document.getElementById('nonce_distrito').value
-   const action_distrito = document.getElementById('action_distrito').value
-
-   if (document.getElementById('beneficiario_imagen')) {
-      document.getElementById('beneficiario_imagen').addEventListener('change', function () {
-         const imagen = this.files[0]
-         if (imagen) {
-            const reader = new FileReader()
-            document.getElementById('imagennueva').display = 'block'
-            reader.addEventListener('load', function () {
-               document.getElementById('imagennueva').setAttribute('src', this.result)
-            })
-            reader.readAsDataURL(imagen)
-         } else {
-            console.log('por definir')
-         }
-      })
-   }
-   if (document.getElementById('beneficiario_imagen_editar')) {
-      document.getElementById('beneficiario_imagen_editar').addEventListener('change', function () {
-         const imagen = this.files[0]
-         if (imagen) {
-            const reader = new FileReader()
-            document.getElementById('imagennueva_editar').display = 'block'
-            reader.addEventListener('load', function () {
-               document.getElementById('imagennueva_editar').setAttribute('src', this.result)
-            })
-            reader.readAsDataURL(imagen)
-         } else {
-            console.log('por definir')
-         }
-      })
-   }
-   f_nacimiento.addEventListener('change', () => {
-      var fecha_actual = new Date()
-      var f_nacimiento_val = new Date(f_nacimiento.value)
-      var edad_calc = Math.floor((fecha_actual - f_nacimiento_val) / (365.25 * 24 * 60 * 60 * 1000))
-      edad.value = edad_calc
-   })
-   provincia.addEventListener('change', () => {
-      const provincia_id = provincia.value
-      const datos = new FormData()
-      datos.append('endpoint', endpoint)
-      datos.append('action', action_canton)
-      datos.append('nonce', nonce_canton)
-      datos.append('provincia_id', provincia_id)
-      async function buscar_canton() {
-         const request = new Request(
-            datos.get('endpoint'), {
-            method: 'POST',
-            body: datos,
-         })
-         try {
-            const response = await fetch(request)
-            const data = await response.json()
-            if (data.success) {
-               canton.innerHTML = '<option selected>Seleccionar Cantón</option>'
-               const cantones = data.data
-               cantones.forEach(cantones => {
-                  canton.innerHTML += `<option value="${cantones.ID}">${cantones.canton}</option>`;
-               });
-
-            } else {
-               console.log(data)
-            }
-         } catch (error) {
-            console.log('Error: ', error)
-         }
+   document.getElementById('reflexion').addEventListener('click', () => {
+      if (document.getElementById('reflexion').value == 'No') {
+         document.getElementById('reflexion').value = 'Si'
+      } else {
+         document.getElementById('reflexion').value = 'No'
       }
-      buscar_canton()
    })
-   canton.addEventListener('change', () => {
-      const canton_id = canton.value
-      const datos = new FormData()
-      datos.append('endpoint', endpoint)
-      datos.append('action', action_distrito)
-      datos.append('nonce', nonce_distrito)
-      datos.append('canton_id', canton_id)
-      async function buscar_distrito() {
-         const request = new Request(
-            datos.get('endpoint'), {
-            method: 'POST',
-            body: datos,
-         })
-         try {
-            const response = await fetch(request)
-            const data = await response.json()
-            if (data.success) {
-               distrito.innerHTML = '<option selected>Seleccionar Distrito</option>'
-               const distritos = data.data
-               distritos.forEach(distritos => {
-                  distrito.innerHTML += `<option value="${distritos.ID}">${distritos.distrito}</option>`;
-               });
-
-            } else {
-               console.log(data)
-            }
-         } catch (error) {
-            console.log('Error: ', error)
-         }
+   document.getElementById('alimentacion').addEventListener('click', () => {
+      if (document.getElementById('alimentacion').value == 'No') {
+         document.getElementById('alimentacion').value = 'Si'
+      } else {
+         document.getElementById('alimentacion').value = 'No'
       }
-      buscar_distrito()
    })
 }
 if (document.getElementById('beneficiario_single_editar')) {
@@ -137,7 +40,7 @@ if (document.getElementById('beneficiario_single_editar')) {
       location.reload()
    })
    document.getElementById('btn_editar_beneficiario').addEventListener('click', () => {
-      document.getElementById('beneficiario_single').setAttribute('hidden', '')
+      document.getElementById('seccion_beneficiario_single').setAttribute('hidden', '')
       const post_id = document.getElementById('btn_editar_beneficiario').dataset.scc_post_id
       const action = document.getElementById('btn_editar_beneficiario').dataset.action
       const nonce = document.getElementById('btn_editar_beneficiario').dataset.nonce
@@ -277,16 +180,49 @@ if (document.getElementById('beneficiario_single_editar')) {
       document.getElementById('t_otros').value = datos.get('t_otros')
       document.getElementById('n_madre').value = datos.get('n_madre')
       document.getElementById('n_padre').value = datos.get('n_padre')
+      function datos_comedores() {
+         const comedor = document.getElementById('comedor')
+         const datos_comedores = new FormData()
+         datos_comedores.append('nonce', datos.get('nonce_comedor'))
+         datos_comedores.append('action', datos.get('action_comedor'))
+         async function get_comedores() {
+            const request = new Request(
+               endpoint, {
+               method: 'POST',
+               body: datos_comedores,
+            })
+            try {
+               const response = await fetch(request)
+               const data = await response.json()
+               if (data.success) {
+                  comedor.innerHTML = ''
+                  const comedores = data.data
+                  console.log(datos.get('post_parent'))
+                  comedores.forEach(item => {
+                     if (datos.get('post_parent') == item.ID) {
+                        comedor.innerHTML += `<option selected value="${item.ID}">${item.comedor}</option>`;
+                     } else {
+                        if (datos.get('post_parent') == 0) {
+                           comedor.innerHTML += `<option value="0">Sin Asignar</option>`;
+                        } else {
+                           comedor.innerHTML += `<option value="${item.ID}">${item.comedor}</option>`;
+                        }
+                     }
+                  });
+               } else {
+                  console.log(data)
+               }
+            } catch (error) {
+               console.log('Error: ', error)
+            }
+         }
+         get_comedores()
+      }
+      datos_comedores()
       document.getElementById('content').value = datos.get('content')
 
-      document.getElementById('beneficiario_single_editar').removeAttribute('hidden')
+      document.getElementById('seccion_beneficiario_single_editar').removeAttribute('hidden')
    })
-
-   /*document.getElementById('btn_asistencia').addEventListener('click', () => {
-      document.getElementById('asistencia').removeAttribute('hidden')
-      document.getElementById('btn_asistencia').setAttribute('hidden', '')
-   })*/
-
    document.getElementById('btn_actualizar_asistencia').addEventListener('click', () => {
       document.getElementById('asistencia').setAttribute('hidden', '')
       document.getElementById('btn_asistencia').removeAttribute('hidden')

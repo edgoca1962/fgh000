@@ -260,6 +260,9 @@ class BeneficiarioModel
          'normal',
          'default'
       );
+
+      // comedor_id es post_parent
+
       add_meta_box(
          '_f_u_actualizacion',
          'Fecha Última Actualización',

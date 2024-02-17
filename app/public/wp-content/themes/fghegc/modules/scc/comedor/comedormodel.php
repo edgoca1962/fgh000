@@ -11,7 +11,6 @@ class ComedorModel
    {
       add_action('init', [$this, 'set_comedor']);
       add_action('add_meta_boxes', [$this, 'set_campos']);
-      add_action('save_post', [$this, 'save_nombre']);
       add_action('save_post', [$this, 'save_provincia_id']);
       add_action('save_post', [$this, 'save_canton_id']);
       add_action('save_post', [$this, 'save_distrito_id']);
@@ -19,6 +18,7 @@ class ComedorModel
       add_action('save_post', [$this, 'save_email']);
       add_action('save_post', [$this, 'save_telefono']);
       add_action('save_post', [$this, 'save_contacto_id']);
+      add_action('wp_ajax_comedores', [$this, 'scc_get_comedores']);
    }
    public function set_comedor()
    {
@@ -99,14 +99,8 @@ class ComedorModel
    }
    public function set_campos()
    {
-      add_meta_box(
-         '_nombre',
-         'Nombre',
-         [$this, 'set_nombre_cbk'],
-         'comedor',
-         'normal',
-         'default'
-      );
+      // Nombre es post_title
+
       add_meta_box(
          '_provincia_id',
          'Provincia ID',
@@ -163,38 +157,6 @@ class ComedorModel
          'normal',
          'default'
       );
-   }
-   public function set_nombre_cbk($post)
-   {
-      wp_nonce_field('nombre_nonce', 'nombre_nonce');
-      $nombre = get_post_meta($post->ID, '_nombre', true);
-      echo '<input type="text" style="width:50%" id="nombre" name="nombre" value="' . esc_attr($nombre) . '" ></input>';
-   }
-   public function save_nombre($post_id)
-   {
-      if (!isset($_POST['nombre_nonce'])) {
-         return;
-      }
-      if (!wp_verify_nonce($_POST['nombre_nonce'], 'nombre_nonce')) {
-         return;
-      }
-      if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
-         return;
-      }
-      if (isset($_POST['post_type']) && 'page' == $_POST['post_type']) {
-         if (!current_user_can('edit_page', $post_id)) {
-            return;
-         }
-      } else {
-         if (!current_user_can('edit_post', $post_id)) {
-            return;
-         }
-      }
-      if (!isset($_POST['nombre'])) {
-         return;
-      }
-      $nombre = sanitize_text_field($_POST['nombre']);
-      update_post_meta($post_id, '_nombre', $nombre);
    }
    public function set_provincia_id_cbk($post)
    {
@@ -419,5 +381,29 @@ class ComedorModel
       }
       $contacto_id = sanitize_text_field($_POST['contacto_id']);
       update_post_meta($post_id, '_contacto_id', $contacto_id);
+   }
+   public function scc_get_comedores()
+   {
+      if (!wp_verify_nonce($_POST['nonce'], 'comedores')) {
+         wp_send_json_error('Error de seguridad', 401);
+         wp_die();
+      } else {
+
+         global $wpdb;
+
+         $sql =
+            "SELECT ID, post_title AS comedor
+            FROM $wpdb->posts
+            WHERE post_type = 'comedor' AND post_status = 'publish'
+            ORDER BY post_title
+            ";
+
+         $comedores = $wpdb->get_results($sql, ARRAY_A);
+         if ($comedores) {
+            wp_send_json_success($comedores);
+         } else {
+            wp_send_json_success([['ID' => 0, 'comedor' => 'No hay comedores definidos']]);
+         }
+      }
    }
 }
