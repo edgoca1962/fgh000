@@ -97,6 +97,8 @@ class AsistenciaModel
    }
    public function set_campos()
    {
+      // post_parent es el ID del beneficiario
+
       add_meta_box(
          '_f_asistencia',
          'Fecha Asitencia',
@@ -261,5 +263,74 @@ class AsistenciaModel
 
    public function scc_agregar_asistencia()
    {
+      if (!wp_verify_nonce($_POST['nonce'], 'asistencia')) {
+         wp_send_json_error('Error de seguridad', 401);
+         wp_die();
+      } else {
+         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+         $charactersLength = strlen($characters);
+         $randomString = '';
+         for ($i = 0; $i < 15; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+         }
+         $post_name = 'asi_' . $randomString;
+
+         $f_asistencia = sanitize_text_field($_POST['f_asistencia']);
+         $reflexion = sanitize_text_field($_POST['reflexion']);
+         $alimentacion = sanitize_text_field($_POST['alimentacion']);
+         $q_alimentacion = sanitize_text_field($_POST['q_alimentacion']);
+         $post_parent = sanitize_text_field($_POST['post_parent']);
+         $titulo = sanitize_text_field($_POST['nombre']);
+
+         global $wpdb;
+         $sql =
+            "SELECT ID
+            FROM $wpdb->posts
+            INNER JOIN $wpdb->postmeta
+            ON (ID = post_id)
+            WHERE post_type ='asistencia' 
+              AND post_parent = $post_parent
+              AND post_status = 'publish'
+              AND (meta_key = '_f_asistencia' AND meta_value = '$f_asistencia')
+            ";
+         $registrado = $wpdb->get_var($sql);
+
+         if ($registrado) {
+            $post_data = array(
+               'ID' => $registrado,
+               'post_type' => 'asistencia',
+               'post_title' => $titulo,
+               'post_name' => $post_name,
+               'post_status' => 'publish',
+               'post_parent' => $post_parent,
+               'post_date' => $f_asistencia,
+               'meta_input' => array(
+                  '_f_asistencia' => $f_asistencia,
+                  '_reflexion' => $reflexion,
+                  '_alimentacion' => $alimentacion,
+                  '_q_alimentacion' => $q_alimentacion,
+               )
+            );
+            wp_update_post($post_data);
+         } else {
+            $post_data = array(
+               'post_type' => 'asistencia',
+               'post_title' => $titulo,
+               'post_name' => $post_name,
+               'post_status' => 'publish',
+               'post_parent' => $post_parent,
+               'post_date' => $f_asistencia,
+               'meta_input' => array(
+                  '_f_asistencia' => $f_asistencia,
+                  '_reflexion' => $reflexion,
+                  '_alimentacion' => $alimentacion,
+                  '_q_alimentacion' => $q_alimentacion,
+               )
+            );
+            wp_insert_post($post_data);
+         }
+         wp_send_json_success(['titulo' => 'Asistencia Actualizada', 'msg' => 'La información fue registrada exitosamente.']);
+         wp_die();
+      }
    }
 }

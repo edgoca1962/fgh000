@@ -6,6 +6,7 @@ use FGHEGC\Modules\Scc\Beneficiario\BeneficiarioController;
 $core = CoreController::get_instance();
 $atributos = $core->get_atributos('beneficiario');
 $provincias = BeneficiarioController::get_instance()->scc_get_provincias();
+$comedores = get_posts(['post_type' => 'comedor', 'posts_per_page' => -1, 'post_status' => 'publish']);
 
 ?>
 <div class="container">
@@ -59,6 +60,7 @@ $provincias = BeneficiarioController::get_instance()->scc_get_provincias();
                      <label class="form-check-label" for="femenino">Femenino</label>
                   </div>
                </div>
+               <input type="hidden" name="condicion" value="1">
                <div class="col-md mb-3">
                   <label class="form-label">Fecha Nacimiento</label>
                   <input id="f_nacimiento" type="date" name="f_nacimiento" placeholder="Fecha de Nacimiento" class="form-control" required>
@@ -81,7 +83,8 @@ $provincias = BeneficiarioController::get_instance()->scc_get_provincias();
             <div class="form-group row">
                <div class="col-md-4 mb-3">
                   <label class="form-label">Edad</label>
-                  <input type="text" name="edad" placeholder="Edad (este dato se calcula)" class="form-control" id="edad" disabled>
+                  <input type="text" placeholder="Edad (este dato se calcula)" class="form-control" id="edad" disabled>
+                  <input id="edad_capturar" name="edad" type="hidden">
                </div>
                <div class="col-md-4 mb-3">
                   <label class="form-label">Peso (kg)</label>
@@ -158,6 +161,16 @@ $provincias = BeneficiarioController::get_instance()->scc_get_provincias();
                      Por favor indicar un nombre del padre.
                   </div>
                </div>
+               <div class="col-md-4 mb-3">
+                  <label class="form-label">Comedor</label>
+                  <select name="post_parent" class="form-select" aria-label="Comedores">
+                     <option value="0" selected>Seleccionar Comedor</option>
+                     <?php foreach ($comedores as $comedor) : ?>
+                        <option value="<?php echo $comedor->ID ?> "><?php echo $comedor->post_title ?></option>
+                     <?php endforeach; ?>
+                  </select>
+               </div>
+
             </div><!-- Madre, Tutor, Padre -->
             <div class="form-group mb-3">
                <label for="content" class="form-label fs-4">Rerseña</label>

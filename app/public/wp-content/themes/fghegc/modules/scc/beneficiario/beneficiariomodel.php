@@ -12,6 +12,7 @@ class BeneficiarioModel
    {
       $this->set_paginas();
       add_action('init', [$this, 'set_beneficiario']);
+      add_action('rest_api_init', [$this, 'show_beneficiario_meta_fields']);
       add_action('add_meta_boxes', [$this, 'set_campos']);
       add_action('save_post', [$this, 'save_nombre']);
       add_action('save_post', [$this, 'save_p_apellido']);
@@ -34,7 +35,7 @@ class BeneficiarioModel
       add_action('save_post', [$this, 'save_condicion']);
       add_action('pre_get_posts', [$this, 'set_pre_get_posts']);
       add_action('wp_ajax_f_u_actualizacion', [$this, 'f_u_actualizacion']);
-      add_action('wp_ajax_editar_beneficiario', [$this, 'editar_beneficiario']);
+      add_action('wp_ajax_beneficiario_editar', [$this, 'beneficiario_editar']);
       add_action('wp_ajax_beneficiario_ninos', [$this, 'agregar_beneficiario_ninos']);
    }
    public function set_beneficiario()
@@ -940,6 +941,19 @@ class BeneficiarioModel
     * Fin definición post beneficiario 
     * 
     * */
+   public function show_beneficiario_meta_fields()
+   {
+      register_meta(
+         'post',
+         '_condicion',
+         array(
+            'type' => 'string',
+            'description' => 'condicion',
+            'single' => true,
+            'show_in_rest' => true
+         )
+      );
+   }
    public function set_pre_get_posts($query)
    {
       if (!is_admin() && is_post_type_archive() && $query->is_main_query()) {
@@ -948,18 +962,38 @@ class BeneficiarioModel
             $query->set('posts_per_page', 20);
             $query->set('orderby', 'post_title');
             $query->set('order', 'ASC');
-            $query->set('meta_query', [
-               'relation' => 'OR',
-               [
-                  'key' => '_f_u_actualizacion',
-                  'value' => date('Y-m-d'),
-                  'compare' => '!='
-               ],
-               [
-                  'key' => '_f_u_actualizacion',
-                  'compare' => 'NOT EXISTS',
-               ],
-            ]);
+            if (isset($_GET['condicion'])) {
+               $condicion = sanitize_text_field($_GET['condicion']);
+               $meta_query =
+                  [
+                     'relation' => 'AND',
+                     [
+                        'key' => '_condicion',
+                        'value' => $condicion
+                     ],
+                     [
+                        'relation' => 'OR',
+                        [
+                           'key' => '_f_u_actualizacion',
+                           'value' => date('Y-m-d'),
+                           'compare' => '!='
+                        ],
+                        [
+                           'key' => '_f_u_actualizacion',
+                           'compare' => 'NOT EXISTS',
+                        ],
+                     ]
+                  ];
+            } else {
+               $meta_query =
+                  [
+                     [
+                        'key' => '_condicion',
+                        'value' => 99
+                     ]
+                  ];
+            }
+            $query->set('meta_query', $meta_query);
          }
       }
    }
@@ -1020,30 +1054,183 @@ class BeneficiarioModel
    }
    public function agregar_beneficiario_ninos()
    {
-      wp_send_json_success(['titulo' => 'Información Actualizada', 'msg' => 'La información del niño(a) se actualizó correctamente.']);
-   }
-   public function editar_beneficiario()
-   {
-      $post_id = sanitize_text_field($_POST['post_id']);
-
-      require_once(ABSPATH . "wp-admin" . '/includes/image.php');
-      require_once(ABSPATH . "wp-admin" . '/includes/file.php');
-      require_once(ABSPATH . "wp-admin" . '/includes/media.php');
-
-      $imagen = $_FILES['beneficiario_imagen_editar']['tmp_name'];
-      if (get_post_thumbnail_id($post_id)) {
-         $post_attached_id = 'remplazar imagen';
+      if (!wp_verify_nonce($_POST['nonce'], 'beneficiarios')) {
+         wp_send_json_error('Error de seguridad', 401);
+         wp_die();
       } else {
-         $post_attached_id = 'No tiene imagen';
-      }
+         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+         $charactersLength = strlen($characters);
+         $randomString = '';
+         for ($i = 0; $i < 15; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+         }
+         $post_name = 'ben_' . $randomString;
 
-      $attach_id = media_handle_upload('beneficiario_imagen_editar', $post_id);
-      if (is_wp_error($attach_id)) {
-         $attach_id = '';
-      }
-      // set_post_thumbnail($post_id, $attach_id);
+         $post_id = sanitize_text_field($_POST['post_id']);
 
-      wp_send_json_success(['titulo' => 'Actualizado', 'msg' => 'Los datos fueron actualizados correctamente.']);
+         require_once(ABSPATH . "wp-admin" . '/includes/image.php');
+         require_once(ABSPATH . "wp-admin" . '/includes/file.php');
+         require_once(ABSPATH . "wp-admin" . '/includes/media.php');
+         $imagen = $_FILES['beneficiario_imagen_editar']['tmp_name'];
+         if (get_post_thumbnail_id($post_id)) {
+            $post_attached_id = 'remplazar imagen';
+         } else {
+            $post_attached_id = 'No tiene imagen';
+         }
+         $attach_id = media_handle_upload('beneficiario_imagen_editar', $post_id);
+         if (is_wp_error($attach_id)) {
+            $attach_id = '';
+         }
+         // set_post_thumbnail($post_id, $attach_id);
+         $nombre = sanitize_text_field($_POST['nombre']);
+         $p_apellido = sanitize_text_field($_POST['p_apellido']);
+         $s_apellido = sanitize_text_field($_POST['s_apellido']);
+         $post_title = $nombre . ' ' . $p_apellido . ' ' . $s_apellido;
+         $sexo = sanitize_text_field($_POST['sexo']);
+         $condicion = sanitize_text_field($_POST['condicion']);
+         $f_nacimiento = sanitize_text_field($_POST['f_nacimiento']);
+         $f_ingreso = sanitize_text_field($_POST['f_ingreso']);
+         $f_salida = sanitize_text_field($_POST['f_salida']);
+         $edad = sanitize_text_field($_POST['edad']);
+         $peso = sanitize_text_field($_POST['peso']);
+         $estatura = sanitize_text_field($_POST['estatura']);
+         $provincia = sanitize_text_field($_POST['provincia']);
+         $canton = sanitize_text_field($_POST['canton']);
+         $distrito = sanitize_text_field($_POST['distrito']);
+         $direccion = sanitize_text_field($_POST['direccion']);
+         $email = sanitize_text_field($_POST['email']);
+         $t_principal = sanitize_text_field($_POST['t_principal']);
+         $t_otros = sanitize_text_field($_POST['t_otros']);
+         $n_madre = sanitize_text_field($_POST['n_madre']);
+         $n_padre = sanitize_text_field($_POST['n_padre']);
+         $post_parent = sanitize_text_field($_POST['post_parent']);
+         $post_content = sanitize_textarea_field($_POST['content']);
+
+         $post_data =
+            [
+               'ID' => $post_id,
+               'post_type' => 'beneficiario',
+               'post_title' => $post_title,
+               'post_name' => $post_name,
+               'post_status' => 'publish',
+               'post_parent' => $post_parent,
+               'post_content' => $post_content,
+               'meta_input' =>
+               [
+                  '_nombre' => $nombre,
+                  '_p_apellido' => $p_apellido,
+                  '_s_apellido' => $s_apellido,
+                  '_sexo' => $sexo,
+                  '_condicion' => $condicion,
+                  '_f_nacimiento' => $f_nacimiento,
+                  '_f_ingreso' => $f_ingreso,
+                  '_f_salida' => $f_salida,
+                  '_edad' => $edad,
+                  '_peso' => $peso,
+                  '_estatura' => $estatura,
+                  '_provincia' => $provincia,
+                  '_canton' => $canton,
+                  '_distrito' => $distrito,
+                  '_direccion' => $direccion,
+                  '_email' => $email,
+                  '_t_principal' => $t_principal,
+                  '_t_otros' => $t_otros,
+                  '_n_madre' => $n_madre,
+                  '_n_padre' => $n_padre,
+               ]
+            ];
+         // wp_insert_post($post_data);
+         wp_send_json_success(['titulo' => 'Actualizado', 'msg' => 'Los datos fueron actualizados correctamente.', 'datos' => $post_data]);
+      }
+   }
+   public function beneficiario_editar()
+   {
+      if (!wp_verify_nonce($_POST['nonce'], 'beneficiarios')) {
+         wp_send_json_error('Error de seguridad', 401);
+         wp_die();
+      } else {
+         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+         $charactersLength = strlen($characters);
+         $randomString = '';
+         for ($i = 0; $i < 15; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+         }
+         $post_name = 'ben_' . $randomString;
+
+         $post_id = sanitize_text_field($_POST['post_id']);
+
+         require_once(ABSPATH . "wp-admin" . '/includes/image.php');
+         require_once(ABSPATH . "wp-admin" . '/includes/file.php');
+         require_once(ABSPATH . "wp-admin" . '/includes/media.php');
+         $imagen = $_FILES['beneficiario_imagen']['tmp_name'];
+         if (get_post_thumbnail_id($post_id)) {
+            delete_post_thumbnail($post_id);
+         }
+         $attach_id = media_handle_upload('beneficiario_imagen', $post_id);
+         if (is_wp_error($attach_id)) {
+            $attach_id = '';
+         }
+         set_post_thumbnail($post_id, $attach_id);
+         $nombre = sanitize_text_field($_POST['nombre']);
+         $p_apellido = sanitize_text_field($_POST['p_apellido']);
+         $s_apellido = sanitize_text_field($_POST['s_apellido']);
+         $post_title = $nombre . ' ' . $p_apellido . ' ' . $s_apellido;
+         $sexo = sanitize_text_field($_POST['sexo']);
+         $condicion = sanitize_text_field($_POST['condicion']);
+         $f_nacimiento = sanitize_text_field($_POST['f_nacimiento']);
+         $f_ingreso = sanitize_text_field($_POST['f_ingreso']);
+         $f_salida = sanitize_text_field($_POST['f_salida']);
+         $edad = sanitize_text_field($_POST['edad']);
+         $peso = sanitize_text_field($_POST['peso']);
+         $estatura = sanitize_text_field($_POST['estatura']);
+         $provincia = sanitize_text_field($_POST['provincia']);
+         $canton = sanitize_text_field($_POST['canton']);
+         $distrito = sanitize_text_field($_POST['distrito']);
+         $direccion = sanitize_text_field($_POST['direccion']);
+         $email = sanitize_text_field($_POST['email']);
+         $t_principal = sanitize_text_field($_POST['t_principal']);
+         $t_otros = sanitize_text_field($_POST['t_otros']);
+         $n_madre = sanitize_text_field($_POST['n_madre']);
+         $n_padre = sanitize_text_field($_POST['n_padre']);
+         $post_parent = sanitize_text_field($_POST['post_parent']);
+         $post_content = sanitize_textarea_field($_POST['content']);
+
+         $post_data =
+            [
+               'ID' => $post_id,
+               'post_type' => 'beneficiario',
+               'post_title' => $post_title,
+               'post_name' => $post_name,
+               'post_status' => 'publish',
+               'post_parent' => $post_parent,
+               'post_content' => $post_content,
+               'meta_input' =>
+               [
+                  '_nombre' => $nombre,
+                  '_p_apellido' => $p_apellido,
+                  '_s_apellido' => $s_apellido,
+                  '_sexo' => $sexo,
+                  '_condicion' => $condicion,
+                  '_f_nacimiento' => $f_nacimiento,
+                  '_f_ingreso' => $f_ingreso,
+                  '_f_salida' => $f_salida,
+                  '_edad' => $edad,
+                  '_peso' => $peso,
+                  '_estatura' => $estatura,
+                  '_provincia' => $provincia,
+                  '_canton' => $canton,
+                  '_distrito' => $distrito,
+                  '_direccion' => $direccion,
+                  '_email' => $email,
+                  '_t_principal' => $t_principal,
+                  '_t_otros' => $t_otros,
+                  '_n_madre' => $n_madre,
+                  '_n_padre' => $n_padre,
+               ]
+            ];
+         wp_update_post($post_data);
+         wp_send_json_success(['titulo' => 'Actualizado', 'msg' => 'Los datos fueron actualizados correctamente.']);
+      }
    }
    public function borrar_beneficiario()
    {

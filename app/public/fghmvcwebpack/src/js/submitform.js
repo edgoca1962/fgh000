@@ -83,7 +83,7 @@ async function send_data(dataform, event) {
                timer: 2000
             });
             setTimeout(() => {
-               // location.reload()
+               location.reload()
             }, 2000);
             console.log(data.data)
          }

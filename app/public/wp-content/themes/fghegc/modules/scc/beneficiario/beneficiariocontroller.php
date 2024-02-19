@@ -51,7 +51,11 @@ class BeneficiarioController
       }
 
       if (is_single()) {
-         $datosAtributos['templatepart'] = 'modules/scc/' . $postType . '/view/' . $postType . '-single';
+         if (get_post_meta(get_the_ID(), '_condicion', true) == '1') {
+            $datosAtributos['templatepart'] = 'modules/scc/' . $postType . '/view/' . $postType . '-single-ninos';
+         } else {
+            $datosAtributos['templatepart'] = 'modules/scc/' . $postType . '/view/' . $postType . '-single-adultos';
+         }
          $datosAtributos['subtitulo'] = '<figcaption class="blockquote-footer fs-4 fw-bold"><cite title="Source Title">Pero Jesús Dijo: Dejad a los niños venir a mi, y no se lo inpidáis; porque de los tales es el reino de los cielos.</cite></figcaption>';
          $datosAtributos['subtitulo2'] = get_the_title();
          $datosAtributos['div4'] = '';
@@ -163,5 +167,37 @@ class BeneficiarioController
          $avatar = FGHEGC_DIR_URI . '/assets/img/avatar_masculino.png';
       }
       return $avatar;
+   }
+   public function get_datos_sidebar()
+   {
+      $datosSidebar = [];
+      global $wpdb;
+
+      $sql =
+         "SELECT meta_value as condicion_id,count(*) AS total,
+            CASE 
+               WHEN meta_value = '1' THEN 'Niños(as)'
+               WHEN meta_value = '2' THEN 'Adultos(as) Mayores'
+               WHEN meta_value = '3' THEN 'Embarazadas'
+               ELSE 'En Lactancia'
+            END AS condicion
+      FROM $wpdb->posts
+      INNER JOIN $wpdb->postmeta t1
+         ON (ID = t1.post_id)
+      WHERE post_type = 'beneficiario'
+         AND (t1.meta_key = '_condicion' AND t1.meta_value !='')
+      GROUP BY t1.meta_value,
+            CASE 
+               WHEN meta_value = '1' THEN 'Niños(as)'
+               WHEN meta_value = '2' THEN 'Adultos(as) Mayores'
+               WHEN meta_value = '3' THEN 'Embarazadas'
+               ELSE 'En Lactancia'
+            END
+      ORDER BY t1.meta_value
+      ";
+
+      $datosSidebar['condiciones'] = $wpdb->get_results($sql, ARRAY_A);
+
+      return $datosSidebar;
    }
 }
