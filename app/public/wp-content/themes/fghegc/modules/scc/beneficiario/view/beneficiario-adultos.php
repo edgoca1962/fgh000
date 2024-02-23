@@ -3,9 +3,10 @@
 use FGHEGC\Modules\Core\CoreController;
 use FGHEGC\Modules\Scc\Beneficiario\BeneficiarioController;
 
-$core = CoreController::get_instance();
-$atributos = $core->get_atributos('beneficiario');
-$provincias = BeneficiarioController::get_instance()->scc_get_provincias();
+$atributos = CoreController::get_instance()->get_atributos('beneficiario');
+$beneficiario = BeneficiarioController::get_instance();
+$asistencias = get_posts(['post_type' => 'asistencia', 'posts_per_page' => -1, 'post_parent' => get_the_id()]);
+$comedores = get_posts(['post_type' => 'comedor', 'posts_per_page' => -1]);
 
 ?>
 <div class="container">
@@ -14,13 +15,11 @@ $provincias = BeneficiarioController::get_instance()->scc_get_provincias();
          <h2 class="mb-3 text-center">Información del Adulto(a)</h2>
          <form id="beneficiario_adultos" enctype="multipart/form-data" class="needs-validation" novalidate>
             <div class="col d-flex justify-content-center align-items-center my-3">
-               <div style="width: 200px; overflow:hidden; ">
-                  <div class="card h-100">
-                     <img id="imagennueva" src="<?php echo FGHEGC_DIR_URI . '/assets/img/avatar03.png' ?>" class="card-img h-100" alt="Imágen del beneficiario">
-                     <div class="card-img-overlay d-flex justify-content-center align-items-center">
-                        <label class="display-1" for="beneficiario_imagen"><i class="fa-regular fa-file-image"></i></label>
-                        <input type="file" name="beneficiario_imagen" id="beneficiario_imagen" multiple="false" hidden>
-                     </div>
+               <div class="card">
+                  <img id="imagennueva" src="<?php echo (get_the_post_thumbnail_url()) ? get_the_post_thumbnail_url() : $beneficiario->get_avatar(get_the_ID()) ?>" class="object-fit-cover rounded" alt="Imágen del beneficiario" style="width: 200px;">
+                  <div class="card-img-overlay d-flex justify-content-center align-items-center">
+                     <label class="display-1" for="beneficiario_imagen"><i class="fa-regular fa-file-image"></i></label>
+                     <input type="file" name="beneficiario_imagen" id="beneficiario_imagen" multiple="false" hidden>
                   </div>
                </div>
             </div><!-- Foto beneficiario -->
@@ -68,14 +67,14 @@ $provincias = BeneficiarioController::get_instance()->scc_get_provincias();
                </div>
                <div class="col-md mb-3">
                   <label class="form-label">Fecha Ingreso</label>
-                  <input id="f_ingreso" type="date" name="f_ingreso" placeholder="Fecha de Ingreso" class="form-control" required>
+                  <input type="date" name="f_ingreso" placeholder="Fecha de Ingreso" class="form-control" required>
                   <div class="invalid-feedback">
                      Por favor indicar la fecha de ingreso.
                   </div>
                </div>
                <div class="col-md mb-3">
                   <label class="form-label">Fecha Salida</label>
-                  <input id="f_salida" type="date" name="f_salida" placeholder="Fecha de Salida" class="form-control">
+                  <input type="date" name="f_salida" placeholder="Fecha de Salida" class="form-control">
                </div>
             </div><!-- Sexo, fecha nacimiento, ingreso y salida -->
             <div class="form-group row">
@@ -94,11 +93,14 @@ $provincias = BeneficiarioController::get_instance()->scc_get_provincias();
                      <label class="form-check-label" for="femenino">En Lactancia</label>
                   </div>
                </div>
-               <div class="col-md-2 mb-3">
+               <div class="col-md-4 mb-3">
                   <label class="form-label">Edad</label>
-                  <input type="text" name="edad" placeholder="Edad" class="form-control" id="edad" disabled>
+                  <input id="edad" type="text" placeholder="Edad (este dato se calcula)" class="form-control" disabled>
+                  <input id="edad_capturar" name="edad" type="hidden">
                </div>
             </div><!-- Condición y Edad -->
+            <input type="hidden" name="peso" value="0">
+            <input type="hidden" name="estatura" value="0">
             <div class="form-group row">
                <div class="col-md-4 mb-3">
                   <label class="form-label">Provincia</label>
@@ -130,6 +132,7 @@ $provincias = BeneficiarioController::get_instance()->scc_get_provincias();
                <label class="form-label">Detalle de dirección</label>
                <input name="direccion" class="form-control" placeholder="Espacio para detallar la dirección"></input>
             </div><!-- dirección detallada -->
+            <input type="hidden" name="email" value="no aplica">
             <div class="form-group row">
                <div class="col-md-4 mb-3">
                   <label class="form-label">Teléfono Principal</label>
@@ -142,18 +145,28 @@ $provincias = BeneficiarioController::get_instance()->scc_get_provincias();
                   <label class="form-label">Otros Teléfonos</label>
                   <input type="text" name="t_otros" placeholder="Otros Teléfonos" class="form-control">
                </div>
-            </div><!-- teléfonos -->
+               <div class="col-md-4 mb-3">
+                  <label class="form-label">Comedor</label>
+                  <select name="post_parent" class="form-select" aria-label="Comedores">
+                     <option value="0" selected>Seleccionar Comedor</option>
+                     <?php foreach ($comedores as $comedor) : ?>
+                        <option value="<?php echo $comedor->ID ?> "><?php echo $comedor->post_title ?></option>
+                     <?php endforeach; ?>
+                  </select>
+               </div>
+            </div><!-- teléfonos y Comedor-->
+            <input type="hidden" name="n_padre" value="no aplica">
+            <input type="hidden" name="n_madre" value="no aplica">
             <div class="form-group mb-3">
                <label for="content" class="form-label fs-4">Rerseña</label>
                <textarea name="content" cols="30" rows="5" class="form-control" placeholder="Reseña del beneficiario"></textarea>
             </div><!-- Reseña -->
             <div class="form-group mb-3">
-               <div class="col">
-                  <button type="submit" class="btn btn-warning mb-3"><span><i class="fa-solid fa-floppy-disk"></i></span> Guardar</button>
-               </div>
-            </div><!-- Butón submit -->
+               <button type="submit" class="btn btn-warning btn-sm mb-3 me-5"><span><i class="fa-solid fa-floppy-disk"></i></span> Guardar</button>
+               <button id="btn_cancelar" type="btn" class="btn btn-sm btn-danger mb-3">Cancelar</button>
+            </div><!-- Botones Guardar y Cancelar -->
             <input type="hidden" name="post_id" value="<?php the_ID() ?>">
-            <input type="hidden" name="action" value="beneficiario_adultos">
+            <input type="hidden" name="action" value="beneficiario_editar">
             <input type="hidden" name="nonce" value="<?php echo wp_create_nonce('beneficiarios') ?>">
             <input id="endpoint" type="hidden" name="endpoint" value="<?php echo admin_url('admin-ajax.php') ?>">
          </form>

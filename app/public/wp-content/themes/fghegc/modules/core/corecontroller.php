@@ -25,6 +25,7 @@ use FGHEGC\Modules\Sca\Puesto\PuestoModel;
 use FGHEGC\Modules\Scc\Asistencia\AsistenciaModel;
 use FGHEGC\Modules\Scc\Beneficiario\BeneficiarioController;
 use FGHEGC\Modules\Scc\Beneficiario\BeneficiarioModel;
+use FGHEGC\Modules\Scc\Comedor\ComedorController;
 use FGHEGC\Modules\Scc\Comedor\ComedorModel;
 use FGHEGC\modules\scp\oracion\OracionModel;
 use FGHEGC\Modules\Scp\Peticion\PeticionController;
@@ -253,6 +254,10 @@ class CoreController
             $this->atributos = BeneficiarioController::get_instance()->get_atributos($postType);
             break;
 
+         case 'comedor':
+            $this->atributos = ComedorController::get_instance()->get_atributos($postType);
+            break;
+
          default:
             if (isset($_GET['cpt'])) {
                $titulo = 'No hay un información registrada';
@@ -361,12 +366,15 @@ class CoreController
       $sca = ['comite', 'acta', 'acuerdo', 'miembro', 'puesto'];
       $sae = ['evento', 'inscripcion'];
       $scp = ['peticion', 'oracion'];
+      $scc = ['asistencia', 'bebeficiario', 'comedor'];
       if (in_array($postType, $sca)) {
          $modulo = 'modules/sca/';
       } elseif (in_array($postType, $sae)) {
          $modulo = 'modules/sae/';
       } elseif (in_array($postType, $scp)) {
          $modulo = 'modules/scp/';
+      } elseif (in_array($postType, $scc)) {
+         $modulo = 'modules/scc/';
       } else {
          $modulo = 'modules/';
       }

@@ -54,6 +54,13 @@ async function send_data(dataform, event) {
    if (dataform.get('vigente') == null) {
       dataform.set('vigente', 0)
    }
+   /*
+   for (var pair of datoform.entries()) {
+      var nombre = pair[0];
+      var valor = pair[1];
+      console.log("Nombre:", nombre, "Valor:", valor);
+   }
+   */
    const request = new Request(
       dataform.get('endpoint'), {
       method: 'POST',

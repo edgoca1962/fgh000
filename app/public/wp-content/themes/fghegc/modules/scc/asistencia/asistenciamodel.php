@@ -12,7 +12,6 @@ class AsistenciaModel
    {
       add_action('init', [$this, 'set_asistencia']);
       add_action('add_meta_boxes', [$this, 'set_campos']);
-      add_action('save_post', [$this, 'save_f_asistencia']);
       add_action('save_post', [$this, 'save_reflexion']);
       add_action('save_post', [$this, 'save_alimentacion']);
       add_action('save_post', [$this, 'save_q_alimentacion']);
@@ -97,16 +96,10 @@ class AsistenciaModel
    }
    public function set_campos()
    {
+      // Fecha Asistenia es post_date
       // post_parent es el ID del beneficiario
 
-      add_meta_box(
-         '_f_asistencia',
-         'Fecha Asitencia',
-         [$this, 'set_f_asistencia_cbk'],
-         'asistencia',
-         'normal',
-         'default'
-      );
+
       add_meta_box(
          '_reflexion',
          'Asistencia a reflexion',
@@ -131,38 +124,6 @@ class AsistenciaModel
          'normal',
          'default'
       );
-   }
-   public function set_f_asistencia_cbk($post)
-   {
-      wp_nonce_field('f_asistencia_nonce', 'f_asistencia_nonce');
-      $f_asistencia = get_post_meta($post->ID, '_f_asistencia', true);
-      echo '<input type="date" style="width:20%" id="f_asistencia" name="f_asistencia" value="' . esc_attr($f_asistencia) . '" ></input>';
-   }
-   public function save_f_asistencia($post_id)
-   {
-      if (!isset($_POST['f_asistencia_nonce'])) {
-         return;
-      }
-      if (!wp_verify_nonce($_POST['f_asistencia_nonce'], 'f_asistencia_nonce')) {
-         return;
-      }
-      if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
-         return;
-      }
-      if (isset($_POST['post_type']) && 'page' == $_POST['post_type']) {
-         if (!current_user_can('edit_page', $post_id)) {
-            return;
-         }
-      } else {
-         if (!current_user_can('edit_post', $post_id)) {
-            return;
-         }
-      }
-      if (!isset($_POST['f_asistencia'])) {
-         return;
-      }
-      $f_asistencia = sanitize_text_field($_POST['f_asistencia']);
-      update_post_meta($post_id, '_f_asistencia', $f_asistencia);
    }
    public function set_reflexion_cbk($post)
    {
@@ -232,7 +193,7 @@ class AsistenciaModel
    {
       wp_nonce_field('q_alimentacion_nonce', 'q_alimentacion_nonce');
       $q_alimentacion = get_post_meta($post->ID, '_q_alimentacion', true);
-      echo '<input type="number" min="1" max="4" style="width:5%" id="q_alimentacion" name="q_alimentacion" value="' . esc_attr($q_alimentacion) . '" ></input>';
+      echo '<input type="number" min="0" max="4" style="width:5%" id="q_alimentacion" name="q_alimentacion" value="' . esc_attr($q_alimentacion) . '" ></input>';
    }
    public function save_q_alimentacion($post_id)
    {
@@ -286,15 +247,12 @@ class AsistenciaModel
          $sql =
             "SELECT ID
             FROM $wpdb->posts
-            INNER JOIN $wpdb->postmeta
-            ON (ID = post_id)
             WHERE post_type ='asistencia' 
               AND post_parent = $post_parent
               AND post_status = 'publish'
-              AND (meta_key = '_f_asistencia' AND meta_value = '$f_asistencia')
+              AND post_date = '$f_asistencia'
             ";
          $registrado = $wpdb->get_var($sql);
-
          if ($registrado) {
             $post_data = array(
                'ID' => $registrado,
@@ -305,13 +263,13 @@ class AsistenciaModel
                'post_parent' => $post_parent,
                'post_date' => $f_asistencia,
                'meta_input' => array(
-                  '_f_asistencia' => $f_asistencia,
                   '_reflexion' => $reflexion,
                   '_alimentacion' => $alimentacion,
                   '_q_alimentacion' => $q_alimentacion,
                )
             );
             wp_update_post($post_data);
+            $mensaje = 'La información fue ACTUALIZADA exitosamente.';
          } else {
             $post_data = array(
                'post_type' => 'asistencia',
@@ -321,16 +279,16 @@ class AsistenciaModel
                'post_parent' => $post_parent,
                'post_date' => $f_asistencia,
                'meta_input' => array(
-                  '_f_asistencia' => $f_asistencia,
                   '_reflexion' => $reflexion,
                   '_alimentacion' => $alimentacion,
                   '_q_alimentacion' => $q_alimentacion,
                )
             );
+            $mensaje = 'La información fue registrada exitosamente.';
             wp_insert_post($post_data);
+            update_post_meta($post_parent, '_f_u_actualizacion', $f_asistencia);
          }
-         wp_send_json_success(['titulo' => 'Asistencia Actualizada', 'msg' => 'La información fue registrada exitosamente.']);
-         wp_die();
+         wp_send_json_success(['titulo' => 'Asistencia Actualizada', 'msg' => $mensaje]);
       }
    }
 }

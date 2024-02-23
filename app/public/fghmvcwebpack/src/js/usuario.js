@@ -8,7 +8,6 @@ if (document.getElementById('mantener_usuario')) {
    const btn_agregar = document.getElementById("agregar_usuario");
    const btn_modificar = document.getElementById("modificar_usuario");
    const btn_eliminar = document.getElementById("eliminar_usuario");
-
    user_email.addEventListener("change", function () {
       const datosformulario = new FormData(formulario);
       datosformulario.append("boton", "validar_usr");
@@ -35,6 +34,9 @@ if (document.getElementById('mantener_usuario')) {
                   btn_eliminar.classList.add("disabled");
                   first_name.focus();
                } else {
+                  if (document.getElementById('imagennueva')) {
+                     document.getElementById('imagennueva').setAttribute('src', data.data.avatar)
+                  }
                   first_name.value = data.data.first_name;
                   last_name.value = data.data.last_name;
                   user_login.value = data.data.user_login;
@@ -46,6 +48,30 @@ if (document.getElementById('mantener_usuario')) {
                   btn_agregar.classList.add("disabled");
                   btn_modificar.classList.remove("disabled");
                   btn_eliminar.classList.remove("disabled");
+                  if (document.getElementById('roles')) {
+                     switch (data.data.role) {
+                        case '1':
+                           document.getElementById('visualiza').setAttribute('checked', '')
+                           document.getElementById('encargado').removeAttribute('checked')
+                           document.getElementById('administrador').removeAttribute('checked')
+                           break;
+
+                        case '2':
+                           document.getElementById('visualiza').removeAttribute('checked')
+                           document.getElementById('encargado').setAttribute('checked', '')
+                           document.getElementById('administrador').removeAttribute('checked')
+                           break;
+
+                        case '3':
+                           document.getElementById('visualiza').removeAttribute('checked')
+                           document.getElementById('encargado').removeAttribute('checked')
+                           document.getElementById('administrador').setAttribute('checked', '')
+                           break;
+
+                        default:
+                           break;
+                     }
+                  }
                }
             } else {
                console.log(data);
@@ -56,11 +82,9 @@ if (document.getElementById('mantener_usuario')) {
       }
       validar_usr();
    });
-
    user_login.addEventListener("change", function () {
       const datosformulario = new FormData(formulario);
       datosformulario.append("boton", "validar_login");
-
       async function validar_login() {
          const request = new Request(datosformulario.get("endpoint"), {
             method: "POST",
@@ -70,9 +94,8 @@ if (document.getElementById('mantener_usuario')) {
             const response = await fetch(request);
             const data = await response.json();
             if (data.success) {
-               console.log(data.data);
                if (data.data == "agregar") {
-                  user_pass.removeAttribute("readonly", "");
+                  user_pass.removeAttribute("readonly");
                   btn_agregar.classList.remove("disabled");
                   btn_modificar.classList.add("disabled");
                   btn_eliminar.classList.add("disabled");

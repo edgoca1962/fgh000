@@ -11,6 +11,7 @@ class BeneficiarioModel
    public function __construct()
    {
       $this->set_paginas();
+      $this->set_roles();
       add_action('init', [$this, 'set_beneficiario']);
       add_action('rest_api_init', [$this, 'show_beneficiario_meta_fields']);
       add_action('add_meta_boxes', [$this, 'set_campos']);
@@ -33,10 +34,12 @@ class BeneficiarioModel
       add_action('save_post', [$this, 'save_n_madre']);
       add_action('save_post', [$this, 'save_n_padre']);
       add_action('save_post', [$this, 'save_condicion']);
-      add_action('pre_get_posts', [$this, 'set_pre_get_posts']);
+      add_action('save_post', [$this, 'save_f_u_actualizacion']);
+      add_action('pre_get_posts', [$this, 'scc_beneficiario_set_pre_get_posts']);
       add_action('wp_ajax_f_u_actualizacion', [$this, 'f_u_actualizacion']);
       add_action('wp_ajax_beneficiario_editar', [$this, 'beneficiario_editar']);
-      add_action('wp_ajax_beneficiario_ninos', [$this, 'agregar_beneficiario_ninos']);
+      add_action('wp_ajax_beneficiario_agregar', [$this, 'beneficiario_gregar']);
+      add_action('wp_ajax_scc_beneficiario_mantener_usuario', [$this, 'scc_beneficiario_mantener_usuario']);
    }
    public function set_beneficiario()
    {
@@ -954,44 +957,44 @@ class BeneficiarioModel
          )
       );
    }
-   public function set_pre_get_posts($query)
+   public function scc_beneficiario_set_pre_get_posts($query)
    {
       if (!is_admin() && is_post_type_archive() && $query->is_main_query()) {
-
          if (is_post_type_archive('beneficiario')) {
             $query->set('posts_per_page', 20);
             $query->set('orderby', 'post_title');
             $query->set('order', 'ASC');
-            if (isset($_GET['condicion'])) {
+            if (isset($_GET['comedor_id']) && isset($_GET['condicion']) && isset($_GET['sexo'])) {
+               $comedor = sanitize_text_field($_GET['comedor_id']);
                $condicion = sanitize_text_field($_GET['condicion']);
+               $sexo = sanitize_text_field($_GET['sexo']);
+               $query->set('post_parent', $comedor);
                $meta_query =
                   [
-                     'relation' => 'AND',
                      [
                         'key' => '_condicion',
                         'value' => $condicion
                      ],
                      [
-                        'relation' => 'OR',
-                        [
-                           'key' => '_f_u_actualizacion',
-                           'value' => date('Y-m-d'),
-                           'compare' => '!='
-                        ],
-                        [
-                           'key' => '_f_u_actualizacion',
-                           'compare' => 'NOT EXISTS',
-                        ],
+                        'key' => '_sexo',
+                        'value' => $sexo
                      ]
                   ];
-            } else {
+            } elseif (isset($_GET['condicion'])) {
+               $condicion = sanitize_text_field($_GET['condicion']);
                $meta_query =
                   [
                      [
                         'key' => '_condicion',
-                        'value' => 99
-                     ]
+                        'value' => $condicion
+                     ],
                   ];
+            } elseif (isset($_GET['comedor_id'])) {
+               $comedor = sanitize_text_field($_GET['comedor_id']);
+               $query->set('post_parent', $comedor);
+               $meta_query = [];
+            } else {
+               $meta_query = [];
             }
             $query->set('meta_query', $meta_query);
          }
@@ -1003,7 +1006,7 @@ class BeneficiarioModel
          'principal' =>
          [
             'slug' => 'beneficiario-principal',
-            'titulo' => 'Sistema Comedores'
+            'titulo' => 'Sistema Comedor_ides'
          ],
          'ninos' =>
          [
@@ -1024,7 +1027,17 @@ class BeneficiarioModel
          [
             'slug' => 'beneficiario-acerca',
             'titulo' => 'Acerca de Nosotros'
-         ]
+         ],
+         'graficos' =>
+         [
+            'slug' => 'beneficiario-graficos',
+            'titulo' => 'Información Gráfica'
+         ],
+         'encargados' =>
+         [
+            'slug' => 'beneficiario-encargados',
+            'titulo' => 'Listado de Encargados'
+         ],
       ];
       foreach ($paginas as $pagina) {
 
@@ -1049,10 +1062,12 @@ class BeneficiarioModel
    {
       // remove_role('useradmineventos');
       // remove_role('usercoordinaeventos');
-      add_role('useradminbeneficiarios', 'Administrador(a) Beneficiarios', get_role('subscriber')->capabilities);
-      add_role('beneficiarios', 'Beneficiarios', get_role('subscriber')->capabilities);
+
+      add_role('comedores', 'Ver Comedores', get_role('subscriber')->capabilities);
+      add_role('encargadocomedores', 'Enc. Comedores', get_role('subscriber')->capabilities);
+      add_role('useradmincomedores', 'Adm. Comedores', get_role('subscriber')->capabilities);
    }
-   public function agregar_beneficiario_ninos()
+   public function beneficiario_agregar()
    {
       if (!wp_verify_nonce($_POST['nonce'], 'beneficiarios')) {
          wp_send_json_error('Error de seguridad', 401);
@@ -1071,17 +1086,14 @@ class BeneficiarioModel
          require_once(ABSPATH . "wp-admin" . '/includes/image.php');
          require_once(ABSPATH . "wp-admin" . '/includes/file.php');
          require_once(ABSPATH . "wp-admin" . '/includes/media.php');
-         $imagen = $_FILES['beneficiario_imagen_editar']['tmp_name'];
          if (get_post_thumbnail_id($post_id)) {
-            $post_attached_id = 'remplazar imagen';
-         } else {
-            $post_attached_id = 'No tiene imagen';
+            delete_post_thumbnail($post_id);
          }
-         $attach_id = media_handle_upload('beneficiario_imagen_editar', $post_id);
+         $attach_id = media_handle_upload('beneficiario_imagen', $post_id);
          if (is_wp_error($attach_id)) {
             $attach_id = '';
          }
-         // set_post_thumbnail($post_id, $attach_id);
+         set_post_thumbnail($post_id, $attach_id);
          $nombre = sanitize_text_field($_POST['nombre']);
          $p_apellido = sanitize_text_field($_POST['p_apellido']);
          $s_apellido = sanitize_text_field($_POST['s_apellido']);
@@ -1108,7 +1120,6 @@ class BeneficiarioModel
 
          $post_data =
             [
-               'ID' => $post_id,
                'post_type' => 'beneficiario',
                'post_title' => $post_title,
                'post_name' => $post_name,
@@ -1139,8 +1150,8 @@ class BeneficiarioModel
                   '_n_padre' => $n_padre,
                ]
             ];
-         // wp_insert_post($post_data);
-         wp_send_json_success(['titulo' => 'Actualizado', 'msg' => 'Los datos fueron actualizados correctamente.', 'datos' => $post_data]);
+         wp_insert_post($post_data);
+         wp_send_json_success(['titulo' => 'Ingreso de Beneficiarios(as)', 'msg' => 'La información del Beneficiario(a) se registró correctamente.']);
       }
    }
    public function beneficiario_editar()
@@ -1162,7 +1173,6 @@ class BeneficiarioModel
          require_once(ABSPATH . "wp-admin" . '/includes/image.php');
          require_once(ABSPATH . "wp-admin" . '/includes/file.php');
          require_once(ABSPATH . "wp-admin" . '/includes/media.php');
-         $imagen = $_FILES['beneficiario_imagen']['tmp_name'];
          if (get_post_thumbnail_id($post_id)) {
             delete_post_thumbnail($post_id);
          }
@@ -1229,10 +1239,260 @@ class BeneficiarioModel
                ]
             ];
          wp_update_post($post_data);
-         wp_send_json_success(['titulo' => 'Actualizado', 'msg' => 'Los datos fueron actualizados correctamente.']);
+         wp_send_json_success(['titulo' => 'Actualización', 'msg' => 'Los datos fueron actualizados correctamente.']);
       }
    }
-   public function borrar_beneficiario()
+   public function beneficiario_eliminar()
    {
+   }
+   public function scc_beneficiario_mantener_usuario()
+   {
+      if (!wp_verify_nonce($_POST['nonce'], 'mantener_usuario')) {
+         wp_send_json_error('Error de seguridad', 401);
+         wp_die();
+      } else {
+         $boton = sanitize_text_field($_POST['boton']);
+         switch ($boton) {
+            case 'validar_usr':
+               $user_email = sanitize_text_field($_POST['user_email']);
+               $datos = get_user_by('email', $user_email);
+               if (empty($datos)) {
+                  wp_send_json_success('agregar');
+               } else {
+                  $datos_usuario['ID'] = $datos->ID;
+                  $datos_usuario['first_name'] = $datos->first_name;
+                  $datos_usuario['last_name'] = $datos->last_name;
+                  $datos_usuario['user_login'] = $datos->user_login;
+                  $datos_usuario['user_pass'] = $datos->user_pass;
+                  $roles = get_userdata($datos->ID)->roles;
+                  if (in_array('useradmincomedores', $roles)) {
+                     $datos_usuario['role'] = '3';
+                  } elseif (in_array('encargadocomedores', $roles)) {
+                     $datos_usuario['role'] = '2';
+                  } else {
+                     $datos_usuario['role'] = '1';
+                  }
+
+                  require_once(ABSPATH . "wp-admin" . '/includes/image.php');
+                  require_once(ABSPATH . "wp-admin" . '/includes/file.php');
+                  require_once(ABSPATH . "wp-admin" . '/includes/media.php');
+
+                  $attach_id = media_handle_upload('usuario_imagen', 0);
+                  if (is_wp_error($attach_id)) {
+                     $attach_id = '';
+                     if (get_user_meta($datos->ID, 'custom_avatar', true)) {
+                        $datos_usuario['avatar'] = wp_get_attachment_url(get_user_meta($datos->ID, 'custom_avatar', true));
+                     } else {
+                        $datos_usuario['avatar'] = FGHEGC_DIR_URI . '/assets/img/avatar03.png';
+                     }
+                  } else {
+                     update_user_meta($datos->ID, 'custom_avatar', $attach_id);
+                     $datos_usuario['avatar'] = wp_get_attachment_url(get_user_meta($datos->ID, 'custom_avatar', true));
+                  }
+                  wp_send_json_success($datos_usuario);
+               }
+               break;
+            case 'validar_login':
+               $user_login = sanitize_text_field($_POST['user_login']);
+               $datos = get_user_by('login', $user_login);
+               if (empty($datos)) {
+                  wp_send_json_success('agregar');
+               } else {
+                  $datos_usuario['ID'] = $datos->ID;
+                  $datos_usuario['user_email'] = $datos->user_email;
+                  $datos_usuario['user_login'] = $datos->user_login;
+                  wp_send_json_success($datos_usuario);
+               }
+               break;
+            case 'agregar_usuario':
+               require_once(ABSPATH . "wp-admin" . '/includes/image.php');
+               require_once(ABSPATH . "wp-admin" . '/includes/file.php');
+               require_once(ABSPATH . "wp-admin" . '/includes/media.php');
+
+               $attach_id = media_handle_upload('usuario_imagen', 0);
+               if (is_wp_error($attach_id)) {
+                  $attach_id = '';
+               }
+
+               $user_email = sanitize_text_field($_POST['user_email']);
+               $first_name = sanitize_text_field($_POST['first_name']);
+               $last_name = sanitize_text_field($_POST['last_name']);
+               $user_login = sanitize_text_field($_POST['user_login']);
+               $user_pass = sanitize_text_field($_POST['user_pass']);
+               $user_nicename = $first_name . '-' . $last_name;
+               $nombre = $first_name . ' ' . $last_name;
+               $userdata = array(
+                  'user_pass' => $user_pass,
+                  'user_login' => $user_login,
+                  'user_nicename' => $user_nicename,
+                  'user_email' => $user_email,
+                  'display_name' => $nombre,
+                  'nickname' => $user_login,
+                  'first_name' => $first_name,
+                  'last_name' => $last_name,
+                  'show_admin_bar_front' => 'false'
+               );
+               $user_id = wp_insert_user($userdata);
+               if (isset($_POST['role'])) {
+                  $role = sanitize_text_field($_POST['role']);
+
+                  $sccusuarios = get_userdata($user_id);
+
+                  switch ($role) {
+                     case '1':
+                        $sccusuarios->remove_role('subscriber');
+                        $sccusuarios->add_role('comedores');
+                        break;
+
+                     case '2':
+                        $sccusuarios->remove_role('subscriber');
+                        $sccusuarios->add_role('encargadocomedores');
+                        break;
+
+                     case '3':
+                        $sccusuarios->remove_role('subscriber');
+                        $sccusuarios->add_role('useradmincomedores');
+                        break;
+                     default:
+                        $sccusuarios->remove_role('subscriber');
+                        $sccusuarios->add_role('comedores');
+                        break;
+                  }
+               }
+               if ($attach_id) {
+                  update_user_meta($user_id, 'custom_avatar', $attach_id);
+               }
+               // add_filter('avatar_defaults', 'wpb_new_gravatar');
+               wp_send_json_success('Usuario Registrado');
+               break;
+
+            case 'modificar_usuario':
+               $user_email = sanitize_text_field($_POST['user_email']);
+               $first_name = sanitize_text_field($_POST['first_name']);
+               $last_name = sanitize_text_field($_POST['last_name']);
+               $user_login = sanitize_text_field($_POST['user_login']);
+               $user_pass = sanitize_text_field($_POST['user_pass']);
+               $user_nicename = $first_name . '-' . $last_name;
+               $nombre = $first_name . ' ' . $last_name;
+               $datos = get_user_by('email', $user_email);
+
+               require_once(ABSPATH . "wp-admin" . '/includes/image.php');
+               require_once(ABSPATH . "wp-admin" . '/includes/file.php');
+               require_once(ABSPATH . "wp-admin" . '/includes/media.php');
+
+               $attach_id = media_handle_upload('usuario_imagen', 0);
+               if (is_wp_error($attach_id)) {
+                  $attach_id = '';
+               } else {
+                  update_user_meta($datos->ID, 'custom_avatar', $attach_id);
+               }
+               $args = [
+                  'ID' => $datos->ID,
+                  'user_email' => $user_email,
+                  'first_name' => $first_name,
+                  'last_name' => $last_name,
+                  'user_login' => $user_login,
+                  'user_pass' => $user_pass,
+                  'user_nicename' => $user_nicename,
+                  'display_name' => $nombre,
+
+               ];
+               wp_update_user($args);
+
+               if (isset($_POST['role'])) {
+                  $role = sanitize_text_field($_POST['role']);
+                  $sccusuarios = get_userdata($datos->ID);
+                  $roles = $sccusuarios->roles;
+                  if (in_array('subscriber', $roles)) {
+                     $sccusuarios->remove_role('subscriber');
+                  }
+                  if (in_array('comedores', $roles)) {
+                     $sccusuarios->remove_role('comedores');
+                  }
+                  if (in_array('encargadocomedores', $roles)) {
+                     $sccusuarios->remove_role('encargadocomedores');
+                  }
+                  switch ($role) {
+                     case '1':
+                        if (in_array('comedores', $roles)) {
+                           $sccusuarios->add_role('comedores');
+                        }
+                        break;
+
+                     case '2':
+                        $sccusuarios->add_role('encargadocomedores');
+                        break;
+
+                     case '3':
+                        $sccusuarios->add_role('useradmincomedores');
+                        break;
+                     default:
+                        $sccusuarios->add_role('subsciber');
+                        break;
+                  }
+               }
+               wp_send_json_success(['titulo' => 'Actualización de Usuario', 'msg', 'La información se actualizó exitosamente.']);
+               break;
+            case 'eliminar':
+               $post_id = $_POST['post_id'];
+               wp_trash_post($post_id);
+               wp_send_json_success('Registro Eliminado');
+               break;
+         }
+         wp_send_json_success(['titulo' => 'Actualización de Usuario', 'msg', 'La información se registró exitosamente.', 'usermeta' => $act]);
+      }
+   }
+   public function scc_beneficiario_agregar_usuario()
+   {
+      if (!wp_verify_nonce($_POST['nonce'], 'mantener_usuario')) {
+         wp_send_json_error('Error de seguridad', 401);
+         wp_die();
+      } else {
+         $user_email = sanitize_text_field($_POST['user_email']);
+         $first_name = sanitize_text_field($_POST['first_name']);
+         $last_name = sanitize_text_field($_POST['last_name']);
+         $user_login = sanitize_text_field($_POST['user_login']);
+         $user_pass = sanitize_text_field($_POST['user_pass']);
+         $user_nicename = $first_name . '-' . $last_name;
+         $nombre = $first_name . ' ' . $last_name;
+         $userdata = array(
+            'user_pass' => $user_pass,
+            'user_login' => $user_login,
+            'user_nicename' => $user_nicename,
+            'user_email' => $user_email,
+            'display_name' => $nombre,
+            'nickname' => $user_login,
+            'first_name' => $first_name,
+            'last_name' => $last_name,
+            'show_admin_bar_front' => 'false'
+         );
+         $user_id = wp_insert_user($userdata);
+         if (isset($_POST['role'])) {
+            $role = sanitize_text_field($_POST['role']);
+            $sccusuarios = new \WP_User($user_id);
+            switch ($role) {
+               case '1':
+                  $sccusuarios->remove_role('subscriber');
+                  $sccusuarios->add_role('comedores');
+                  break;
+
+               case '2':
+                  $sccusuarios->remove_role('subscriber');
+                  $sccusuarios->add_role('encargadocomedores');
+                  break;
+
+               case '3':
+                  $sccusuarios->remove_role('subscriber');
+                  $sccusuarios->add_role('useradmincomedores');
+                  break;
+               default:
+                  $sccusuarios->remove_role('subscriber');
+                  $sccusuarios->add_role('comedores');
+                  break;
+            }
+         }
+         add_filter('avatar_defaults', 'wpb_new_gravatar');
+         wp_send_json_success(['titulo' => 'Actualización de Usuario', 'msg', 'La información se registró exitosamente.']);
+      }
    }
 }

@@ -1,46 +1,22 @@
 
-document.addEventListener('click', funcion_beneficiario)
-function funcion_beneficiario(e) {
-   if (e.target.getAttribute('data-b_id')) {
-      e.preventDefault();
-      e.stopPropagation();
-      const post_id = e.target.dataset.b_id
-      const formulario = document.getElementById(post_id)
-      const datos = new FormData(formulario)
 
-      async function save_f_u_actualizacion() {
-         const request = new Request(
-            datos.get('endpoint'), {
-            method: 'POST',
-            body: datos,
-         })
-         try {
-            const response = await fetch(request)
-            const data = await response.json()
-            if (data.success) {
-               console.log(data.data)
-            } else {
-               console.log(data)
-            }
-         } catch (error) {
-            console.log('Error: ', error)
-         }
-      }
-      save_f_u_actualizacion()
-
-      document.getElementById(post_id).setAttribute('hidden', '')
+document.addEventListener('click', funcion_actualizar_asistencia)
+function funcion_actualizar_asistencia(e) {
+   let elemento_id = ''
+   let etiqueta = ''
+   if (e.target.getAttribute('id')) {
+      elemento_id = e.target.getAttribute('id')
+      etiqueta = elemento_id.substring(0, 6)
    }
-
+   if (etiqueta == 'reflex' || etiqueta == 'alimen') {
+      if (document.getElementById(elemento_id).value == 'No') {
+         document.getElementById(elemento_id).value = 'Si'
+      } else {
+         document.getElementById(elemento_id).value = 'No'
+      }
+   }
 }
-if (document.getElementById('comedorescsv')) {
-   document.getElementById('csvfile').addEventListener('change', function () {
-      const csvfile = document.getElementById('csvfile').value
-      const csvfile2 = csvfile.split('\\')
-      console.log(csvfile2[2])
-      document.getElementById('lbl_csvfile').innerHTML = csvfile2[2]
-   })
-}
-if (document.getElementById('beneficiario_single')) {
+if (document.getElementById('asistencia_single')) {
    document.getElementById('reflexion').addEventListener('click', () => {
       if (document.getElementById('reflexion').value == 'No') {
          document.getElementById('reflexion').value = 'Si'
@@ -288,11 +264,6 @@ if (document.getElementById('beneficiario_single_editar')) {
 
       document.getElementById('seccion_beneficiario_single_editar').removeAttribute('hidden')
    })
-   document.getElementById('btn_actualizar_asistencia').addEventListener('click', () => {
-      document.getElementById('asistencia').setAttribute('hidden', '')
-      document.getElementById('btn_asistencia').removeAttribute('hidden')
-
-   })
 }
 if (document.getElementById('beneficiario_ninos')) {
    const endpoint = document.getElementById('endpoint').value
@@ -403,6 +374,9 @@ if (document.getElementById('beneficiario_ninos')) {
       }
       buscar_distrito()
    })
+   document.getElementById('btn_cancelar').addEventListener('click', () => {
+      location.reload()
+   })
 }
 if (document.getElementById('beneficiario_adultos')) {
    const endpoint = document.getElementById('endpoint').value
@@ -511,61 +485,98 @@ if (document.getElementById('beneficiario_adultos')) {
       }
       buscar_distrito()
    })
+   document.getElementById('btn_cancelar').addEventListener('click', () => {
+      location.reload()
+   })
 }
-if (document.getElementById('comedor')) {
-   const endpoint = document.getElementById('endpoint').value
-   const provincia = document.getElementById('provincia')
-   const canton = document.getElementById('canton')
-   const distrito = document.getElementById('distrito')
-   const nonce_canton = document.getElementById('nonce_canton').value
-   const action_canton = document.getElementById('action_canton').value
-   const nonce_distrito = document.getElementById('nonce_distrito').value
-   const action_distrito = document.getElementById('action_distrito').value
-
-   if (document.getElementById('comedor_imagen')) {
-      document.getElementById('comedor_imagen').addEventListener('change', function () {
-         const imagen = this.files[0]
-         if (imagen) {
-            const reader = new FileReader()
-            document.getElementById('imagennueva').display = 'block'
-            reader.addEventListener('load', function () {
-               document.getElementById('imagennueva').setAttribute('src', this.result)
-            })
-            reader.readAsDataURL(imagen)
-         } else {
-            console.log('por definir')
-         }
-      })
-   }
-
-   provincia.addEventListener('change', () => {
-      const provincia_id = provincia.value
-      const datos = new FormData()
-      datos.append('endpoint', endpoint)
-      datos.append('action', action_canton)
-      datos.append('nonce', nonce_canton)
-      datos.append('provincia_id', provincia_id)
-      for (var pair of datos.entries()) {
-         var nombre = pair[0];
-         var valor = pair[1];
-         console.log("Nombre:", nombre, "Valor:", valor);
+if (document.getElementById('comedor_single')) {
+   const formulario = document.getElementById('comedor')
+   const datos = new FormData(formulario)
+   const elementosConEditar = document.querySelectorAll('[editar]');
+   elementosConEditar.forEach(function (elemento) {
+      elemento.setAttribute('disabled', '');
+   });
+   document.getElementById('btn_editar').addEventListener('click', () => {
+      document.getElementById('comedor_single').setAttribute('hidden', '')
+      document.getElementById('comedor_single_editar').removeAttribute('hidden')
+      comedor_editar(datos)
+   })
+}
+function comedor_editar(datos) {
+   document.getElementById('comedor_imagen').addEventListener('change', function () {
+      const imagen = this.files[0]
+      if (imagen) {
+         const reader = new FileReader()
+         document.getElementById('imagennueva').display = 'block'
+         reader.addEventListener('load', function () {
+            document.getElementById('imagennueva').setAttribute('src', this.result)
+         })
+         reader.readAsDataURL(imagen)
+      } else {
+         console.log('por definir')
       }
-      async function buscar_canton() {
+   })
+   document.getElementById('nombre').value = datos.get('nombre')
+
+   function datos_provincias() {
+      const provincia = document.getElementById('provincia')
+      const datos_provincias = new FormData()
+      datos_provincias.append('nonce', datos.get('nonce_provincia'))
+      datos_provincias.append('action', datos.get('action_provincia'))
+      async function get_provincias() {
          const request = new Request(
             datos.get('endpoint'), {
             method: 'POST',
-            body: datos,
+            body: datos_provincias,
          })
          try {
             const response = await fetch(request)
             const data = await response.json()
             if (data.success) {
-               canton.innerHTML = '<option selected>Seleccionar Cantón</option>'
+               provincia.innerHTML = ''
+               const provincias = data.data
+               provincias.forEach(provincias => {
+                  if (datos.get('provincia_id') == provincias.ID) {
+                     provincia.innerHTML += `<option selected value="${provincias.ID}">${provincias.provincia}</option>`;
+                  } else {
+                     provincia.innerHTML += `<option value="${provincias.ID}">${provincias.provincia}</option>`;
+                  }
+               });
+            } else {
+               console.log(data)
+            }
+         } catch (error) {
+            console.log('Error: ', error)
+         }
+      }
+      get_provincias()
+   }
+   datos_provincias()
+   function datos_cantones() {
+      const canton = document.getElementById('canton')
+      const datos_cantones = new FormData()
+      datos_cantones.append('nonce', datos.get('nonce_canton'))
+      datos_cantones.append('action', datos.get('action_canton'))
+      datos_cantones.append('provincia_id', datos.get('provincia_id'))
+      async function get_cantones() {
+         const request = new Request(
+            datos.get('endpoint'), {
+            method: 'POST',
+            body: datos_cantones,
+         })
+         try {
+            const response = await fetch(request)
+            const data = await response.json()
+            if (data.success) {
+               canton.innerHTML = ''
                const cantones = data.data
                cantones.forEach(cantones => {
-                  canton.innerHTML += `<option value="${cantones.ID}">${cantones.canton}</option>`;
+                  if (datos.get('canton_id') == cantones.ID) {
+                     canton.innerHTML += `<option selected value="${cantones.ID}">${cantones.canton}</option>`;
+                  } else {
+                     canton.innerHTML += `<option value="${cantones.ID}">${cantones.canton}</option>`;
+                  }
                });
-
             } else {
                console.log(data)
             }
@@ -573,36 +584,34 @@ if (document.getElementById('comedor')) {
             console.log('Error: ', error)
          }
       }
-      buscar_canton()
-   })
-   canton.addEventListener('change', () => {
-      const canton_id = canton.value
-      const datos = new FormData()
-      datos.append('endpoint', endpoint)
-      datos.append('action', action_distrito)
-      datos.append('nonce', nonce_distrito)
-      datos.append('canton_id', canton_id)
-      for (var pair of datos.entries()) {
-         var nombre = pair[0];
-         var valor = pair[1];
-         console.log("Nombre:", nombre, "Valor:", valor);
-      }
-      async function buscar_distrito() {
+      get_cantones()
+   }
+   datos_cantones()
+   function datos_distritos() {
+      const distrito = document.getElementById('distrito')
+      const datos_distritos = new FormData()
+      datos_distritos.append('nonce', datos.get('nonce_distrito'))
+      datos_distritos.append('action', datos.get('action_distrito'))
+      datos_distritos.append('canton_id', datos.get('canton_id'))
+      async function get_distritos() {
          const request = new Request(
             datos.get('endpoint'), {
             method: 'POST',
-            body: datos,
+            body: datos_distritos,
          })
          try {
             const response = await fetch(request)
             const data = await response.json()
             if (data.success) {
-               distrito.innerHTML = '<option selected>Seleccionar Distrito</option>'
+               distrito.innerHTML = ''
                const distritos = data.data
                distritos.forEach(distritos => {
-                  distrito.innerHTML += `<option value="${distritos.ID}">${distritos.distrito}</option>`;
+                  if (datos.get('distrito_id') == distritos.ID) {
+                     distrito.innerHTML += `<option selected value="${distritos.ID}">${distritos.distrito}</option>`;
+                  } else {
+                     distrito.innerHTML += `<option value="${distritos.ID}">${distritos.distrito}</option>`;
+                  }
                });
-
             } else {
                console.log(data)
             }
@@ -610,6 +619,67 @@ if (document.getElementById('comedor')) {
             console.log('Error: ', error)
          }
       }
-      buscar_distrito()
+      get_distritos()
+   }
+   datos_distritos()
+   document.getElementById('direccion').value = datos.get('direccion')
+   document.getElementById('telefono').value = datos.get('telefono')
+   document.getElementById('email').value = datos.get('email')
+
+   function datos_encargados() {
+      const encargado = document.getElementById('encargado')
+      const datos_encargados = new FormData()
+      datos_encargados.append('nonce', datos.get('nonce_encargado'))
+      datos_encargados.append('action', datos.get('action_encargado'))
+      async function get_encargados() {
+         const request = new Request(
+            datos.get('endpoint'), {
+            method: 'POST',
+            body: datos_encargados,
+         })
+         try {
+            const response = await fetch(request)
+            const data = await response.json()
+            if (data.success) {
+               encargado.innerHTML = ''
+               const encargados = data.data
+               encargados.forEach(contacto => {
+                  if (datos.get('contacto_id') == contacto.ID) {
+                     encargado.innerHTML += `<option selected value="${contacto.ID}">${contacto.nombre}</option>`;
+                  } else {
+                     encargado.innerHTML += `<option value="${contacto.ID}">${contacto.nombre}</option>`;
+                  }
+               });
+            } else {
+               console.log(data)
+            }
+         } catch (error) {
+            console.log('Error: ', error)
+         }
+      }
+      get_encargados()
+   }
+   datos_encargados()
+
+   document.getElementById('btn_cancelar').addEventListener('click', () => {
+      location.reload()
+   })
+}
+if (document.getElementById('scc_usuarios')) {
+   document.getElementById('usuario_imagen').addEventListener('change', function () {
+      const imagen = this.files[0]
+      if (imagen) {
+         const reader = new FileReader()
+         document.getElementById('imagennueva').display = 'block'
+         reader.addEventListener('load', function () {
+            document.getElementById('imagennueva').setAttribute('src', this.result)
+         })
+         reader.readAsDataURL(imagen)
+      } else {
+         console.log('por definir')
+      }
+   })
+   document.getElementById('btn_cancelar').addEventListener('click', () => {
+      location.reload();
    })
 }

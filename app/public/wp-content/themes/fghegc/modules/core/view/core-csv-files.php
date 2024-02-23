@@ -12,15 +12,6 @@
 			<input type="hidden" name="action" value="csvfile">
 			<input type="hidden" name="nonce" value="<?php echo wp_create_nonce('csvfile') ?>">
 			<input type="hidden" name="endpoint" value="<?php echo admin_url('admin-ajax.php') ?>">
-			<input type="hidden" name="titulo_procesado" value="El archivo ha sido procesado">
 		</form>
 	</div>
 </div>
-<script>
-	document.getElementById('csvfile').addEventListener('change', function() {
-		const csvfile = document.getElementById('csvfile').value
-		const csvfile2 = csvfile.split('\\')
-		console.log(csvfile2[2])
-		document.getElementById('lbl_csvfile').innerHTML = csvfile2[2]
-	})
-</script>

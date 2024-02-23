@@ -14,7 +14,6 @@ class BeneficiarioController
    }
    public function get_atributos($postType)
    {
-      $this->atributos['titulo'] = 'Comedor Grano de Trigo';
       $this->atributos['div2'] = 'row';
       $this->atributos['div3'] = 'col-md-8';
       $this->atributos['div5'] = 'col-md-4';
@@ -25,12 +24,14 @@ class BeneficiarioController
       $this->atributos['displaysub'] = 'fs-4';
       $this->atributos['displaysub2'] = 'fs-5';
 
+      $this->atributos['titulo'] = $this->get_datosAtributos($postType)['titulo'];
       $this->atributos['subtitulo'] = $this->get_datosAtributos($postType)['subtitulo'];
       $this->atributos['subtitulo2'] = $this->get_datosAtributos($postType)['subtitulo2'];
       $this->atributos['div4'] = $this->get_datosAtributos($postType)['div4'];
       $this->atributos['agregarpost'] = $this->get_datosAtributos($postType)['agregarpost'];
       $this->atributos['templatepart'] = $this->get_datosAtributos($postType)['templatepart'];
       $this->atributos['carrusel'] = $this->get_datosAtributos($postType)['carrusel'];
+      $this->atributos['ocultar'] = $this->get_ocultar();
       return $this->atributos;
    }
    private function get_datosAtributos($postType)
@@ -72,6 +73,12 @@ class BeneficiarioController
          'imagen03' => FGHEGC_DIR_URI . '/assets/img/comedores03.jpeg',
          'imagen04' => FGHEGC_DIR_URI . '/assets/img/comedores04.jpeg',
       ];
+      if (isset($_GET['comedor_id'])) {
+         $comedor = sanitize_text_field($_GET['comedor_id']);
+         $datosAtributos['titulo'] = get_post($comedor)->post_title;
+      } else {
+         $datosAtributos['titulo'] = 'Comedor Grano de Trigo';
+      }
 
       return $datosAtributos;
    }
@@ -162,9 +169,35 @@ class BeneficiarioController
    public function get_avatar($post_id)
    {
       if (get_post_meta($post_id, '_sexo', true) == '2') {
-         $avatar = FGHEGC_DIR_URI . '/assets/img/avatar_femenino.png';
+         switch (get_post_meta($post_id, '_condicion', true)) {
+            case '1':
+               $avatar = FGHEGC_DIR_URI . '/assets/img/avatar_femenino.png';
+               break;
+            case '2':
+               $avatar = FGHEGC_DIR_URI . '/assets/img/avatarAdultaMayor.png';
+               break;
+            case '3':
+               $avatar = FGHEGC_DIR_URI . '/assets/img/avatarEmbarazada.png';
+               break;
+            case '4':
+               $avatar = FGHEGC_DIR_URI . '/assets/img/avatarLactancia.png';
+               break;
+            default:
+               $avatar = FGHEGC_DIR_URI . '/assets/img/avatar03.png';
+               break;
+         }
       } else {
-         $avatar = FGHEGC_DIR_URI . '/assets/img/avatar_masculino.png';
+         switch (get_post_meta($post_id, '_condicion', true)) {
+            case '1':
+               $avatar = FGHEGC_DIR_URI . '/assets/img/avatar_masculino.png';
+               break;
+            case '2':
+               $avatar = FGHEGC_DIR_URI . '/assets/img/avatarAdultoMayor.png';
+               break;
+            default:
+               $avatar = FGHEGC_DIR_URI . '/assets/img/avatar03.png';
+               break;
+         }
       }
       return $avatar;
    }
@@ -196,8 +229,89 @@ class BeneficiarioController
       ORDER BY t1.meta_value
       ";
 
+
+      /********************************************
+       * 
+       * Listado de comedores por condición y sexo 
+       * 
+       * ******************************************/
       $datosSidebar['condiciones'] = $wpdb->get_results($sql, ARRAY_A);
+      $comedores = get_posts(['post_type' => 'comedor', 'post_status' => 'publish', 'posts_per_page' => -1, 'orderby' => 'post_title', 'order' => 'ASC']);
+      $sql =
+         "SELECT post_parent AS comedor_id, 
+            t1.meta_value AS condicion_id,
+            t2.meta_value AS sexo,
+            count(*) AS total
+         FROM $wpdb->posts
+            INNER JOIN $wpdb->postmeta t1
+            ON (ID = t1.post_id)
+            INNER JOIN $wpdb->postmeta t2
+            ON (ID = t2.post_id)
+         WHERE post_type = 'beneficiario'
+            AND post_status = 'publish'
+            AND (t1.meta_key='_condicion')
+            AND (t2.meta_key = '_sexo')
+         GROUP BY post_parent,t1.meta_value,t2.meta_value
+         ORDER BY post_parent,t1.meta_value,t2.meta_value";
+      $datos = $wpdb->get_results($sql, ARRAY_A);
+      $listado = [];
+      foreach ($comedores as $comedor) {
+         $listado[] =
+            [
+               'nivel' => 1,
+               'enlace' => get_post_type_archive_link('beneficiario') . '?comedor_id=' . $comedor->ID,
+               'descripcion' => $comedor->post_title
+            ];
+         foreach ($datos as $dato) {
+            $descripcion = '';
+            switch ($dato['condicion_id']) {
+               case '1':
+                  if ($dato['sexo'] == '1') {
+                     $descripcion = 'Total de Niños ' . '( ' . $dato['total'] . ' )';
+                  } else {
+                     $descripcion = 'Total de Niñas ' . '( ' . $dato['total'] . ' )';
+                  }
+                  break;
+
+               case '2':
+                  if ($dato['sexo'] == '1') {
+                     $descripcion = 'Total de Adultos Mayores ' . '( ' . $dato['total'] . ' )';
+                  } else {
+                     $descripcion = 'Total de Adultas Mayores ' . '( ' . $dato['total'] . ' )';
+                  }
+                  break;
+
+               case '3':
+                  $descripcion = 'Total de Embarazadas ' . '( ' . $dato['total'] . ' )';
+                  break;
+
+               case '4':
+                  $descripcion = 'Total en Lactancia ' . '( ' . $dato['total'] . ' )';
+                  break;
+            }
+
+            if ($dato['comedor_id'] == $comedor->ID) {
+               $listado[] =
+                  [
+                     'nivel' => 2,
+                     'enlace' => get_post_type_archive_link('beneficiario') . '?comedor_id=' . $comedor->ID . '&condicion=' . $dato['condicion_id'] . '&sexo=' . $dato['sexo'],
+                     'descripcion' => $descripcion
+                  ];
+            }
+         }
+      }
+
+      $datosSidebar['listado'] = $listado;
+
 
       return $datosSidebar;
+   }
+   public function get_ocultar()
+   {
+      $ocultar = '';
+      if (get_post_meta(get_the_ID(), '_f_u_actualizacion', true) == date('Y-d-m')) {
+         $ocultar = 'hidden';
+      }
+      return $ocultar;
    }
 }

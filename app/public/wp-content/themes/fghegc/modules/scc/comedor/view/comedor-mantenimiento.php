@@ -74,6 +74,13 @@ $encargados = get_users(['role' => 'comedores', 'orderby' => 'nicename']);
                   </div>
                </div>
                <div class="col-md-4 mb-3">
+                  <label class="form-label">e-mail</label>
+                  <input type="text" name="email" placeholder="e-mail" class="form-control" required>
+                  <div class="invalid-feedback">
+                     Por favor indicar un correo válido.
+                  </div>
+               </div>
+               <div class="col-md-4 mb-3">
                   <label class="form-label">Encargado(a)</label>
                   <select name="contacto_id" id="contacto_id" class="form-select" aria-label="Provincias">
                      <option selected>Seleccionar Encargado</option>
@@ -84,12 +91,11 @@ $encargados = get_users(['role' => 'comedores', 'orderby' => 'nicename']);
                </div>
             </div><!-- teléfono y contacto -->
             <div class="form-group mb-3">
-               <div class="col">
-                  <button type="submit" class="btn btn-warning mb-3"><span><i class="fa-solid fa-floppy-disk"></i></span> Guardar</button>
-               </div>
-            </div><!-- Butón submit -->
+               <button type="submit" class="btn btn-warning btn-sm mb-3 me-5"><span><i class="fa-solid fa-floppy-disk"></i></span> Guardar</button>
+               <button id="btn_cancelar" type="btn" class="btn btn-sm btn-danger mb-3">Cancelar</button>
+            </div><!-- Botones Guardar y Cancelar -->
             <input type="hidden" name="post_id" value="<?php the_ID() ?>">
-            <input type="hidden" name="action" value="comedores">
+            <input type="hidden" name="action" value="comedor_agregar">
             <input type="hidden" name="nonce" value="<?php echo wp_create_nonce('comedores') ?>">
             <input id="endpoint" type="hidden" name="endpoint" value="<?php echo admin_url('admin-ajax.php') ?>">
          </form>

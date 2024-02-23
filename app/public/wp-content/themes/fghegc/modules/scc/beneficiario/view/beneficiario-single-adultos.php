@@ -184,7 +184,7 @@ $comedores = get_posts(['post_type' => 'comedor', 'posts_per_page' => -1]);
       <?php if ($asistencias) : ?>
          <?php foreach ($asistencias as $asistencia) : ?>
             <div class="row">
-               <div class="col"><?php echo  get_post_meta($asistencia->ID, '_f_asistencia', true) ?></div>
+               <div class="col"><?php echo date('Y-m-d', strtotime($asistencia->post_date)) ?></div>
                <div class="col"><?php echo get_post_meta($asistencia->ID, '_reflexion', true) ?></div>
                <div class="col"><?php echo get_post_meta($asistencia->ID, '_alimentacion', true) ?></div>
                <div class="col"><?php echo get_post_meta($asistencia->ID, '_q_alimentacion', true) ?></div>
@@ -334,7 +334,7 @@ $comedores = get_posts(['post_type' => 'comedor', 'posts_per_page' => -1]);
             <label class="form-label">Comedor</label>
             <select id="comedor" name="post_parent" class="form-select" aria-label="Comedores"></select>
          </div>
-      </div><!-- teléfonos -->
+      </div><!-- teléfonos y Comedor -->
       <input type="hidden" name="n_padre" value="no aplica">
       <input type="hidden" name="n_madre" value="no aplica">
       <div class="form-group mb-3">

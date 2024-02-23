@@ -175,11 +175,12 @@ function f_active_element() {
          "Se eliminará el puesto de " + elementolabel;
       document.getElementById("miembro_post_id").value = elemento.value;
    } else {
-      document.getElementById("boton_puesto").value =
-         document.activeElement.getAttribute("id");
-      document.getElementById("boton_miembro").value =
-         document.activeElement.getAttribute("id");
-      document.getElementById("boton_usuario").value =
-         document.activeElement.getAttribute("id");
+      if (document.getElementById('scc_usuarios')) {
+         document.getElementById("boton_usuario").value = document.activeElement.getAttribute("id");
+      } else {
+         document.getElementById("boton_puesto").value = document.activeElement.getAttribute("id");
+         document.getElementById("boton_miembro").value = document.activeElement.getAttribute("id");
+         document.getElementById("boton_usuario").value = document.activeElement.getAttribute("id");
+      }
    }
 }

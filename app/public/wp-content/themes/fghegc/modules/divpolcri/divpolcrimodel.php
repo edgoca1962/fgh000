@@ -372,50 +372,6 @@ class DivPolCriModel
          }
       }
    }
-   public function fghegc_beneficiario_csvfile()
-   {
-      if (!wp_verify_nonce($_POST['nonce'], 'csvfile')) {
-         wp_send_json_error('Error de seguridad', 401);
-         die();
-      } else {
-
-         $campos = [];
-         $registro = 0;
-         $post_fields = [];
-         $post_meta = [];
-         $args = [];
-
-         if (($file = fopen($_FILES['csvfile']['tmp_name'], "r")) !== FALSE) {
-            $campos = fgetcsv($file);
-            while (($data = fgetcsv($file)) !== false) {
-               $registro = count($campos);
-               $primerRegistro = true;
-               for ($i = 0; $i < $registro; $i++) {
-                  if ($primerRegistro && ctype_digit($data[$i])) {
-                     $post_fields['import_id'] = $data[$i];
-                  } elseif (substr(trim($campos[$i]), 0, 4) === 'post') {
-                     $post_fields[$campos[$i]] = $data[$i];
-                  } else {
-                     $post_meta[$campos[$i]] = $data[$i];
-                  }
-                  $primerRegistro = false;
-               }
-               if (count($post_meta)) {
-                  $args = array_merge($post_fields, array('meta_input' => $post_meta));
-               } else {
-                  $args = $post_fields;
-               }
-               $temporal[] = $args;
-               wp_insert_post($args);
-            }
-            wp_send_json_success(['titulo' => 'Procesado', 'msg' => 'El archivo fue procesado exitosamente.', 'datos' => $temporal]);
-         } else {
-            wp_send_json_error(['titulo' => 'Error', 'msg' => 'Archivo no encontrado.']);
-         }
-         fclose($file);
-         die();
-      }
-   }
    public function dpc_get_provincia()
    {
       if (!wp_verify_nonce($_POST['nonce'], 'provincias')) {
@@ -499,5 +455,68 @@ class DivPolCriModel
          $distritos = $wpdb->get_results($sql, ARRAY_A);
          wp_send_json_success($distritos);
       }
+   }
+   public function scc_divpolcri_get_provincia($provincia_id)
+   {
+      global $wpdb;
+
+      $sql =
+         "SELECT t2.meta_value AS provincia
+      FROM $wpdb->posts
+      INNER JOIN $wpdb->postmeta t1
+         ON (ID = t1.post_id)
+      INNER JOIN $wpdb->postmeta t2
+         ON (ID = t2.post_id)
+      WHERE post_type = 'divpolcri'
+         AND (t1.meta_key = '_provincia_id' AND t1.meta_value = $provincia_id)
+         AND (t2.meta_key = '_provincia' AND t2.meta_value !='')
+      ORDER BY t2.meta_value
+      ";
+
+      $provincia = $wpdb->get_var($sql);
+
+      return $provincia;
+   }
+   public function scc_divpolcri_get_canton($canton_id)
+   {
+      global $wpdb;
+
+      $sql =
+         "SELECT t2.meta_value AS canton
+      FROM $wpdb->posts
+      INNER JOIN $wpdb->postmeta t1
+         ON (ID = t1.post_id)
+      INNER JOIN $wpdb->postmeta t2
+         ON (ID = t2.post_id)
+      WHERE post_type = 'divpolcri'
+         AND (t1.meta_key = '_canton_id' AND t1.meta_value = $canton_id)
+         AND (t2.meta_key = '_canton' AND t2.meta_value !='')
+      ORDER BY t2.meta_value
+      ";
+
+      $cantone = $wpdb->get_var($sql);
+
+      return $cantone;
+   }
+   public function scc_divpolcri_get_distrito($distrito_id)
+   {
+      global $wpdb;
+
+      $sql =
+         "SELECT t2.meta_value AS distrito
+      FROM $wpdb->posts
+      INNER JOIN $wpdb->postmeta t1
+         ON (ID = t1.post_id)
+      INNER JOIN $wpdb->postmeta t2
+         ON (ID = t2.post_id)
+      WHERE post_type = 'divpolcri'
+         AND (t1.meta_key = '_distrito_id' AND t1.meta_value = $distrito_id)
+         AND (t2.meta_key = '_distrito' AND t2.meta_value !='')
+      ORDER BY t2.meta_value
+      ";
+
+      $distrito = $wpdb->get_var($sql);
+
+      return $distrito;
    }
 }

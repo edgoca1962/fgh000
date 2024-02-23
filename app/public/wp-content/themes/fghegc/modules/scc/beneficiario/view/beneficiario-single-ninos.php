@@ -193,7 +193,7 @@ $comedores = get_posts(['post_type' => 'comedor', 'posts_per_page' => -1]);
       <?php if ($asistencias) : ?>
          <?php foreach ($asistencias as $asistencia) : ?>
             <div class="row">
-               <div class="col"><?php echo  get_post_meta($asistencia->ID, '_f_asistencia', true) ?></div>
+               <div class="col"><?php echo date('Y-m-d', strtotime($asistencia->post_date)) ?></div>
                <div class="col"><?php echo get_post_meta($asistencia->ID, '_reflexion', true) ?></div>
                <div class="col"><?php echo get_post_meta($asistencia->ID, '_alimentacion', true) ?></div>
                <div class="col"><?php echo get_post_meta($asistencia->ID, '_q_alimentacion', true) ?></div>
