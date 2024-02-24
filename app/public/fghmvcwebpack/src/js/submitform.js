@@ -8,6 +8,13 @@ Array.from(forms).forEach(form => {
       } else {
          event.preventDefault()
          const dataform = new FormData(form)
+         if (event.submitter.name) {
+            dataform.append('gestion', event.submitter.name)
+            if (event.submitter.name == 'eliminar') {
+               dataform.append('titulo_confirmar', event.submitter.getAttribute('titulo'))
+               dataform.append('msg_confirmar', event.submitter.getAttribute('msg'))
+            }
+         }
          if (dataform.get('gestion') === 'eliminar') {
             Swal.fire({
                icon: 'warning',
@@ -54,13 +61,11 @@ async function send_data(dataform, event) {
    if (dataform.get('vigente') == null) {
       dataform.set('vigente', 0)
    }
-   /*
-   for (var pair of datoform.entries()) {
+   /*for (var pair of dataform.entries()) {
       var nombre = pair[0];
       var valor = pair[1];
       console.log("Nombre:", nombre, "Valor:", valor);
-   }
-   */
+   }*/
    const request = new Request(
       dataform.get('endpoint'), {
       method: 'POST',

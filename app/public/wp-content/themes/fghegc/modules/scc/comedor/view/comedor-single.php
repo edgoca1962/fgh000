@@ -141,7 +141,8 @@ $divpolcri = DivPolCriModel::get_instance();
          </div>
       </div><!-- teléfono y contacto -->
       <div class="form-group mb-3">
-         <button type="submit" class="btn btn-warning btn-sm mb-3 me-5"><span><i class="fa-solid fa-floppy-disk"></i></span> Guardar</button>
+         <button name="modificar" type="submit" class="btn btn-warning btn-sm mb-3 me-5"><span><i class="fa-solid fa-floppy-disk"></i></span> Guardar</button>
+         <button name="eliminar" titulo="Eliminar Comedor" msg="Se eliminará el Comedor y todos los beneficiarios con su historial de asistencia." type="submit" class="btn btn-danger btn-sm mb-3 me-5"><span><i class="fa-solid fa-trash-can"></i></span> Eliminar</button>
          <button id="btn_cancelar" type="btn" class="btn btn-sm btn-danger mb-3">Cancelar</button>
       </div><!-- Botones Guardar y Cancelar -->
       <input type="hidden" name="post_id" value="<?php the_ID() ?>">

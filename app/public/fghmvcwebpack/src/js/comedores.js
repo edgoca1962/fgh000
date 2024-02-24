@@ -59,13 +59,11 @@ if (document.getElementById('beneficiario_single_editar')) {
       datos.append('endpoint', endpoint)
       datos.append('action', action)
       datos.append('nonce', nonce)
-      /*
-      for (var pair of datos.entries()) {
+      /*for (var pair of datos.entries()) {
          var nombre = pair[0];
          var valor = pair[1];
          console.log("Nombre:", nombre, "Valor:", valor);
-      }
-      */
+      }*/
       if (document.getElementById('beneficiario_imagen')) {
          document.getElementById('beneficiario_imagen').addEventListener('change', function () {
             const imagen = this.files[0]

@@ -1160,90 +1160,110 @@ class BeneficiarioModel
          wp_send_json_error('Error de seguridad', 401);
          wp_die();
       } else {
-         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-         $charactersLength = strlen($characters);
-         $randomString = '';
-         for ($i = 0; $i < 15; $i++) {
-            $randomString .= $characters[rand(0, $charactersLength - 1)];
-         }
-         $post_name = 'ben_' . $randomString;
+         $gestion = sanitize_text_field($_POST['gestion']);
 
-         $post_id = sanitize_text_field($_POST['post_id']);
-
-         require_once(ABSPATH . "wp-admin" . '/includes/image.php');
-         require_once(ABSPATH . "wp-admin" . '/includes/file.php');
-         require_once(ABSPATH . "wp-admin" . '/includes/media.php');
-         if (get_post_thumbnail_id($post_id)) {
-            delete_post_thumbnail($post_id);
+         if ($gestion == 'modificar') {
+            $this->beneficiario_modificar();
          }
-         $attach_id = media_handle_upload('beneficiario_imagen', $post_id);
-         if (is_wp_error($attach_id)) {
-            $attach_id = '';
+         if ($gestion == 'eliminar') {
+            $this->beneficiario_eliminar();
          }
-         set_post_thumbnail($post_id, $attach_id);
-         $nombre = sanitize_text_field($_POST['nombre']);
-         $p_apellido = sanitize_text_field($_POST['p_apellido']);
-         $s_apellido = sanitize_text_field($_POST['s_apellido']);
-         $post_title = $nombre . ' ' . $p_apellido . ' ' . $s_apellido;
-         $sexo = sanitize_text_field($_POST['sexo']);
-         $condicion = sanitize_text_field($_POST['condicion']);
-         $f_nacimiento = sanitize_text_field($_POST['f_nacimiento']);
-         $f_ingreso = sanitize_text_field($_POST['f_ingreso']);
-         $f_salida = sanitize_text_field($_POST['f_salida']);
-         $edad = sanitize_text_field($_POST['edad']);
-         $peso = sanitize_text_field($_POST['peso']);
-         $estatura = sanitize_text_field($_POST['estatura']);
-         $provincia = sanitize_text_field($_POST['provincia']);
-         $canton = sanitize_text_field($_POST['canton']);
-         $distrito = sanitize_text_field($_POST['distrito']);
-         $direccion = sanitize_text_field($_POST['direccion']);
-         $email = sanitize_text_field($_POST['email']);
-         $t_principal = sanitize_text_field($_POST['t_principal']);
-         $t_otros = sanitize_text_field($_POST['t_otros']);
-         $n_madre = sanitize_text_field($_POST['n_madre']);
-         $n_padre = sanitize_text_field($_POST['n_padre']);
-         $post_parent = sanitize_text_field($_POST['post_parent']);
-         $post_content = sanitize_textarea_field($_POST['content']);
-
-         $post_data =
-            [
-               'ID' => $post_id,
-               'post_type' => 'beneficiario',
-               'post_title' => $post_title,
-               'post_name' => $post_name,
-               'post_status' => 'publish',
-               'post_parent' => $post_parent,
-               'post_content' => $post_content,
-               'meta_input' =>
-               [
-                  '_nombre' => $nombre,
-                  '_p_apellido' => $p_apellido,
-                  '_s_apellido' => $s_apellido,
-                  '_sexo' => $sexo,
-                  '_condicion' => $condicion,
-                  '_f_nacimiento' => $f_nacimiento,
-                  '_f_ingreso' => $f_ingreso,
-                  '_f_salida' => $f_salida,
-                  '_edad' => $edad,
-                  '_peso' => $peso,
-                  '_estatura' => $estatura,
-                  '_provincia' => $provincia,
-                  '_canton' => $canton,
-                  '_distrito' => $distrito,
-                  '_direccion' => $direccion,
-                  '_email' => $email,
-                  '_t_principal' => $t_principal,
-                  '_t_otros' => $t_otros,
-                  '_n_madre' => $n_madre,
-                  '_n_padre' => $n_padre,
-               ]
-            ];
-         wp_update_post($post_data);
-         wp_send_json_success(['titulo' => 'Actualización', 'msg' => 'Los datos fueron actualizados correctamente.']);
       }
    }
-   public function beneficiario_eliminar()
+   private function beneficiario_modificar()
    {
+      $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      $charactersLength = strlen($characters);
+      $randomString = '';
+      for ($i = 0; $i < 15; $i++) {
+         $randomString .= $characters[rand(0, $charactersLength - 1)];
+      }
+      $post_name = 'ben_' . $randomString;
+
+      $post_id = sanitize_text_field($_POST['post_id']);
+
+      require_once(ABSPATH . "wp-admin" . '/includes/image.php');
+      require_once(ABSPATH . "wp-admin" . '/includes/file.php');
+      require_once(ABSPATH . "wp-admin" . '/includes/media.php');
+      if (get_post_thumbnail_id($post_id)) {
+         delete_post_thumbnail($post_id);
+      }
+      $attach_id = media_handle_upload('beneficiario_imagen', $post_id);
+      if (is_wp_error($attach_id)) {
+         $attach_id = '';
+      }
+      set_post_thumbnail($post_id, $attach_id);
+      $nombre = sanitize_text_field($_POST['nombre']);
+      $p_apellido = sanitize_text_field($_POST['p_apellido']);
+      $s_apellido = sanitize_text_field($_POST['s_apellido']);
+      $post_title = $nombre . ' ' . $p_apellido . ' ' . $s_apellido;
+      $sexo = sanitize_text_field($_POST['sexo']);
+      $condicion = sanitize_text_field($_POST['condicion']);
+      $f_nacimiento = sanitize_text_field($_POST['f_nacimiento']);
+      $f_ingreso = sanitize_text_field($_POST['f_ingreso']);
+      $f_salida = sanitize_text_field($_POST['f_salida']);
+      $edad = sanitize_text_field($_POST['edad']);
+      $peso = sanitize_text_field($_POST['peso']);
+      $estatura = sanitize_text_field($_POST['estatura']);
+      $provincia = sanitize_text_field($_POST['provincia']);
+      $canton = sanitize_text_field($_POST['canton']);
+      $distrito = sanitize_text_field($_POST['distrito']);
+      $direccion = sanitize_text_field($_POST['direccion']);
+      $email = sanitize_text_field($_POST['email']);
+      $t_principal = sanitize_text_field($_POST['t_principal']);
+      $t_otros = sanitize_text_field($_POST['t_otros']);
+      $n_madre = sanitize_text_field($_POST['n_madre']);
+      $n_padre = sanitize_text_field($_POST['n_padre']);
+      $post_parent = sanitize_text_field($_POST['post_parent']);
+      $post_content = sanitize_textarea_field($_POST['content']);
+
+      $post_data =
+         [
+            'ID' => $post_id,
+            'post_type' => 'beneficiario',
+            'post_title' => $post_title,
+            'post_name' => $post_name,
+            'post_status' => 'publish',
+            'post_parent' => $post_parent,
+            'post_content' => $post_content,
+            'meta_input' =>
+            [
+               '_nombre' => $nombre,
+               '_p_apellido' => $p_apellido,
+               '_s_apellido' => $s_apellido,
+               '_sexo' => $sexo,
+               '_condicion' => $condicion,
+               '_f_nacimiento' => $f_nacimiento,
+               '_f_ingreso' => $f_ingreso,
+               '_f_salida' => $f_salida,
+               '_edad' => $edad,
+               '_peso' => $peso,
+               '_estatura' => $estatura,
+               '_provincia' => $provincia,
+               '_canton' => $canton,
+               '_distrito' => $distrito,
+               '_direccion' => $direccion,
+               '_email' => $email,
+               '_t_principal' => $t_principal,
+               '_t_otros' => $t_otros,
+               '_n_madre' => $n_madre,
+               '_n_padre' => $n_padre,
+            ]
+         ];
+      wp_update_post($post_data);
+      wp_send_json_success(['titulo' => 'Actualización', 'msg' => 'Los datos fueron actualizados correctamente.']);
+   }
+   private function beneficiario_eliminar()
+   {
+      $post_id = sanitize_text_field($_POST['post_id']);
+      wp_trash_post($post_id);
+      $asistencia = get_posts(['post_type' => 'asistencia', 'posts_per_page' => -1, 'post_status' => 'publish', 'post_parent' => $post_id]);
+      if ($asistencia) {
+         foreach ($asistencia as $eliminar) {
+            wp_trash_post($eliminar->ID);
+         }
+      }
+      wp_send_json_success(['titulo' => 'Beneficiario Eliminado', 'msg' => 'La información personal y la bitácora de asistencia fue eliminada también.']);
    }
    public function scc_beneficiario_mantener_usuario()
    {

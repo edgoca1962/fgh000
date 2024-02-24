@@ -1,14 +1,10 @@
 <h3>Pruebas Funcionales</h3>
 <?php
-
-$datos = get_userdata(1);
-print_r($datos->roles);
-$datos->remove_role('subscriber');
-
-$datos = get_userdata(39);
-echo 'priscila';
-print_r($datos->roles);
-
-$datos = get_userdata(38);
-echo 'encargado01';
-print_r($datos->roles);
+$asistencia = get_posts(['post_type' => 'asistencia', 'posts_per_page' => -1, 'post_status' => 'publish', 'post_parent' => 77938]);
+if ($asistencia) {
+   foreach ($asistencia as $eliminar) {
+      echo $eliminar->ID . ' ' . get_post($eliminar->post_parent)->post_title . '<br>';
+   }
+} else {
+   echo 'No tiene bitácora de asistencia';
+}

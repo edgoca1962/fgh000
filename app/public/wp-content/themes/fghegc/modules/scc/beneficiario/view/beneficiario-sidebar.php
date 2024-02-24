@@ -45,5 +45,5 @@ $beneficiario = BeneficiarioController::get_instance();
    <li><a href="<?php echo site_url('/beneficiario-ninos') ?>">Inlcuir Niño(a)</a></li>
    <li><a href="<?php echo site_url('/beneficiario-adultos') ?>">Incluir Adulto(a)</a></li>
    <li><a href="<?php echo site_url('/comedor-mantenimiento') ?>">Incluir Comedor</a></li>
-   <li><a href="<?php echo site_url('/beneficiario-usuario') ?>">Incluir Usuarios</a></li>
+   <li><a href="<?php echo site_url('/beneficiario-usuario') ?>">Administrar Usuarios</a></li>
 </div>

@@ -22,7 +22,6 @@ class ComedorModel
       add_action('wp_ajax_scc_comedor_encargados', [$this, 'scc_comedor_get_encargados']);
       add_action('wp_ajax_comedor_agregar', [$this, 'comedor_agregar']);
       add_action('wp_ajax_comedor_editar', [$this, 'comedor_editar']);
-      add_action('wp_ajax_comedor_eliminar', [$this, 'comedor_eliminar']);
    }
    public function set_comedor()
    {
@@ -474,51 +473,78 @@ class ComedorModel
          wp_send_json_error('Error de seguridad', 401);
          wp_die();
       } else {
-         $post_id = sanitize_text_field($_POST['post_id']);
+         $gestion = sanitize_text_field($_POST['gestion']);
 
-         require_once(ABSPATH . "wp-admin" . '/includes/image.php');
-         require_once(ABSPATH . "wp-admin" . '/includes/file.php');
-         require_once(ABSPATH . "wp-admin" . '/includes/media.php');
-
-         $attach_id = media_handle_upload('comedor_imagen', $post_id);
-         if (is_wp_error($attach_id)) {
-            $attach_id = '';
+         if ($gestion == 'modificar') {
+            $this->comedor_modificar();
          }
-         set_post_thumbnail($post_id, $attach_id);
-
-         $post_title = sanitize_text_field($_POST['nombre']);
-         $provincia = sanitize_text_field($_POST['provincia']);
-         $canton = sanitize_text_field($_POST['canton']);
-         $distrito = sanitize_text_field($_POST['distrito']);
-         $direccion = sanitize_text_field($_POST['direccion']);
-         $telefono = sanitize_text_field($_POST['telefono']);
-         $email = sanitize_text_field($_POST['email']);
-         $contacto_id = sanitize_text_field($_POST['contacto_id']);
-
-         $post_data =
-            [
-               'ID' => $post_id,
-               'post_type' => 'comedor',
-               'post_title' => $post_title,
-               'post_status' => 'publish',
-               'meta_input' =>
-               [
-                  '_provincia_id' => $provincia,
-                  '_canton_id' => $canton,
-                  '_distrito_id' => $distrito,
-                  '_direccion' => $direccion,
-                  '_email' => $email,
-                  '_telefono' => $telefono,
-                  '_contacto_id' => $contacto_id
-               ]
-            ];
-
-         wp_update_post($post_data);
-         wp_send_json_success(['titulo' => 'Comedores', 'msg' => 'La información del Comedor se registró correctamente.']);
+         if ($gestion == 'eliminar') {
+            $this->comedor_eliminar();
+         }
       }
    }
-   public function comedor_eliminar()
+   private function comedor_modificar()
    {
+      $post_id = sanitize_text_field($_POST['post_id']);
+
+      require_once(ABSPATH . "wp-admin" . '/includes/image.php');
+      require_once(ABSPATH . "wp-admin" . '/includes/file.php');
+      require_once(ABSPATH . "wp-admin" . '/includes/media.php');
+
+      $attach_id = media_handle_upload('comedor_imagen', $post_id);
+      if (is_wp_error($attach_id)) {
+         $attach_id = '';
+      }
+      set_post_thumbnail($post_id, $attach_id);
+
+      $post_title = sanitize_text_field($_POST['nombre']);
+      $provincia = sanitize_text_field($_POST['provincia']);
+      $canton = sanitize_text_field($_POST['canton']);
+      $distrito = sanitize_text_field($_POST['distrito']);
+      $direccion = sanitize_text_field($_POST['direccion']);
+      $telefono = sanitize_text_field($_POST['telefono']);
+      $email = sanitize_text_field($_POST['email']);
+      $contacto_id = sanitize_text_field($_POST['contacto_id']);
+
+      $post_data =
+         [
+            'ID' => $post_id,
+            'post_type' => 'comedor',
+            'post_title' => $post_title,
+            'post_status' => 'publish',
+            'meta_input' =>
+            [
+               '_provincia_id' => $provincia,
+               '_canton_id' => $canton,
+               '_distrito_id' => $distrito,
+               '_direccion' => $direccion,
+               '_email' => $email,
+               '_telefono' => $telefono,
+               '_contacto_id' => $contacto_id
+            ]
+         ];
+
+      wp_update_post($post_data);
+      wp_send_json_success(['titulo' => 'Comedores', 'msg' => 'La información del Comedor se registró correctamente.']);
+   }
+   private function comedor_eliminar()
+   {
+      $post_id = sanitize_text_field($_POST['post_id']);
+      wp_trash_post($post_id);
+      $beneficiarios = get_posts(['post_type' => 'beneficiario', 'posts_per_page' => -1, 'post_status' => 'publish', 'post_parent' => $post_id]);
+      if ($beneficiarios) {
+         foreach ($beneficiarios as $eliminar) {
+            wp_trash_post($eliminar->ID);
+            $asistencia = get_posts(['post_type' => 'asistencia', 'posts_per_page' => -1, 'post_status' => 'publish', 'post_parent' => $eliminar->ID]);
+            if ($asistencia) {
+               foreach ($asistencia as $eliminar) {
+                  wp_trash_post($eliminar->ID);
+               }
+            }
+         }
+      }
+
+      wp_send_json_success(['titulo' => 'Comedor Eliminado', 'msg' => 'La información del Comedor, Beneficiarios y su bitácora de asistencia fue eliminada también.']);
    }
    public function scc_comedor_get_encargados()
    {
