@@ -11,6 +11,7 @@ class BeneficiarioController
    private function __construct()
    {
       $this->atributos = [];
+      // add_action('wp_ajax_beneficiario_graficos', [$this, 'scc_beneficiario_get_datos_graficos']);
    }
    public function get_atributos($postType)
    {
@@ -32,6 +33,11 @@ class BeneficiarioController
       $this->atributos['templatepart'] = $this->get_datosAtributos($postType)['templatepart'];
       $this->atributos['carrusel'] = $this->get_datosAtributos($postType)['carrusel'];
       $this->atributos['ocultar'] = $this->get_ocultar();
+      $this->atributos['ocultarVista'] = $this->get_datosAtributos($postType)['ocultarVista'];
+      $this->atributos['ocultarElemento'] = $this->get_datosAtributos($postType)['ocultarElemento'];
+      $this->atributos['ocultarMantenimiento'] = $this->get_datosAtributos($postType)['ocultarMantenimiento'];
+      $this->atributos['datosGraficos'] = $this->get_datos_graficos();
+
       return $this->atributos;
    }
    private function get_datosAtributos($postType)
@@ -40,8 +46,8 @@ class BeneficiarioController
       $datosAtributos['agregarpost'] = '';
       $datosAtributos['verbeneficiarios'] = false;
       $datosAtributos['userAdmin'] = false;
+      $usuarioRoles = wp_get_current_user()->roles;
       if (is_user_logged_in()) {
-         $usuarioRoles = wp_get_current_user()->roles;
          if (in_array('administrator', $usuarioRoles) || in_array('useradmingeneral', $usuarioRoles) || in_array('useradminbeneficiarios', $usuarioRoles) || in_array('beneficiarios', $usuarioRoles)) {
             $datosAtributos['verbeneficiarios'] = true;
             if (in_array('administrator', $usuarioRoles) || in_array('useradmingeneral', $usuarioRoles) || in_array('useradminbeneficiarios', $usuarioRoles)) {
@@ -49,6 +55,34 @@ class BeneficiarioController
                $datosAtributos['agregarpost'] = 'modules/scc/' . $postType . '/view/' . $postType . '-agregar';
             }
          }
+      }
+
+      if (in_array('administrator', $usuarioRoles) || in_array('useradmingeneral', $usuarioRoles) || in_array('useradmincomedores', $usuarioRoles)) {
+         $datosAtributos['ocultarElemento'] = '';
+         $datosAtributos['ocultarVista'] = '';
+         $datosAtributos['ocultarMantenimiento'] = '';
+      } elseif (in_array('encargadocomedores', $usuarioRoles)) {
+         if (get_current_user_id() == get_post_meta(wp_get_post_parent_id(), '_contacto_id', true)) {
+            $datosAtributos['ocultarElemento'] = '';
+            $datosAtributos['ocultarVista'] = '';
+            $datosAtributos['ocultarMantenimiento'] = '';
+         } else {
+            $datosAtributos['ocultarVista'] = '';
+            $datosAtributos['ocultarElemento'] = 'hidden';
+            $datosAtributos['ocultarMantenimiento'] = '';
+         }
+      } elseif (in_array('comedores', $usuarioRoles)) {
+         if (is_page('beneficiario-graficos')) {
+            $datosAtributos['ocultarVista'] = '';
+         } else {
+            $datosAtributos['ocultarVista'] = 'hidden';
+         }
+         $datosAtributos['ocultarElemento'] = 'hidden';
+         $datosAtributos['ocultarMantenimiento'] = 'hidden';
+      } else {
+         $datosAtributos['ocultarVista'] = 'hidden';
+         $datosAtributos['ocultarElemento'] = 'hidden';
+         $datosAtributos['ocultarMantenimiento'] = 'hidden';
       }
 
       if (is_single()) {
@@ -313,5 +347,236 @@ class BeneficiarioController
          $ocultar = 'hidden';
       }
       return $ocultar;
+   }
+   private function get_datos_graficos()
+   {
+      $mesesIngles = ['1' => 'Jan', '2' => 'Feb', '3' => 'Mar', '4' => 'Apr', '5' => 'May', '6' => 'Jun', '7' => 'Jul', '8' => 'Aug', '9' => 'Sep', '10' => 'Oct', '11' => 'Nov', '12' => 'Dec'];
+      $datosGraficos['mesesEspanol'] = ["1" => "Enero", "2" => "Febrero", "3" => "Marzo", "4" => "Abril", "5" => "Mayo", "6" => "Junio", "7" => "Julio", "8" => "Agosto", "9" => "Septiembre", "10" => "Octubre", "11" => "Noviembre", "12" => "Diciembre"];
+
+      $comedores = get_posts(['post_type' => 'comedor', 'posts_per_page' => -1, 'post_status' => 'publish', 'orderby' => 'post_title', 'order' => 'ASC']);
+
+      if (isset($_GET['mes'])) {
+         $mes = sanitize_text_field($_GET['mes']);
+      } else {
+         $mes = date('n');
+      }
+      if (isset($_GET['anno'])) {
+         $anno = sanitize_text_field($_GET['anno']);
+      } else {
+         $anno = date('Y');
+      }
+
+      $fechaInicial = date('Y-m-d H:i:s', strtotime('First day of' . $mesesIngles[$mes] . ' ' . $anno));
+      $fechaFinal = date('Y-m-d H:i:s', strtotime('Last day of' . $mesesIngles[$mes] . ' ' . $anno));
+
+      global $wpdb;
+
+      /***************************************************
+       * 
+       * Datos para Gráfico de Barras combinado con una línea
+       * 
+       **************************************************/
+
+      $sql =
+         "SELECT DISTINCT post_date AS label
+      FROM $wpdb->posts
+      WHERE 
+         post_type = 'asistencia' 
+         AND post_status = 'publish'
+         AND post_date BETWEEN '$fechaInicial' AND '$fechaFinal'
+      ORDER BY post_date";
+      $results = $wpdb->get_results($sql, ARRAY_A);
+      foreach ($results as $item) {
+         $labels[] = date('d-m-y', strtotime($item['label']));
+      }
+      if ($results) {
+         $datosGraficos['labels'] = $labels;
+      } else {
+         $datosGraficos['labels'] = [];
+      }
+
+      $sql =
+         "SELECT post_date AS fecha,
+      count(t1.meta_value) AS asistencia
+      FROM $wpdb->posts
+         INNER JOIN $wpdb->postmeta t1
+         ON ( ID = t1.post_id )
+      WHERE 
+         post_type = 'asistencia' 
+         AND post_status = 'publish'
+         AND post_date BETWEEN '$fechaInicial' AND '$fechaFinal'
+         AND (t1.meta_key = '_reflexion' AND t1.meta_value='Si')
+      GROUP BY post_date
+      ORDER BY post_date";
+      $asistencias = $wpdb->get_results($sql, ARRAY_A);
+      foreach ($asistencias as $item) {
+         $asistencia[] = $item['asistencia'];
+      }
+      if ($asistencias) {
+         $datosGraficos['asistencia'] = $asistencia;
+      } else {
+         $datosGraficos['asistencia'] = [];
+      }
+
+      $sql =
+         "SELECT post_date AS fecha,
+      count(t1.meta_value) AS ausencia
+      FROM $wpdb->posts
+         INNER JOIN $wpdb->postmeta t1
+         ON ( ID = t1.post_id )
+      WHERE 
+         post_type = 'asistencia' 
+         AND post_status = 'publish'
+         AND post_date BETWEEN '$fechaInicial' AND '$fechaFinal'
+         AND (t1.meta_key = '_reflexion' AND t1.meta_value='No')
+      GROUP BY post_date
+      ORDER BY post_date";
+      $ausencias = $wpdb->get_results($sql, ARRAY_A);
+      foreach ($ausencias as $item) {
+         $ausencia[] = $item['ausencia'];
+      }
+      if ($ausencias) {
+         $datosGraficos['ausencia'] = $ausencia;
+      } else {
+         $datosGraficos['ausencia'] = [];
+      }
+
+      $sql =
+         "SELECT post_date AS fecha,
+      sum(t1.meta_value) AS cantidad
+      FROM $wpdb->posts
+         INNER JOIN $wpdb->postmeta t1
+         ON ( ID = t1.post_id )
+      WHERE 
+         post_type = 'asistencia' 
+         AND post_status = 'publish'
+         AND post_date BETWEEN '$fechaInicial' AND '$fechaFinal'
+         AND (t1.meta_key = '_q_alimentacion')
+      GROUP BY post_date
+      ORDER BY post_date";
+      $cantidades = $wpdb->get_results($sql, ARRAY_A);
+      foreach ($cantidades as $item) {
+         $cantidad[] = $item['cantidad'];
+      }
+      if ($cantidades) {
+         $datosGraficos['cantidad'] = $cantidad;
+      } else {
+         $datosGraficos['cantidad'] = [];
+      }
+
+      /***************************************************
+       * 
+       * Datos para Gráficos tipo Dona
+       * 
+       **************************************************/
+      $sql =
+         "SELECT post_parent AS beneficiario,
+      count(t1.meta_value) AS asistencia
+      FROM $wpdb->posts
+         INNER JOIN $wpdb->postmeta t1
+         ON ( ID = t1.post_id )
+      WHERE 
+         post_type = 'asistencia' 
+         AND post_status = 'publish'
+         AND post_date BETWEEN '$fechaInicial' AND '$fechaFinal'
+         AND (t1.meta_key = '_reflexion' AND t1.meta_value = 'Si')
+      GROUP BY post_parent
+      ORDER BY post_parent";
+
+      $asistencia = $wpdb->get_results($sql, ARRAY_A);
+      if (!$asistencia) {
+         $asistencia = [];
+      }
+
+      $sql =
+         "SELECT post_parent AS beneficiario,
+      count(t1.meta_value) AS ausencia
+      FROM $wpdb->posts
+         INNER JOIN $wpdb->postmeta t1
+         ON ( ID = t1.post_id )
+      WHERE 
+         post_type = 'asistencia' 
+         AND post_status = 'publish'
+         AND post_date BETWEEN '$fechaInicial' AND '$fechaFinal'
+         AND (t1.meta_key = '_reflexion' AND t1.meta_value = 'No')
+      GROUP BY post_parent
+      ORDER BY post_parent";
+
+      $ausencia = $wpdb->get_results($sql, ARRAY_A);
+      if (!$ausencia) {
+         $ausencia = [];
+      }
+
+      $sql =
+         "SELECT post_parent AS beneficiario,
+      sum(t1.meta_value) AS cantidad
+      FROM $wpdb->posts
+         INNER JOIN $wpdb->postmeta t1
+         ON ( ID = t1.post_id )
+      WHERE 
+         post_type = 'asistencia' 
+         AND post_status = 'publish'
+         AND post_date BETWEEN '$fechaInicial' AND '$fechaFinal'
+         AND (t1.meta_key = '_q_alimentacion' AND t1.meta_value != '')
+      GROUP BY post_parent
+      ORDER BY post_parent";
+
+      $cantidad = $wpdb->get_results($sql, ARRAY_A);
+      if (!$cantidad) {
+         $cantidad = [];
+      }
+
+      $datos = array_merge($asistencia, $ausencia, $cantidad);
+
+      $datosGraficosDonas = [];
+
+      $asistencia = 0;
+      $ausencia = 0;
+      $cantidad = 0;
+      foreach ($datos as $item) {
+         if (isset($item['asistencia'])) {
+            $asistencia = $asistencia + intval($item['asistencia']);
+         }
+         if (isset($item['ausencia'])) {
+            $ausencia = $ausencia + intval($item['ausencia']);
+         }
+         if (isset($item['cantidad'])) {
+            $cantidad = $cantidad + intval($item['cantidad']);
+         }
+      }
+
+      $datosGraficosDonas[] = [
+         'ID' => 'todos',
+         'titulo' => 'Todos los Comedores',
+         'datos' => [$asistencia, $ausencia, $cantidad]
+      ];
+
+      foreach ($comedores as $comedor) {
+         $asistencia = 0;
+         $ausencia = 0;
+         $cantidad = 0;
+         foreach ($datos as $item) {
+            if (wp_get_post_parent_id($item['beneficiario']) == $comedor->ID) {
+               if (isset($item['asistencia'])) {
+                  $asistencia = $asistencia + intval($item['asistencia']);
+               }
+               if (isset($item['ausencia'])) {
+                  $ausencia = $ausencia + intval($item['ausencia']);
+               }
+               if (isset($item['cantidad'])) {
+                  $cantidad = $cantidad + intval($item['cantidad']);
+               }
+            }
+         }
+
+         $datosGraficosDonas[] = [
+            'ID' => $comedor->ID,
+            'titulo' => $comedor->post_title,
+            'datos' => [$asistencia, $ausencia, $cantidad]
+         ];
+      }
+      $datosGraficos['donas'] = $datosGraficosDonas;
+
+      return $datosGraficos;
    }
 }

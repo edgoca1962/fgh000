@@ -109,14 +109,6 @@ class AsistenciaModel
          'default'
       );
       add_meta_box(
-         '_alimentacion',
-         'Recibe Alimentacion',
-         [$this, 'set_alimentacion_cbk'],
-         'asistencia',
-         'normal',
-         'default'
-      );
-      add_meta_box(
          '_q_alimentacion',
          'Cantiad Porciones Alimentación',
          [$this, 'set_q_alimentacion_cbk'],
@@ -238,7 +230,6 @@ class AsistenciaModel
 
          $f_asistencia = sanitize_text_field($_POST['f_asistencia']);
          $reflexion = sanitize_text_field($_POST['reflexion']);
-         $alimentacion = sanitize_text_field($_POST['alimentacion']);
          $q_alimentacion = sanitize_text_field($_POST['q_alimentacion']);
          $post_parent = sanitize_text_field($_POST['post_parent']);
          $titulo = sanitize_text_field($_POST['nombre']);
@@ -264,7 +255,6 @@ class AsistenciaModel
                'post_date' => $f_asistencia,
                'meta_input' => array(
                   '_reflexion' => $reflexion,
-                  '_alimentacion' => $alimentacion,
                   '_q_alimentacion' => $q_alimentacion,
                )
             );
@@ -280,7 +270,6 @@ class AsistenciaModel
                'post_date' => $f_asistencia,
                'meta_input' => array(
                   '_reflexion' => $reflexion,
-                  '_alimentacion' => $alimentacion,
                   '_q_alimentacion' => $q_alimentacion,
                )
             );

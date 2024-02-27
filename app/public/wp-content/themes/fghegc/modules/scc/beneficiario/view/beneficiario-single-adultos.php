@@ -10,13 +10,13 @@ $comedores = get_posts(['post_type' => 'comedor', 'posts_per_page' => -1]);
 
 ?>
 <!-- Plantilla Single -->
-<section id="seccion_beneficiario_single">
-   <form id="asistenia_single" class="needs-validation">
+<section id="seccion_beneficiario_single" <?php echo $atributos['ocultarVista'] ?>>
+   <form id="asistenia_single" class="needs-validation" <?php echo $atributos['ocultarElemento'] ?>>
       <div class="form-group mb-3">
          <div id="asistencia">
             <hr>
             <h3>Actualizar Asistencia: </h3>
-            <div class="row row-cols-auto mb-3 aling-middle">
+            <div class="form-group row mb-3">
                <div class="col mb-3">
                   <input name="f_asistencia" type="date" class="form-control" value="<?php echo date('Y-m-d') ?>">
                </div>
@@ -28,18 +28,10 @@ $comedores = get_posts(['post_type' => 'comedor', 'posts_per_page' => -1]);
                      </label>
                   </div>
                </div>
-               <div class="col mb-3">
-                  <div class="form-check">
-                     <input name="alimentacion" class="form-check-input" type="checkbox" value="No" id="alimentacion">
-                     <label class="form-check-label" for="alimentacion">
-                        Alimentación
-                     </label>
-                  </div>
-               </div>
-               <div class="col col-xl-2 mb-3">
+               <div class="col-4 col-md-2 mb-3">
                   <div class="input-group mb-3">
+                     <span class="input-group-text">Alim.</span>
                      <input name="q_alimentacion" type="number" class="form-control" step="1" placeholder="Cantidad" value="1">
-                     <span class="input-group-text">Q</span>
                   </div>
                </div>
                <div class="col mb-3">
@@ -56,7 +48,7 @@ $comedores = get_posts(['post_type' => 'comedor', 'posts_per_page' => -1]);
       <input type="hidden" name="endpoint" value="<?php echo admin_url('admin-ajax.php') ?>">
    </form><!-- Actualizar Asistencia -->
    <form id="beneficiario_single">
-      <div class="form-group mb-3">
+      <div class="form-group mb-3" <?php echo $atributos['ocultarElemento'] ?>>
          <button id="btn_editar_beneficiario" type="button" class="btn btn-warning mb-3" data-scc_post_id="<?php the_ID() ?>" data-action="beneficiario_editar" data-nonce="<?php echo wp_create_nonce('beneficiario_editar') ?>"><span><i class="fa-solid fa-pen-to-square"></i></span> Editar Datos</button>
       </div><!-- Boton Editar -->
       <div class="col d-flex justify-content-center">
@@ -178,7 +170,6 @@ $comedores = get_posts(['post_type' => 'comedor', 'posts_per_page' => -1]);
          <div class="col">fecha</div>
          <div class="col">Reflexion</div>
          <div class="col">Alimentación</div>
-         <div class="col">Cantidad</div>
       </div>
       <hr>
       <?php if ($asistencias) : ?>
@@ -186,7 +177,6 @@ $comedores = get_posts(['post_type' => 'comedor', 'posts_per_page' => -1]);
             <div class="row">
                <div class="col"><?php echo date('Y-m-d', strtotime($asistencia->post_date)) ?></div>
                <div class="col"><?php echo get_post_meta($asistencia->ID, '_reflexion', true) ?></div>
-               <div class="col"><?php echo get_post_meta($asistencia->ID, '_alimentacion', true) ?></div>
                <div class="col"><?php echo get_post_meta($asistencia->ID, '_q_alimentacion', true) ?></div>
             </div>
          <?php endforeach; ?>
@@ -343,7 +333,7 @@ $comedores = get_posts(['post_type' => 'comedor', 'posts_per_page' => -1]);
       </div><!-- Reseña -->
       <div class="form-group mb-3">
          <button name="modificar" type="submit" class="btn btn-warning btn-sm mb-3 me-5"><span><i class="fa-solid fa-floppy-disk"></i></span> Guardar</button>
-         <button name="eliminar" titulo="Eliminar Beneficiario" msg="Se eliminará el beneficiario y todo su historial de asistencia." type="submit" class="btn btn-danger btn-sm mb-3 me-5"><span><i class="fa-solid fa-trash-can"></i></span> Eliminar</button>
+         <button name="eliminar" titulo="Eliminar Beneficiario" msg="Se eliminará el beneficiario y todo su historial de asistencia." type="submit" class="btn btn-danger btn-sm mb-3 me-5"><span><i class="fa-solid fa-trash-can" <?php echo $atributos['ocultarElemento'] ?>></i></span> Eliminar</button>
          <button id="btn_cancelar" type="btn" class="btn btn-sm btn-secondary mb-3">Cancelar</button>
       </div><!-- Botones Guardar y Cancelar -->
       <input type="hidden" name="post_id" value="<?php the_ID() ?>">

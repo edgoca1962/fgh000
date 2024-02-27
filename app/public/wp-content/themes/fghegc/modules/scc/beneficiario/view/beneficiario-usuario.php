@@ -5,9 +5,9 @@ use FGHEGC\Modules\Scc\Beneficiario\BeneficiarioController;
 
 $atributos = CoreController::get_instance()->get_atributos('beneficiario');
 $beneficiario = BeneficiarioController::get_instance();
-echo get_current_user_id();
+
 ?>
-<section id="scc_usuarios">
+<section id="scc_usuarios" <?php echo $atributos['ocultarVista'] ?>>
    <div class="row">
       <div class="col-md-8">
          <div class="d-flex justify-content-center">
@@ -16,7 +16,7 @@ echo get_current_user_id();
                   <!-- Foto Usuario -->
                   <div class="col d-flex justify-content-center align-items-center my-3">
                      <div class="card">
-                        <img id="imagennueva" src="<?php echo (get_user_meta(get_current_user_id(), 'custom_avatar', true)) ? get_user_meta(get_current_user_id(), 'custom_avatar', true) : FGHEGC_DIR_URI . '/assets/img/avatar03.png' ?>" class="object-fit-cover rounded" alt="Imágen del Usuario" style="width: 200px;">
+                        <img id="imagennueva" src="<?php echo (get_user_meta(get_current_user_id(), 'custom_avatar', true)) ? wp_get_attachment_url(get_user_meta(get_current_user_id(), 'custom_avatar', true)) : FGHEGC_DIR_URI . '/assets/img/avatar03.png' ?>" class="object-fit-cover rounded" alt="Imágen del Usuario" style="width: 200px;">
                         <div class="card-img-overlay d-flex justify-content-center align-items-center">
                            <label class="display-1" for="usuario_imagen"><i class="fa-regular fa-file-image"></i></label>
                            <input type="file" name="usuario_imagen" id="usuario_imagen" multiple="false" hidden>

@@ -552,7 +552,7 @@ class ComedorModel
          wp_send_json_error('Error de seguridad', 401);
          wp_die();
       } else {
-         $contactos = get_users(['role' => 'comedores', 'orderby' => 'nicename']);
+         $contactos = get_users(['role' => 'encargadocomedores', 'orderby' => 'nicename']);
          $encargados = [];
          foreach ($contactos as $encargado) {
             $encargados[] =

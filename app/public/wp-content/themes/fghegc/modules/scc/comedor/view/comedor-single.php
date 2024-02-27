@@ -3,13 +3,13 @@
 use FGHEGC\Modules\Core\CoreController;
 use FGHEGC\Modules\DivPolCri\DivPolCriModel;
 
-$atributos = CoreController::get_instance()->get_atributos(get_post_type());
+$atributos = CoreController::get_instance()->get_atributos('beneficiario');
 $divpolcri = DivPolCriModel::get_instance();
 
 ?>
-<section id="comedor_single">
+<section id="comedor_single" <?php echo $atributos['ocultarVista'] ?>>
    <form id="comedor">
-      <div class="form-group mb-3">
+      <div class="form-group mb-3" <?php echo $atributos['ocultarVista'] ?>>
          <button id="btn_editar" type="button" class="btn btn-warning mb-3"><span><i class="fa-solid fa-pen-to-square"></i></span> Editar Datos</button>
       </div><!-- Boton Editar -->
       <div class="col d-flex justify-content-center">

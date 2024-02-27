@@ -86,7 +86,7 @@ $recurrencia = isset($_GET['recurrencia']) ? sanitize_text_field($_GET['recurren
                      <?php endif; ?>
                      <?php for ($dia = 1; $dia < $atributos['restante']; $dia++) : ?>
                         <td class=" text-center">
-                           <a href=" <?php echo get_post_type_archive_link('evento') . '??cpt=evento&fpe=' . date('Ymd', strtotime($dia . $atributos['mes'] . $atributos['anno'])) ?>">
+                           <a href=" <?php echo get_post_type_archive_link('evento') . '?cpt=evento&fpe=' . date('Ymd', strtotime($dia . $atributos['mes'] . $atributos['anno'])) ?>">
                               <span class="<?php echo (date('Ymd') == date('Ymd', strtotime($dia . $atributos['mes'] . $atributos['anno']))) ? 'badge rounded-pill text-bg-danger' : '' ?>"><?php echo $dia ?></span>
                            </a>
                         </td>

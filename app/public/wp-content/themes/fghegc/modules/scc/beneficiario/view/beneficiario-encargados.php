@@ -7,13 +7,13 @@ $encargados = get_users(['role__in' => ['encargadocomedores']])
 
 ?>
 
-<section id="encargados">
+<section id="encargados" <?php echo $atributos['ocultarVista'] ?>>
    <div class="row">
       <div class="row col-md-8">
          <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
             <?php foreach ($encargados as $encargado) : ?>
                <div class="col">
-                  <div class="card">
+                  <div class="card h-100">
                      <img src="<?php echo (get_user_meta($encargado->ID, 'custom_avatar', true)) ? wp_get_attachment_url(get_user_meta($encargado->ID, 'custom_avatar', true)) : FGHEGC_DIR_URI . '/assets/img/avatar03.png' ?>" alt="Imágen Encargado">
                      <div class="card-body">
                         <h5 class="card-title"><?php echo $encargado->display_name ?></h5>

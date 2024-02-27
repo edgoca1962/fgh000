@@ -3,6 +3,7 @@
 namespace FGHEGC\Modules\Page;
 
 use FGHEGC\Modules\Core\Singleton;
+use FGHEGC\Modules\Core\CoreController;
 
 class PageController
 {
@@ -28,6 +29,7 @@ class PageController
    }
    private function get_datosAtributos()
    {
+
       $datosAtributos['comentarios'] = true;
       if (isset(get_post(get_the_ID())->post_name)) {
          $modulo = $this->getSlugModulo()['modulo'];

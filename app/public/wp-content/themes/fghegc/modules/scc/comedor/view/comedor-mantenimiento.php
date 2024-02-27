@@ -6,10 +6,10 @@ use FGHEGC\Modules\Scc\Beneficiario\BeneficiarioController;
 $core = CoreController::get_instance();
 $atributos = $core->get_atributos('beneficiario');
 $provincias = BeneficiarioController::get_instance()->scc_get_provincias();
-$encargados = get_users(['role' => 'comedores', 'orderby' => 'nicename']);
+$encargados = get_users(['role' => 'encargadocomedores', 'orderby' => 'nicename']);
 
 ?>
-<section>
+<section <?php echo $atributos['ocultarVista'] ?>>
    <div class="row">
       <div class="col-md-8">
          <h2 class="mb-3 text-center">Información del Comedor</h2>

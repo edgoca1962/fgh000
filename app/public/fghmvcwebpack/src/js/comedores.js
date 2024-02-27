@@ -24,13 +24,6 @@ if (document.getElementById('asistencia_single')) {
          document.getElementById('reflexion').value = 'No'
       }
    })
-   document.getElementById('alimentacion').addEventListener('click', () => {
-      if (document.getElementById('alimentacion').value == 'No') {
-         document.getElementById('alimentacion').value = 'Si'
-      } else {
-         document.getElementById('alimentacion').value = 'No'
-      }
-   })
 }
 if (document.getElementById('beneficiario_single_editar')) {
    if (document.getElementById('f_nacimiento_editar').value !== undefined && document.getElementById('f_nacimiento_editar').value !== null) {
@@ -680,4 +673,23 @@ if (document.getElementById('scc_usuarios')) {
    document.getElementById('btn_cancelar').addEventListener('click', () => {
       location.reload();
    })
+}
+if (document.getElementById('beneficiario_graficos')) {
+   if (document.getElementById('mes')) {
+      document.getElementById('mes').addEventListener('change', function () {
+         actualizar()
+      })
+   }
+   if (document.getElementById('anno')) {
+      document.getElementById('anno').addEventListener('change', function () {
+         actualizar()
+      })
+   }
+
+   function actualizar() {
+      window.location.href = document.getElementById('url').value + '?mes=' + document.getElementById('mes').value + '&anno=' + document.getElementById('anno').value
+   }
+
+
+
 }

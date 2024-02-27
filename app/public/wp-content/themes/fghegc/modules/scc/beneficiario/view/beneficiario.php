@@ -3,11 +3,16 @@
 use FGHEGC\Modules\Core\CoreController;
 use FGHEGC\Modules\Scc\Beneficiario\BeneficiarioController;
 
-$beneficiario = BeneficiarioController::get_instance();
-$atributos = CoreController::get_instance()->get_atributos(get_post_type());
+$core = CoreController::get_instance();
+$atributos = $core->get_atributos(get_post_type());
 
+$beneficiario = BeneficiarioController::get_instance();
+if ($atributos['ocultarVista'] == 'hidden') {
+   $core->set_atributo('verNavegacionPosts', false);
+}
+//  /beneficiarios/ben_ecx7z8w83dlqjlv/
 ?>
-<form id="<?php the_ID() ?>" class="needs-validation" novalidate <?php echo $atributos['ocultar'] ?>>
+<form id="<?php the_ID() ?>" class="needs-validation" novalidate <?php echo $atributos['ocultarVista'] ?>>
    <div class="d-flex align-items-center form-group row mb-3">
       <div class="col-2">
          <img src="<?php echo (get_the_post_thumbnail_url(get_the_ID())) ? get_the_post_thumbnail_url(get_the_ID()) : $beneficiario->get_avatar(get_the_ID()) ?>" class="object-fit-cover rounded" style="width:50px;" alt="imagen beneficiario">
@@ -31,21 +36,13 @@ $atributos = CoreController::get_instance()->get_atributos(get_post_type());
             </label>
          </div>
       </div>
-      <div class="col mb-3">
-         <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="No" name="alimentacion" id="alimentacion_<?php the_ID() ?>">
-            <label class="form-check-label" for="alimentacion">
-               Alimentación
-            </label>
-         </div>
-      </div>
-      <div class="col mb-3">
+      <div class="col-4 col-md-2 mb-3">
          <div class="input-group mb-3">
+            <span class="input-group-text">Alim.</span>
             <input type="number" class="form-control" step="1" name="q_alimentacion" placeholder="Cantidad" value="1" required>
-            <span class="input-group-text">Q</span>
          </div>
       </div>
-      <div class="col">
+      <div class="col" <?php echo $atributos['ocultarElemento'] ?>>
          <button type="submit" class="btn btn-info btn-sm mb-3" data-b_id="<?php the_ID() ?>"><span><i class="fa-solid fa-floppy-disk"></i></span> Actualizar</button>
       </div>
    </div>

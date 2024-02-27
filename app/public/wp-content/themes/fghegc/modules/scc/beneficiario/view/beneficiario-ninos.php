@@ -3,14 +3,15 @@
 use FGHEGC\Modules\Core\CoreController;
 use FGHEGC\Modules\Scc\Beneficiario\BeneficiarioController;
 
-$atributos = CoreController::get_instance()->get_atributos('beneficiario');
+$core = CoreController::get_instance();
+$atributos = $core->get_atributos('beneficiario');
 $beneficiario = BeneficiarioController::get_instance();
 $asistencias = get_posts(['post_type' => 'asistencia', 'posts_per_page' => -1, 'post_parent' => get_the_id()]);
 $comedores = get_posts(['post_type' => 'comedor', 'posts_per_page' => -1]);
 
 ?>
 <!-- Captura de Beneficiarios Niños(as) -->
-<div class="container">
+<div class="container" <?php echo $atributos['ocultarVista'] ?>>
    <div class="row">
       <div class="col-md-8">
          <h2 class="mb-3 text-center">Información del Niño(a)</h2>

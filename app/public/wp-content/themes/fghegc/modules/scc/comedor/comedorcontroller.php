@@ -43,7 +43,7 @@ class ComedorController
          $datosAtributos['templatepart'] = 'modules/scc/' . $postType . '/view/' . $postType;
          $datosAtributos['subtitulo'] = 'Pero Jesús Dijo: Dejad a los niños venir a mi, y no se lo inpidáis; porque de los tales es el reino de los cielos.';
          $datosAtributos['subtitulo2'] = 'Mateo 19:14 (RVR1960)';
-         $datosAtributos['div4'] = '';
+         $datosAtributos['div4'] = 'row row-cols-1 row-cols-md-3 g-4';
       }
       return $datosAtributos;
    }
