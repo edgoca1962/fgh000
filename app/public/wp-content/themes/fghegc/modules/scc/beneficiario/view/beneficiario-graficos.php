@@ -15,12 +15,6 @@ if (isset($_GET['anno'])) {
    $annoSel = date('Y');
 }
 $totalComedores = count($atributos['datosGraficos']['donas']);
-$comedoresId = [];
-foreach ($atributos['datosGraficos']['donas'] as $comedor) {
-   $comedoresId[] = $comedor['ID'];
-}
-$comedoresId = json_encode($comedoresId);
-$comedoresId = str_replace('"', '', $comedoresId);
 
 ?>
 
@@ -43,26 +37,29 @@ $comedoresId = str_replace('"', '', $comedoresId);
                </select>
             </div>
          </div>
-         <div class="row mb-5">
-            <canvas class="bg-white rounded" id="myChart"></canvas>
-            <input id="GraGenLabels" type="hidden" value='<?php echo json_encode($atributos['datosGraficos']['labels']) ?>'>
-            <input id="GraGenAsistencia" type="hidden" value='<?php echo json_encode($atributos['datosGraficos']['asistencia']) ?>'>
-            <input id="GraGenAusencia" type="hidden" value='<?php echo json_encode($atributos['datosGraficos']['ausencia']) ?>'>
-            <input id="GraGenCantidad" type="hidden" value='<?php echo json_encode($atributos['datosGraficos']['cantidad']) ?>'>
-         </div>
-         <div class="row row-cols-1 row-cols-md-2 g-4 mb-5">
-            <?php $i = 0;
-            foreach ($atributos['datosGraficos']['donas'] as $comedor) : ?>
-               <div>
-                  <h3><?php echo $comedor['titulo'] ?></h3>
-                  <canvas class="bg-white rounded" id="grafico_<?php echo $i ?>"></canvas>
-                  <input id="titulo_<?php echo $i ?>" type="hidden" value='<?php echo $comedor['titulo'] ?>'>
-                  <input id="datos_<?php echo $i ?>" type="hidden" value='<?php echo json_encode($comedor['datos']) ?>'>
-               </div>
-            <?php $i++;
-            endforeach; ?>
-            <input type="hidden" id="totalComedores" value="<?php echo $totalComedores  ?>">
-         </div>
+         <h3 id="sin_informacion" <?php echo ($atributos['datosGraficos']['cantidad']) ? 'hidden' : '' ?>>No hay información para ese mes y año</h3>
+         <section <?php echo ($atributos['datosGraficos']['cantidad']) ? '' : 'hidden' ?>>
+            <div class="row mb-5">
+               <canvas class="bg-white rounded" id="myChart"></canvas>
+               <input id="GraGenLabels" type="hidden" value='<?php echo json_encode($atributos['datosGraficos']['labels']) ?>'>
+               <input id="GraGenAsistencia" type="hidden" value='<?php echo json_encode($atributos['datosGraficos']['asistencia']) ?>'>
+               <input id="GraGenAusencia" type="hidden" value='<?php echo json_encode($atributos['datosGraficos']['ausencia']) ?>'>
+               <input id="GraGenCantidad" type="hidden" value='<?php echo json_encode($atributos['datosGraficos']['cantidad']) ?>'>
+            </div>
+            <div class="row row-cols-1 row-cols-md-2 g-4 mb-5">
+               <?php $i = 0;
+               foreach ($atributos['datosGraficos']['donas'] as $comedor) : ?>
+                  <div>
+                     <h3><?php echo $comedor['titulo'] ?></h3>
+                     <canvas class="bg-white rounded" id="grafico_<?php echo $i ?>"></canvas>
+                     <input id="titulo_<?php echo $i ?>" type="hidden" value='<?php echo $comedor['titulo'] ?>'>
+                     <input id="datos_<?php echo $i ?>" type="hidden" value='<?php echo json_encode($comedor['datos']) ?>'>
+                  </div>
+               <?php $i++;
+               endforeach; ?>
+               <input type="hidden" id="totalComedores" value="<?php echo $totalComedores  ?>">
+            </div>
+         </section>
       </div>
    </div>
    <input type="hidden" id="url" value=<?php echo site_url('/beneficiario-graficos') ?>>
