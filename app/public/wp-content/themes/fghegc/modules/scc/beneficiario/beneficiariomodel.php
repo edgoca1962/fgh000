@@ -1093,7 +1093,6 @@ class BeneficiarioModel
          if (is_wp_error($attach_id)) {
             $attach_id = '';
          }
-         set_post_thumbnail($post_id, $attach_id);
          $nombre = sanitize_text_field($_POST['nombre']);
          $p_apellido = sanitize_text_field($_POST['p_apellido']);
          $s_apellido = sanitize_text_field($_POST['s_apellido']);
@@ -1150,7 +1149,8 @@ class BeneficiarioModel
                   '_n_padre' => $n_padre,
                ]
             ];
-         wp_insert_post($post_data);
+         $post_id = wp_insert_post($post_data);
+         set_post_thumbnail($post_id, $attach_id);
          wp_send_json_success(['titulo' => 'Ingreso de Beneficiarios(as)', 'msg' => 'La información del Beneficiario(a) se registró correctamente.']);
       }
    }

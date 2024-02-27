@@ -75,7 +75,7 @@ $divpolcri = DivPolCriModel::get_instance();
       <div class="col d-flex justify-content-center align-items-center my-3">
          <div style="width: 200px; overflow:hidden; ">
             <div class="card h-100">
-               <img id="imagennueva" src="<?php echo FGHEGC_DIR_URI . '/assets/img/scccomedor.png' ?>" class="card-img h-100" alt="Imágen del comedor">
+               <img id="imagennueva" class="object-fit-cover rounded" src="<?php echo (get_the_post_thumbnail_url()) ? get_the_post_thumbnail_url() : FGHEGC_DIR_URI . '/assets/img/scccomedor.png' ?>" alt="Imágen del beneficiario" style="width:200px;">
                <div class="card-img-overlay d-flex justify-content-center align-items-center">
                   <label class="display-1" for="comedor_imagen"><i class="fa-regular fa-file-image"></i></label>
                   <input type="file" name="comedor_imagen" id="comedor_imagen" multiple="false" hidden>
@@ -136,8 +136,10 @@ $divpolcri = DivPolCriModel::get_instance();
          </div>
          <div class="col-md-4 mb-3">
             <label class="form-label">Encargado(a)</label>
-            <select id="encargado" name="contacto_id" id="contacto_id" class="form-select" aria-label="Encargados">
+            <select name="contacto_id" id="contacto_id" class="form-select" aria-label="Encargados">
             </select>
+            <input id="nonce_encargado" type="hidden" name="nonce_encargado" value="<?php echo wp_create_nonce('encargados') ?>">
+            <input id="action_encargado" type="hidden" name="action_encargado" value="scc_comedor_encargados">
          </div>
       </div><!-- teléfono y contacto -->
       <div class="form-group mb-3">

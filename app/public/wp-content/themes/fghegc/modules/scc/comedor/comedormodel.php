@@ -423,19 +423,14 @@ class ComedorModel
          }
          $post_name = 'com_' . $randomString;
 
-         $post_id = sanitize_text_field($_POST['post_id']);
-
          require_once(ABSPATH . "wp-admin" . '/includes/image.php');
          require_once(ABSPATH . "wp-admin" . '/includes/file.php');
          require_once(ABSPATH . "wp-admin" . '/includes/media.php');
-         if (get_post_thumbnail_id($post_id)) {
-            delete_post_thumbnail($post_id);
-         }
-         $attach_id = media_handle_upload('beneficiario_imagen', $post_id);
+
+         $attach_id = media_handle_upload('comedor_imagen', $post_id);
          if (is_wp_error($attach_id)) {
             $attach_id = '';
          }
-         set_post_thumbnail($post_id, $attach_id);
          $post_title = sanitize_text_field($_POST['nombre']);
          $provincia = sanitize_text_field($_POST['provincia']);
          $canton = sanitize_text_field($_POST['canton']);
@@ -463,7 +458,8 @@ class ComedorModel
                ]
 
             ];
-         wp_insert_post($post_data);
+         $post_id = wp_insert_post($post_data);
+         set_post_thumbnail($post_id, $attach_id);
          wp_send_json_success(['titulo' => 'Comedores', 'msg' => 'La información del Comedor se registró correctamente.']);
       }
    }
