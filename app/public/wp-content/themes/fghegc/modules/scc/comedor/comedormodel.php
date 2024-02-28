@@ -18,6 +18,7 @@ class ComedorModel
       add_action('save_post', [$this, 'save_email']);
       add_action('save_post', [$this, 'save_telefono']);
       add_action('save_post', [$this, 'save_contacto_id']);
+      add_action('pre_get_posts', [$this, 'scc_comedor_set_pre_get_posts']);
       add_action('wp_ajax_comedores', [$this, 'scc_get_comedores']);
       add_action('wp_ajax_scc_comedor_encargados', [$this, 'scc_comedor_get_encargados']);
       add_action('wp_ajax_comedor_agregar', [$this, 'comedor_agregar']);
@@ -384,6 +385,45 @@ class ComedorModel
       }
       $contacto_id = sanitize_text_field($_POST['contacto_id']);
       update_post_meta($post_id, '_contacto_id', $contacto_id);
+   }
+   public function scc_comedor_set_pre_get_posts($query)
+   {
+      if (!is_admin() && is_post_type_archive() && $query->is_main_query()) {
+         if (is_post_type_archive('comedor')) {
+            $query->set('orderby', 'post_title');
+            $query->set('order', 'ASC');
+         }
+      }
+   }
+
+
+   private function set_paginas()
+   {
+      $paginas = [
+         'comedor' =>
+         [
+            'slug' => 'comedor-mantenimiento',
+            'titulo' => 'Ingresar Comedores'
+         ],
+      ];
+      foreach ($paginas as $pagina) {
+
+         $pags = get_posts([
+            'post_type' => 'page',
+            'post_status' => 'publish',
+            'name' => $pagina['slug'],
+         ]);
+         if (count($pags) > 0) {
+         } else {
+            $post_data = array(
+               'post_type' => 'page',
+               'post_title' => $pagina['titulo'],
+               'post_name' => $pagina['slug'],
+               'post_status' => 'publish',
+            );
+            wp_insert_post($post_data);
+         }
+      }
    }
    public function scc_get_comedores()
    {

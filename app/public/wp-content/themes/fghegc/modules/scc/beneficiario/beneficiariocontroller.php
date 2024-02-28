@@ -72,11 +72,7 @@ class BeneficiarioController
             $datosAtributos['ocultarMantenimiento'] = '';
          }
       } elseif (in_array('comedores', $usuarioRoles)) {
-         if (is_page('beneficiario-graficos')) {
-            $datosAtributos['ocultarVista'] = '';
-         } else {
-            $datosAtributos['ocultarVista'] = 'hidden';
-         }
+         $datosAtributos['ocultarVista'] = '';
          $datosAtributos['ocultarElemento'] = 'hidden';
          $datosAtributos['ocultarMantenimiento'] = 'hidden';
       } else {

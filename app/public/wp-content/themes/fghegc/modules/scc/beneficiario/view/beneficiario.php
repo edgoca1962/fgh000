@@ -24,7 +24,7 @@ if ($atributos['ocultarVista'] == 'hidden') {
       </div>
       <input type="hidden" name="nombre" value="<?php echo get_the_title() ?>">
    </div>
-   <div class="form-group row mb-3">
+   <div class="form-group row mb-3" <?php echo $atributos['ocultarMantenimiento'] ?>>
       <div class="col col-md-3 mb-3">
          <input type="date" class="form-control" name="f_asistencia" placeholder="Fecha" value="<?php echo date('Y-m-d') ?>" required>
       </div>
@@ -36,7 +36,7 @@ if ($atributos['ocultarVista'] == 'hidden') {
             </label>
          </div>
       </div>
-      <div class="col-4 col-md-2 mb-3">
+      <div class="col-4 col-xl-2 mb-3">
          <div class="input-group mb-3">
             <span class="input-group-text">Alim.</span>
             <input type="number" class="form-control" step="1" name="q_alimentacion" placeholder="Cantidad" value="1" required>
