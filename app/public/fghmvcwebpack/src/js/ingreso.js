@@ -1,3 +1,17 @@
+if (document.getElementById('menuAvatar')) {
+   const avatar = document.getElementById('menuAvatar')
+   const avatarMenu = document.getElementById('menuAvatarMenu')
+   const mqs = window.matchMedia("(max-width: 991px)")
+
+   if (window.matchMedia("screen and (max-width: 991px)").matches) {
+      avatar.setAttribute('hidden', '')
+      avatarMenu.removeAttribute('hidden')
+   } else {
+      avatar.removeAttribute('hidden')
+      avatarMenu.setAttribute('hidden', '')
+   }
+}
+
 if (document.getElementById('ingreso')) {
    document.addEventListener('click', f_mostrar_clave)
    document.addEventListener('touchstart', f_mostrar_clave)
