@@ -28,14 +28,14 @@ $comedores = get_posts(['post_type' => 'comedor', 'posts_per_page' => -1]);
                      </label>
                   </div>
                </div>
-               <div class="col-4 col-md-2 mb-3">
+               <div class="col-4 col-xl-2 mb-3">
                   <div class="input-group mb-3">
-                     <input type="number" class="form-control" step="1" name="q_alimentacion" placeholder="Cantidad" value="1">
-                     <span class="input-group-text" id="q_alimentacion">Q</span>
+                     <span class="input-group-text">Alim.</span>
+                     <input type="number" class="form-control" step="1" name="q_alimentacion" placeholder="Cantidad" value="1" required>
                   </div>
                </div>
-               <div class="col mb-3">
-                  <button id="btn_actualizar_asistencia" type="submit" class="btn btn-info  btn-sm mb-3"><span><i class="fa-solid fa-floppy-disk"></i></span> Actualizar</button>
+               <div class="col" <?php echo $atributos['ocultarElemento'] ?>>
+                  <button type="submit" class="btn btn-info btn-sm mb-3" data-b_id="<?php the_ID() ?>"><span><i class="fa-solid fa-floppy-disk"></i></span> Actualizar</button>
                </div>
             </div>
             <hr>
