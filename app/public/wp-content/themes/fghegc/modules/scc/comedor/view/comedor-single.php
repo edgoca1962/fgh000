@@ -5,7 +5,7 @@ use FGHEGC\Modules\DivPolCri\DivPolCriModel;
 
 $atributos = CoreController::get_instance()->get_atributos('beneficiario');
 $divpolcri = DivPolCriModel::get_instance();
-
+$menues = get_posts(['post_type' => 'menu', 'posts_per_page' => -1, 'post_status' => 'publish', 'post_parent' => get_the_ID()]);
 ?>
 <section id="comedor_single" <?php echo $atributos['ocultarVista'] ?>>
    <form id="comedor">
@@ -68,6 +68,28 @@ $divpolcri = DivPolCriModel::get_instance();
       <input type="hidden" name="post_id" value="<?php the_ID() ?>">
       <input type="hidden" name="endpoint" value="<?php echo admin_url('admin-ajax.php') ?>">
    </form>
+   <div id="menues">
+      <h4>Historial de Menues</h4>
+      <hr>
+      <div class="row mb-3">
+         <div class="col">Fecha - Comedor</div>
+         <div class="col">Descripción del Menú</div>
+      </div>
+      <hr>
+      <?php if ($menues) : ?>
+         <?php foreach ($menues as $menu) : ?>
+            <div class="d-flex align-items-center row">
+               <div class="col-4">
+                  <a href="<?php echo the_permalink($menu->ID) ?>"><?php echo get_post($menu->ID)->post_title ?></a>
+               </div>
+               <div class="col"><?php echo get_post($menu->ID)->post_content ?></div>
+            </div>
+         <?php endforeach; ?>
+      <?php else : ?>
+         <h5>No hay menues registrados para este comedor</h5>
+      <?php endif; ?>
+   </div><!-- Bitácora de Menues -->
+   <hr>
 </section>
 
 <section id="comedor_single_editar" hidden>

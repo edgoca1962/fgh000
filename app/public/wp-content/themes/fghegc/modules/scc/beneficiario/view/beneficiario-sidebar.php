@@ -45,8 +45,8 @@ $beneficiario = BeneficiarioController::get_instance();
    </div>
    <div class="row mb-3" <?php echo $atributos['ocultarMantenimiento'] ?>>
       <h4>Mantenimiento</h4>
-      <li><a href="<?php echo site_url('/beneficiario-ninos') ?>">Inlcuir Niño(a)</a></li>
-      <li><a href="<?php echo site_url('/beneficiario-adultos') ?>">Incluir Adulto(a)</a></li>
+      <li><a href="<?php echo site_url('/menu-mantenimiento') ?>">Incluir Menú</a></li>
+      <li><a href="<?php echo site_url('/beneficiario-incluir') ?>">Incluir Beneficiario(a)</a></li>
       <div <?php echo $atributos['ocultarElemento'] ?>>
          <li><a href="<?php echo site_url('/comedor-mantenimiento') ?>">Incluir Comedor</a></li>
          <li><a href="<?php echo site_url('/beneficiario-usuario') ?>">Administrar Usuarios</a></li>

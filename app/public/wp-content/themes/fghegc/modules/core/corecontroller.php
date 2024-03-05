@@ -27,6 +27,8 @@ use FGHEGC\Modules\Scc\Beneficiario\BeneficiarioController;
 use FGHEGC\Modules\Scc\Beneficiario\BeneficiarioModel;
 use FGHEGC\Modules\Scc\Comedor\ComedorController;
 use FGHEGC\Modules\Scc\Comedor\ComedorModel;
+use FGHEGC\Modules\Scc\Menu\MenuController;
+use FGHEGC\Modules\Scc\Menu\MenuModel;
 use FGHEGC\modules\scp\oracion\OracionModel;
 use FGHEGC\Modules\Scp\Peticion\PeticionController;
 use FGHEGC\Modules\Scp\Peticion\PeticionModel;
@@ -63,6 +65,7 @@ class CoreController
       BeneficiarioModel::get_instance();
       AsistenciaModel::get_instance();
       ComedorModel::get_instance();
+      MenuModel::get_instance();
 
       $this->atributos = [];
       $this->setup_hooks();
@@ -106,7 +109,7 @@ class CoreController
    public function fghegc_register_scripts_styles()
    {
 
-      wp_enqueue_style('styles', FGHEGC_DIR_STYLE, array(), microtime(), 'all');
+      wp_enqueue_style('styles', FGHEGC_DIR_STYLE, array(), null, 'all');
 
       wp_enqueue_script('google-maps-api', 'https://maps.googleapis.com/maps/api/js?key=AIzaSyA31KJuZkm9rzF8_4zW4y9TneM5BI00lME&ibraries=places&callback=initMap', array(), null, ['in_footer' => true, 'strategy'  => 'async']);
       wp_enqueue_script('mapas', FGHEGC_DIR_URI . '/assets/mapas.js', array(), null, true);
@@ -256,6 +259,10 @@ class CoreController
 
          case 'comedor':
             $this->atributos = ComedorController::get_instance()->get_atributos($postType);
+            break;
+
+         case 'menu':
+            $this->atributos = MenuController::get_instance()->get_atributos($postType);
             break;
 
          default:

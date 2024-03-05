@@ -16,7 +16,7 @@ $comedores = get_posts(['post_type' => 'comedor', 'posts_per_page' => -1]);
    <div class="row">
       <div class="col-md-8">
          <h2 class="mb-3 text-center">Información del Niño(a)</h2>
-         <form id="beneficiario_ninos" enctype="multipart/form-data" class="needs-validation" novalidate>
+         <form id="beneficiario_incluir" enctype="multipart/form-data" class="needs-validation" novalidate>
             <div class="col d-flex justify-content-center align-items-center my-3">
                <div class="card">
                   <img id="imagennueva" src="<?php echo (get_the_post_thumbnail_url()) ? get_the_post_thumbnail_url() : $beneficiario->get_avatar(get_the_ID()) ?>" class="object-fit-cover rounded" alt="Imágen del beneficiario" style="width: 200px;">
@@ -50,7 +50,7 @@ $comedores = get_posts(['post_type' => 'comedor', 'posts_per_page' => -1]);
                </div>
             </div><!-- Nombre y apellidos -->
             <div class="form-group row">
-               <div class="col-md-4 mb-3">
+               <div class="col mb-3">
                   <div class="mb-3">Sexo</div>
                   <div class="form-check form-check-inline">
                      <input class="form-check-input" type="radio" name="sexo" id="masculino" value="1" checked>
@@ -61,7 +61,27 @@ $comedores = get_posts(['post_type' => 'comedor', 'posts_per_page' => -1]);
                      <label class="form-check-label" for="femenino">Femenino</label>
                   </div>
                </div>
-               <input type="hidden" name="condicion" value="1">
+               <div class="col mb-3">
+                  <div class="mb-3">Condición</div>
+                  <div class="form-check form-check-inline">
+                     <input class="form-check-input" type="radio" name="condicion" id="nino" value="1" checked>
+                     <label class="form-check-label" for="masculino">Niño(a)</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                     <input class="form-check-input" type="radio" name="condicion" id="adultomayor" value="2">
+                     <label class="form-check-label" for="masculino">Aldulto(a) Mayor</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                     <input class="form-check-input" type="radio" name="condicion" id="embarazada" value="3">
+                     <label class="form-check-label" for="femenino">Embarazada</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                     <input class="form-check-input" type="radio" name="condicion" id="lactancia" value="4">
+                     <label class="form-check-label" for="femenino">En Lactancia</label>
+                  </div>
+               </div>
+            </div><!-- Sexo y Condición-->
+            <div class="form-group row">
                <div class="col mb-3">
                   <label class="form-label">Fecha Nacimiento</label>
                   <input id="f_nacimiento" type="date" name="f_nacimiento" placeholder="Fecha de Nacimiento" class="form-control" required>
@@ -80,18 +100,23 @@ $comedores = get_posts(['post_type' => 'comedor', 'posts_per_page' => -1]);
                   <label class="form-label">Fecha Salida</label>
                   <input type="date" name="f_salida" placeholder="Fecha de Salida" class="form-control">
                </div>
-            </div><!-- Sexo, fecha nacimiento, ingreso y salida -->
-            <div class="form-group row">
                <div class="col-md-4 mb-3">
+                  <label class="form-label">Edad</label>
+                  <input id="edad" type="text" placeholder="Edad (este dato se calcula)" class="form-control" disabled>
+                  <input id="edad_capturar" name="edad" type="hidden">
+               </div>
+            </div><!-- fecha nacimiento, ingreso, salida y edad -->
+            <div class="form-group row">
+               <div class="col mb-3">
                   <label class="form-label">Edad</label>
                   <input type="text" placeholder="Edad (este dato se calcula)" class="form-control" id="edad" disabled>
                   <input id="edad_capturar" name="edad" type="hidden">
                </div>
-               <div class="col-md-4 mb-3">
+               <div class="col mb-3">
                   <label class="form-label">Peso (kg)</label>
                   <input type="text" name="peso" placeholder="Peso en kilos" class="form-control">
                </div>
-               <div class="col-md-4 mb-3">
+               <div class="col mb-3">
                   <label class="form-label">Estatura (m)</label>
                   <input type="text" name="estatura" placeholder="Estatura en metros" class="form-control">
                </div>
@@ -149,14 +174,14 @@ $comedores = get_posts(['post_type' => 'comedor', 'posts_per_page' => -1]);
             </div><!-- correo y teléfono -->
             <div class="form-group row">
                <div class="col-md-4 mb-3">
-                  <label class="form-label">Nombre de la Madre o Tutor(a)</label>
+                  <label class="form-label">Madre o Tutora</label>
                   <input type="text" name="n_madre" placeholder="Nombre de la madre o tutor(a)" class="form-control" required>
                   <div class="invalid-feedback">
                      Por favor indicar un nombre de la madre o tutor.
                   </div>
                </div>
                <div class="col-md-4 mb-3">
-                  <label class="form-label">Nombre del Padre</label>
+                  <label class="form-label">Padre o Tutor</label>
                   <input type="text" name="n_padre" placeholder="Nombre del padre" class="form-control" required>
                   <div class="invalid-feedback">
                      Por favor indicar un nombre del padre.

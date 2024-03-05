@@ -30,7 +30,7 @@ if ($atributos['ocultarVista'] == 'hidden') {
       </div>
       <div class="col mb-3">
          <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="No" name="reflexion" id="reflexion_<?php the_ID() ?>">
+            <input class="form-check-input" type="checkbox" value="No" name="reflexion" id="reflexion_<?php the_ID() ?>" checked>
             <label class="form-check-label" for="reflexion">
                Reflexión
             </label>
@@ -42,7 +42,7 @@ if ($atributos['ocultarVista'] == 'hidden') {
             <input type="number" class="form-control" step="1" name="q_alimentacion" placeholder="Cantidad" value="1" required>
          </div>
       </div>
-      <div class="col" <?php echo $atributos['ocultarElemento'] ?>>
+      <div class="col" <?php echo $atributos['ocultarBoton'] ?>>
          <button type="submit" class="btn btn-info btn-sm mb-3" data-b_id="<?php the_ID() ?>"><span><i class="fa-solid fa-floppy-disk"></i></span> Actualizar</button>
       </div>
    </div>

@@ -36,6 +36,7 @@ class BeneficiarioController
       $this->atributos['ocultarVista'] = $this->get_datosAtributos($postType)['ocultarVista'];
       $this->atributos['ocultarElemento'] = $this->get_datosAtributos($postType)['ocultarElemento'];
       $this->atributos['ocultarMantenimiento'] = $this->get_datosAtributos($postType)['ocultarMantenimiento'];
+      $this->atributos['ocultarBoton'] = $this->get_datosAtributos($postType)['ocultarBoton'];
       $this->atributos['datosGraficos'] = $this->get_datos_graficos();
 
       return $this->atributos;
@@ -61,32 +62,33 @@ class BeneficiarioController
          $datosAtributos['ocultarElemento'] = '';
          $datosAtributos['ocultarVista'] = '';
          $datosAtributos['ocultarMantenimiento'] = '';
+         $datosAtributos['ocultarBoton'] = '';
       } elseif (in_array('encargadocomedores', $usuarioRoles)) {
-         if (get_current_user_id() == get_post_meta(wp_get_post_parent_id(), '_contacto_id', true)) {
-            $datosAtributos['ocultarElemento'] = '';
-            $datosAtributos['ocultarVista'] = '';
-            $datosAtributos['ocultarMantenimiento'] = '';
-         } else {
-            $datosAtributos['ocultarVista'] = '';
-            $datosAtributos['ocultarElemento'] = 'hidden';
-            $datosAtributos['ocultarMantenimiento'] = '';
-         }
+         $datosAtributos['ocultarVista'] = '';
+         $datosAtributos['ocultarElemento'] = 'hidden';
+         $datosAtributos['ocultarMantenimiento'] = '';
+         $datosAtributos['ocultarBoton'] = '';
       } elseif (in_array('comedores', $usuarioRoles)) {
          $datosAtributos['ocultarVista'] = '';
          $datosAtributos['ocultarElemento'] = 'hidden';
          $datosAtributos['ocultarMantenimiento'] = 'hidden';
+         $datosAtributos['ocultarBoton'] = 'hidden';
       } else {
          $datosAtributos['ocultarVista'] = 'hidden';
          $datosAtributos['ocultarElemento'] = 'hidden';
          $datosAtributos['ocultarMantenimiento'] = 'hidden';
+         $datosAtributos['ocultarBoton'] = 'hidden';
       }
 
       if (is_single()) {
+         $datosAtributos['templatepart'] = 'modules/scc/' . $postType . '/view/' . $postType . '-single';
+         /*
          if (get_post_meta(get_the_ID(), '_condicion', true) == '1') {
             $datosAtributos['templatepart'] = 'modules/scc/' . $postType . '/view/' . $postType . '-single-ninos';
          } else {
             $datosAtributos['templatepart'] = 'modules/scc/' . $postType . '/view/' . $postType . '-single-adultos';
          }
+         */
          $datosAtributos['subtitulo'] = '<figcaption class="blockquote-footer fs-4 fw-bold"><cite title="Source Title">Pero Jesús Dijo: Dejad a los niños venir a mi, y no se lo inpidáis; porque de los tales es el reino de los cielos.</cite></figcaption>';
          $datosAtributos['subtitulo2'] = get_the_title();
          $datosAtributos['div4'] = '';

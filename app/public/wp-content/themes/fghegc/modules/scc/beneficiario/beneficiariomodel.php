@@ -1038,6 +1038,11 @@ class BeneficiarioModel
             'slug' => 'beneficiario-encargados',
             'titulo' => 'Listado de Encargados'
          ],
+         'beneficiario' =>
+         [
+            'slug' => 'beneficiario-incluir',
+            'titulo' => 'Incluir Nuevo Beneficairio(a)'
+         ],
       ];
       foreach ($paginas as $pagina) {
 

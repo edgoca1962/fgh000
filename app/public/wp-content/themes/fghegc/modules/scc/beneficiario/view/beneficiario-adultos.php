@@ -6,6 +6,7 @@ use FGHEGC\Modules\Scc\Beneficiario\BeneficiarioController;
 $core = CoreController::get_instance();
 $atributos = $core->get_atributos('beneficiario');
 $beneficiario = BeneficiarioController::get_instance();
+$provincias = $beneficiario->scc_get_provincias();
 $asistencias = get_posts(['post_type' => 'asistencia', 'posts_per_page' => -1, 'post_parent' => get_the_id()]);
 $comedores = get_posts(['post_type' => 'comedor', 'posts_per_page' => -1]);
 
@@ -59,21 +60,21 @@ $comedores = get_posts(['post_type' => 'comedor', 'posts_per_page' => -1]);
                      <label class="form-check-label" for="femenino">Femenino</label>
                   </div>
                </div>
-               <div class="col-md mb-3">
+               <div class="col mb-3">
                   <label class="form-label">Fecha Nacimiento</label>
                   <input id="f_nacimiento" type="date" name="f_nacimiento" placeholder="Fecha de Nacimiento" class="form-control" required>
                   <div class="invalid-feedback">
                      Por favor indicar la fecha de nacimiento.
                   </div>
                </div>
-               <div class="col-md mb-3">
+               <div class="col mb-3">
                   <label class="form-label">Fecha Ingreso</label>
                   <input type="date" name="f_ingreso" placeholder="Fecha de Ingreso" class="form-control" required>
                   <div class="invalid-feedback">
                      Por favor indicar la fecha de ingreso.
                   </div>
                </div>
-               <div class="col-md mb-3">
+               <div class="col-6 col-md-4 mb-3">
                   <label class="form-label">Fecha Salida</label>
                   <input type="date" name="f_salida" placeholder="Fecha de Salida" class="form-control">
                </div>
