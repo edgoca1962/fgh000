@@ -41,6 +41,14 @@ class BeneficiarioController
 
       return $this->atributos;
    }
+   public function set_atributo($parametro, $valor)
+   {
+      $this->atributos[$parametro] = $valor;
+   }
+   public function get_atributo($parametro)
+   {
+      return $this->atributos[$parametro];
+   }
    private function get_datosAtributos($postType)
    {
       $datosAtributos = [];

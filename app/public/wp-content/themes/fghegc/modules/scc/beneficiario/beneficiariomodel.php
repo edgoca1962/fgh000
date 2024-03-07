@@ -40,6 +40,7 @@ class BeneficiarioModel
       add_action('wp_ajax_beneficiario_editar', [$this, 'beneficiario_editar']);
       add_action('wp_ajax_beneficiario_agregar', [$this, 'beneficiario_gregar']);
       add_action('wp_ajax_scc_beneficiario_mantener_usuario', [$this, 'scc_beneficiario_mantener_usuario']);
+      add_action('wp_ajax_scc_beneficiario_csv', [$this, 'scc_beneficiario_csv']);
    }
    public function set_beneficiario()
    {
@@ -1043,6 +1044,16 @@ class BeneficiarioModel
             'slug' => 'beneficiario-incluir',
             'titulo' => 'Incluir Nuevo Beneficairio(a)'
          ],
+         'beneficiario-csv' =>
+         [
+            'slug' => 'beneficiario-csv',
+            'titulo' => 'Importar datos masivamente'
+         ],
+         'beneficiario-exp-csv' =>
+         [
+            'slug' => 'beneficiario-export-csv',
+            'titulo' => 'Extraer listado de Beneficiarios (as)'
+         ],
       ];
       foreach ($paginas as $pagina) {
 
@@ -1085,8 +1096,6 @@ class BeneficiarioModel
             $randomString .= $characters[rand(0, $charactersLength - 1)];
          }
          $post_name = 'ben_' . $randomString;
-
-         $post_id = sanitize_text_field($_POST['post_id']);
 
          require_once(ABSPATH . "wp-admin" . '/includes/image.php');
          require_once(ABSPATH . "wp-admin" . '/includes/file.php');
@@ -1518,6 +1527,127 @@ class BeneficiarioModel
          }
          add_filter('avatar_defaults', 'wpb_new_gravatar');
          wp_send_json_success(['titulo' => 'Actualización de Usuario', 'msg', 'La información se registró exitosamente.']);
+      }
+   }
+   public function scc_beneficiario_listado()
+   {
+
+      $beneficiarios = get_posts(['post_type' => 'beneficiario', 'posts_per_page' => -1, 'post_status' => 'publish']);
+      foreach ($beneficiarios as $beneficiario) {
+         $hoy = date('Y-m-d');
+         $hoy = new \DateTime($hoy);
+         $f_nacimiento = date('Y-m-d', strtotime(get_post_meta($beneficiario->ID, '_f_nacimiento', true)));
+         $f_nacimiento = new \DateTime($f_nacimiento);
+         $diff = $hoy->diff($f_nacimiento);
+         $edad = $diff->y;
+         update_post_meta($beneficiario->ID, '_edad', $edad);
+      }
+
+      global $wpdb;
+
+      // Query posts from WordPress.
+      $sql =
+         "SELECT 
+         post_parent AS comedor,
+         post_title AS nombre,
+         CASE WHEN t1.meta_value = '1' THEN 'Niño(a)'
+            WHEN t1.meta_value = '2' THEN 'Adulto(a) Mayor'
+            WHEN t1.meta_value = '3' THEN 'Embarazada'
+            WHEN t1.meta_value = '4' THEN 'Lactancia'
+            ELSE 'No definida' END AS condicion,
+         t2.meta_value AS edad,
+         t3.meta_value AS estatura 
+         FROM $wpdb->posts 
+         INNER JOIN $wpdb->postmeta t1
+         ON (ID = t1.post_id)
+         INNER JOIN $wpdb->postmeta t2
+         ON (ID = t2.post_id)
+         INNER JOIN $wpdb->postmeta t3
+         ON (ID = t3.post_id)
+         WHERE post_type = 'beneficiario' AND post_status = 'publish'
+           AND (t1.meta_key = '_condicion')
+           AND (t2.meta_key = '_edad')
+           AND (t3.meta_key = '_estatura')
+         ORDER BY post_parent, post_title,t1.meta_value,t2.meta_value,t3.meta_value
+         ";
+
+      $beneficiarios = $wpdb->get_results($sql);
+
+      return $beneficiarios;
+   }
+   public function scc_beneficiario_csv()
+   {
+      if (!wp_verify_nonce($_POST['nonce'], 'beneficiarios_csv')) {
+         wp_send_json_error('Error de seguridad', 401);
+         wp_die();
+      } else {
+         $beneficiarios = get_posts(['post_type' => 'beneficiario', 'posts_per_page' => -1, 'post_status' => 'publish']);
+         foreach ($beneficiarios as $beneficiario) {
+            $hoy = date('Y-m-d');
+            $hoy = new \DateTime($hoy);
+            $f_nacimiento = date('Y-m-d', strtotime(get_post_meta($beneficiario->ID, '_f_nacimiento', true)));
+            $f_nacimiento = new \DateTime($f_nacimiento);
+            $diff = $hoy->diff($f_nacimiento);
+            $edad = $diff->y;
+            update_post_meta($beneficiario->ID, '_edad', $edad);
+         }
+
+         global $wpdb;
+
+         // Query posts from WordPress.
+         $sql =
+            "SELECT 
+         post_parent AS comedor,
+         post_title AS nombre,
+         t1.meta_value AS condicion,
+         t2.meta_value AS edad,
+         t3.meta_value AS estatura 
+         FROM $wpdb->posts 
+         INNER JOIN $wpdb->postmeta t1
+         ON (ID = t1.post_id)
+         INNER JOIN $wpdb->postmeta t2
+         ON (ID = t2.post_id)
+         INNER JOIN $wpdb->postmeta t3
+         ON (ID = t3.post_id)
+         WHERE post_type = 'beneficiario' AND post_status = 'publish'
+           AND (t1.meta_key = '_condicion')
+           AND (t2.meta_key = '_edad')
+           AND (t3.meta_key = '_estatura')
+         ORDER BY post_parent, post_title,t1.meta_value,t2.meta_value,t3.meta_value
+         ";
+
+         $beneficiarios = $wpdb->get_results($sql);
+
+         // Define the CSV file path.
+         $csv_file = wp_upload_dir()['path'] . '/beneficiarios.csv';
+
+         // Open the CSV file for writing.
+         $csv_handle = fopen($csv_file, 'w');
+
+         // Add headers to the CSV file.
+         fputcsv($csv_handle, array('Comedor', 'Nombre', 'Condicion', 'Edad', 'Estatura'));
+
+         // Loop through the posts and write data to the CSV file.
+         foreach ($beneficiarios as $beneficiario) {
+            $data = array(
+               get_post($beneficiario->comedor)->post_title,
+               $beneficiario->nombre,
+               $beneficiario->condicion,
+               $beneficiario->edad,
+               $beneficiario->estatura
+            );
+            fputcsv($csv_handle, $data);
+         }
+         fseek($csv_handle, 0);
+         // Provide a download link for the CSV file.
+         header('Content-Type: text/csv; charset=utf-8');
+         header('Content-Disposition: attachment; filename="beneficiarios.csv"');
+         fpassthru($csv_handle);
+         // readfile($csv_file);
+         // Close the CSV file.
+         fclose($csv_handle);
+         BeneficiarioController::get_instance()->set_atributo('extraer', '');
+         wp_send_json_success(['titulo' => 'Listado Beneficiarios (as)', 'msg' => 'El listado fue generado exitosamente.']);
       }
    }
 }

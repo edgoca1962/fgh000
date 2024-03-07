@@ -174,8 +174,7 @@ $comedores = get_posts(['post_type' => 'comedor', 'posts_per_page' => -1]);
          </form>
       </div>
       <div class="col-md-4">
-         <?php get_template_part($atributos['sidebar'])
-         ?>
+         <?php get_template_part($atributos['sidebar']) ?>
       </div>
    </div>
 </div>
