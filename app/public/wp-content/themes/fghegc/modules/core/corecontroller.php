@@ -427,7 +427,7 @@ class CoreController
       $texto = htmlentities($texto, ENT_COMPAT, 'UTF-8');
       $texto = preg_replace('/&([a-zA-Z])(uml|acute|grave|circ|tilde);/', '$1', $texto);
       $texto = html_entity_decode($texto, ENT_COMPAT, 'UTF-8');
-      $texto = strtolower($texto);
+      // $texto = strtolower($texto);
       return $texto;
    }
    public function fghegc_id_column($columns)

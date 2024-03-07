@@ -2,6 +2,7 @@
 
 namespace FGHEGC\Modules\Scc\Beneficiario;
 
+use FGHEGC\Modules\Core\CoreController;
 use FGHEGC\Modules\Core\Singleton;
 
 class BeneficiarioModel
@@ -1627,11 +1628,12 @@ class BeneficiarioModel
          // Add headers to the CSV file.
          fputcsv($csv_handle, array('Comedor', 'Nombre', 'Condicion', 'Edad', 'Estatura'));
 
+         $core = CoreController::get_instance();
          // Loop through the posts and write data to the CSV file.
          foreach ($beneficiarios as $beneficiario) {
             $data = array(
                get_post($beneficiario->comedor)->post_title,
-               $beneficiario->nombre,
+               $core->quitarDiacriticos($beneficiario->nombre),
                $beneficiario->condicion,
                $beneficiario->edad,
                $beneficiario->estatura
