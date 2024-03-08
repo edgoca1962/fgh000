@@ -43,11 +43,15 @@ $beneficiario = BeneficiarioController::get_instance();
          <a href="<?php echo site_url('/beneficiario-encargados') ?>">Listado de Encargados</a>
       </h4>
    </div>
+   <div class="row mb-3">
+      <h4>
+         <a href="<?php echo site_url('/beneficiario-export-csv') ?>">Listado de Beneficiarios(as)</a>
+      </h4>
+   </div>
    <div class="row mb-3" <?php echo $atributos['ocultarMantenimiento'] ?>>
       <h4>Mantenimiento</h4>
       <li><a href="<?php echo site_url('/menu-mantenimiento') ?>">Incluir Menú</a></li>
       <li><a href="<?php echo site_url('/beneficiario-incluir') ?>">Incluir Beneficiario(a)</a></li>
-      <li><a href="<?php echo site_url('/beneficiario-export-csv') ?>">Listado de Beneficiarios(as)</a></li>
       <div <?php echo $atributos['ocultarElemento'] ?>>
          <li><a href="<?php echo site_url('/comedor-mantenimiento') ?>">Incluir Comedor</a></li>
          <li><a href="<?php echo site_url('/beneficiario-usuario') ?>">Administrar Usuarios</a></li>
