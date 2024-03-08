@@ -31,7 +31,7 @@ $totalComedores = count($atributos['datosGraficos']['donas']);
             </div>
             <div class="col col-md-4">
                <select id="anno" class="col-3 form-select mb-3">
-                  <?php for ($i = 2024; $i < 2035; $i++) : ?>
+                  <?php for ($i = 2023; $i < 2035; $i++) : ?>
                      <option value="<?php echo $i ?>" <?php echo ($annoSel == $i) ? 'selected' : '' ?>><?php echo $i ?></option>
                   <?php endfor; ?>
                </select>
