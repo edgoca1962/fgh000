@@ -274,6 +274,7 @@ class CoreController
             $this->atributos['fullpage'] = true;
             $this->atributos['height'] = '100vh';
             $this->atributos['titulo'] = $titulo;
+            $this->atributos['subtitulo'] = '';
             $this->atributos['div0'] = 'background-blend';
 
             break;
