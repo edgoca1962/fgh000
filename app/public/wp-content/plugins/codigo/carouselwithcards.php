@@ -29,7 +29,7 @@
             <div class="card h-100 m-2">
                <img src="https://source.unsplash.com/random/300X300?universe" class="card-img-top" style="max-height: 200px;" alt="Imagen">
                <div class="card-body">
-                  <h5 class="card-title">Card title</h5>
+                  <h2 class="card-title">Universe</h2>
                   <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
                   <a href="#" class="btn btn-primary">Go somewhere</a>
                </div>
@@ -39,7 +39,7 @@
             <div class="card h-100 m-2">
                <img src="https://source.unsplash.com/random/300X300?forest" class="card-img-top" style="max-height: 200px;" alt="Imagen">
                <div class="card-body">
-                  <h5 class="card-title">Card title</h5>
+                  <h2 class="card-title">Forest</h2>
                   <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
                   <a href="#" class="btn btn-primary">Go somewhere</a>
                </div>
@@ -49,7 +49,7 @@
             <div class="card h-100 m-2">
                <img src="https://source.unsplash.com/random/300X300?mountains" class="card-img-top" style="max-height: 200px;" alt="Imagen">
                <div class="card-body">
-                  <h5 class="card-title">Card title</h5>
+                  <h2 class="card-title">Mountains</h2>
                   <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
                   <a href="#" class="btn btn-primary">Go somewhere</a>
                </div>
@@ -59,7 +59,7 @@
             <div class="card h-100 m-2">
                <img src="https://source.unsplash.com/random/300X300?ocean" class="card-img-top" style="max-height: 200px;" alt="Imagen">
                <div class="card-body">
-                  <h5 class="card-title">Card title</h5>
+                  <h2 class="card-title">Ocean</h2>
                   <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
                   <a href="#" class="btn btn-primary">Go somewhere</a>
                </div>
@@ -69,7 +69,7 @@
             <div class="card h-100 m-2">
                <img src="https://source.unsplash.com/random/300X300?people" class="card-img-top" style="max-height: 200px;" alt="Imagen">
                <div class="card-body">
-                  <h5 class="card-title">Card title</h5>
+                  <h2 class="card-title">People</h2>
                   <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
                   <a href="#" class="btn btn-primary">Go somewhere</a>
                </div>
@@ -79,7 +79,7 @@
             <div class="card h-100 m-2">
                <img src="https://source.unsplash.com/random/300X300?buildings" class="card-img-top" style="max-height: 200px;" alt="Imagen">
                <div class="card-body">
-                  <h5 class="card-title">Card title</h5>
+                  <h2 class="card-title">Buildings</h2>
                   <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
                   <a href="#" class="btn btn-primary">Go somewhere</a>
                </div>
@@ -87,9 +87,9 @@
          </div>
          <div class="carousel-item">
             <div class="card h-100 m-2">
-               <img src="https://source.unsplash.com/random/300X300?ocean" class="card-img-top" style="max-height: 200px;" alt="Imagen">
+               <img src="https://source.unsplash.com/random/300X300?churchs" class="card-img-top" style="max-height: 200px;" alt="Imagen">
                <div class="card-body">
-                  <h5 class="card-title">Card title</h5>
+                  <h2 class="card-title">Churchs</h2>
                   <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
                   <a href="#" class="btn btn-primary">Go somewhere</a>
                </div>
@@ -97,9 +97,9 @@
          </div>
          <div class="carousel-item">
             <div class="card h-100 m-2">
-               <img src="https://source.unsplash.com/random/300X300?people" class="card-img-top" style="max-height: 200px;" alt="Imagen">
+               <img src="https://source.unsplash.com/random/300X300?bilogy" class="card-img-top" style="max-height: 200px;" alt="Imagen">
                <div class="card-body">
-                  <h5 class="card-title">Card title</h5>
+                  <h2 class="card-title">Biology</h2>
                   <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
                   <a href="#" class="btn btn-primary">Go somewhere</a>
                </div>
@@ -107,9 +107,89 @@
          </div>
          <div class="carousel-item">
             <div class="card h-100 m-2">
-               <img src="https://source.unsplash.com/random/300X300?buildings" class="card-img-top" style="max-height: 200px;" alt="Imagen">
+               <img src="https://source.unsplash.com/random/300X300?computers" class="card-img-top" style="max-height: 200px;" alt="Imagen">
                <div class="card-body">
-                  <h5 class="card-title">Card title</h5>
+                  <h2 class="card-title">Computers</h2>
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                  <a href="#" class="btn btn-primary">Go somewhere</a>
+               </div>
+            </div>
+         </div>
+         <div class="carousel-item">
+            <div class="card h-100 m-2">
+               <img src="https://source.unsplash.com/random/300X300?flowers" class="card-img-top" style="max-height: 200px;" alt="Imagen">
+               <div class="card-body">
+                  <h2 class="card-title">Flowers</h2>
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                  <a href="#" class="btn btn-primary">Go somewhere</a>
+               </div>
+            </div>
+         </div>
+         <div class="carousel-item">
+            <div class="card h-100 m-2">
+               <img src="https://source.unsplash.com/random/300X300?butterfly" class="card-img-top" style="max-height: 200px;" alt="Imagen">
+               <div class="card-body">
+                  <h2 class="card-title">Buterfly</h2>
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                  <a href="#" class="btn btn-primary">Go somewhere</a>
+               </div>
+            </div>
+         </div>
+         <div class="carousel-item">
+            <div class="card h-100 m-2">
+               <img src="https://source.unsplash.com/random/300X300?bears" class="card-img-top" style="max-height: 200px;" alt="Imagen">
+               <div class="card-body">
+                  <h2 class="card-title">Bears</h2>
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                  <a href="#" class="btn btn-primary">Go somewhere</a>
+               </div>
+            </div>
+         </div>
+         <div class="carousel-item">
+            <div class="card h-100 m-2">
+               <img src="https://source.unsplash.com/random/300X300?birds" class="card-img-top" style="max-height: 200px;" alt="Imagen">
+               <div class="card-body">
+                  <h2 class="card-title">Birds</h2>
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                  <a href="#" class="btn btn-primary">Go somewhere</a>
+               </div>
+            </div>
+         </div>
+         <div class="carousel-item">
+            <div class="card h-100 m-2">
+               <img src="https://source.unsplash.com/random/300X300?trucks" class="card-img-top" style="max-height: 200px;" alt="Imagen">
+               <div class="card-body">
+                  <h2 class="card-title">Trucks</h2>
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                  <a href="#" class="btn btn-primary">Go somewhere</a>
+               </div>
+            </div>
+         </div>
+         <div class="carousel-item">
+            <div class="card h-100 m-2">
+               <img src="https://source.unsplash.com/random/300X300?bicycles" class="card-img-top" style="max-height: 200px;" alt="Imagen">
+               <div class="card-body">
+                  <h2 class="card-title">Bicycles</h2>
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                  <a href="#" class="btn btn-primary">Go somewhere</a>
+               </div>
+            </div>
+         </div>
+         <div class="carousel-item">
+            <div class="card h-100 m-2">
+               <img src="https://source.unsplash.com/random/300X300?motorcycles" class="card-img-top" style="max-height: 200px;" alt="Imagen">
+               <div class="card-body">
+                  <h2 class="card-title">Motorcycles</h2>
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                  <a href="#" class="btn btn-primary">Go somewhere</a>
+               </div>
+            </div>
+         </div>
+         <div class="carousel-item">
+            <div class="card h-100 m-2">
+               <img src="https://source.unsplash.com/random/300X300?bees" class="card-img-top" style="max-height: 200px;" alt="Imagen">
+               <div class="card-body">
+                  <h2 class="card-title">Bees</h2>
                   <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
                   <a href="#" class="btn btn-primary">Go somewhere</a>
                </div>
@@ -127,13 +207,12 @@
    </div>
 </div>
 <script>
-   let carouselWidth = document.getElementById('carouselExample').scrollWidth
    let cardWidth = document.querySelector('.carousel-item').offsetWidth
    let totalCardsWidth = document.querySelectorAll('.carousel-item').length * cardWidth
    let scrollPosition = 0
    document.querySelector('.carousel-control-next').addEventListener('click', () => {
       if (scrollPosition <= totalCardsWidth - cardWidth * 4) {
-         scrollPosition += cardWidth
+         scrollPosition += cardWidth * 3
          document.querySelector('.carousel-inner').scrollTo({
             left: scrollPosition,
             behavior: 'smooth'
@@ -142,7 +221,7 @@
    })
    document.querySelector('.carousel-control-prev').addEventListener('click', () => {
       if (scrollPosition > 0) {
-         scrollPosition -= cardWidth
+         scrollPosition -= cardWidth * 3
          document.querySelector('.carousel-inner').scrollTo({
             left: scrollPosition,
             behavior: 'smooth'

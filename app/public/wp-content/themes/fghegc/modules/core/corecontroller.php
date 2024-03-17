@@ -111,8 +111,8 @@ class CoreController
 
       wp_enqueue_style('styles', FGHEGC_DIR_STYLE, array(), null, 'all');
 
-      wp_enqueue_script('google-maps-api', 'https://maps.googleapis.com/maps/api/js?key=AIzaSyA31KJuZkm9rzF8_4zW4y9TneM5BI00lME&ibraries=places&callback=initMap', array(), null, ['in_footer' => true, 'strategy'  => 'async']);
-      wp_enqueue_script('mapas', FGHEGC_DIR_URI . '/assets/mapas.js', array(), null, true);
+      // wp_enqueue_script('google-maps-api', 'https://maps.googleapis.com/maps/api/js?key=AIzaSyA31KJuZkm9rzF8_4zW4y9TneM5BI00lME&ibraries=places&callback=initMap', array(), null, ['in_footer' => true, 'strategy'  => 'async']);
+      // wp_enqueue_script('mapas', FGHEGC_DIR_URI . '/assets/mapas.js', array(), null, true);
 
       wp_enqueue_script('scripts', FGHEGC_DIR_URI . '/assets/main.js', array('jquery'), null, true);
    }
