@@ -13,7 +13,7 @@ $beneficiarios = BeneficiarioModel::get_instance()->scc_beneficiario_listado();
          <form id="beneficiario_export_csv" enctype="multipart/form-data" class="needs-validation mb-5">
             <button type="submit" class="btn btn-info">Generar Archivo</button>
             <button class="btn btn-danger">
-               <a href="<?php echo wp_upload_dir()['url'] . '/beneficiarios.csv' ?>" download>Extraer Archivo (CSV)</a>
+               <a href="<?php echo wp_upload_dir()['url'] . '/beneficiarios.csv' ?>" download="beneficiarios.csv">Extraer Archivo (CSV)</a>
             </button>
             <input type="hidden" name="action" value="scc_beneficiario_csv">
             <input type="hidden" name="nonce" value="<?php echo wp_create_nonce('beneficiarios_csv') ?>">
