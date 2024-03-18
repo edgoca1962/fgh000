@@ -84,7 +84,8 @@ class PageController
          $datosAtributos['div0'] = '';
          $datosAtributos['div1'] = '';
       } elseif (is_page('beneficiario-acerca')) {
-         $datosAtributos['div0'] = 'bg-white pt-5';
+         $datosAtributos['div0'] = 'text-dark bg-white pt-5';
+         $datosAtributos['div1'] = '';
       }
 
 
