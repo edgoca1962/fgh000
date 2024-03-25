@@ -23,6 +23,7 @@ class PageController
       $this->atributos['subtitulo'] = $this->get_datosAtributos()['subtitulo'];
       $this->atributos['div0'] = $this->get_datosAtributos()['div0'];
       $this->atributos['div1'] = $this->get_datosAtributos()['div1'];
+      // $this->atributos['displaysub'] = $this->get_datosAtributos()['displaysub'];
       $this->atributos['comentarios'] = $this->get_datosAtributos()['comentarios'];
 
       return $this->atributos;
@@ -84,8 +85,10 @@ class PageController
          $datosAtributos['div0'] = '';
          $datosAtributos['div1'] = '';
       } elseif (is_page('beneficiario-acerca')) {
-         $datosAtributos['div0'] = 'text-dark bg-white pt-5';
+         $datosAtributos['div0'] = 'bg-white pt-5 text-dark';
          $datosAtributos['div1'] = '';
+         $datosAtributos['subtitulo'] = 'Y SABEMOS QUE DIOS HACE<br>QUE TODAS LAS COSAS<br>COOPEREN PARA EL BIEN DE<br>QUIENES LO AMAN Y SON<br>LLAMADOS SEGÚN EL<br>PROPÓSITO QUE ÉL TIENE<br>PARA ELLOS<br>ROMANSOS 8:28';
+         $datosAtributos['displaysub'] = '';
       }
 
 
