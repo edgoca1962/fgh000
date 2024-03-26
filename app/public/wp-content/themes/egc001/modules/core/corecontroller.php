@@ -4,6 +4,11 @@ namespace EGC001\Modules\Core;
 
 use EGC001\Modules\Page\PageController;
 use EGC001\Modules\Post\PostController;
+use EGC001\Modules\Scc\Asistencia\AsistenciaModel;
+use EGC001\Modules\Scc\Beneficiario\BeneficiarioController;
+use EGC001\Modules\Scc\Beneficiario\BeneficiarioModel;
+use EGC001\Modules\Scc\Comedor\ComedorModel;
+use EGC001\Modules\Scc\Menu\MenuModel;
 
 class CoreController
 {
@@ -12,6 +17,10 @@ class CoreController
    private function __construct()
    {
       ThemeSetup::get_instance();
+      AsistenciaModel::get_instance();
+      BeneficiarioModel::get_instance();
+      ComedorModel::get_instance();
+      MenuModel::get_instance();
       $this->set_paginas();
    }
    public function set_atributo($parametro, $valor)
@@ -42,7 +51,7 @@ class CoreController
       $atributosCore['navbar'] = 'modules/core/view/navbar';
       // variables del banner
       $atributosCore['imagen'] = $this->get_datos_atributos()['imagen'];
-      $atributosCore['height'] = '30vh';
+      $atributosCore['height'] = '60vh';
       $atributosCore['fontweight'] = 'fw-bold';
       $atributosCore['display'] = 'display-3';
       $atributosCore['titulo'] = get_the_title();
@@ -90,6 +99,10 @@ class CoreController
 
          case 'post':
             $atributosModulo = PostController::get_instance()->get_atributos();
+            break;
+
+         case 'beneficiario':
+            $atributosModulo = BeneficiarioController::get_instance()->get_atributos();
             break;
 
          default:

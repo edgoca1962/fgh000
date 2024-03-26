@@ -1,0 +1,17 @@
+Modificaciones:
+1) Eliminar carpetas de módulos no requeridos.
+2) Cambiar Dominio FGHEGC a SCC
+3) CoreController:
+   1) Eliminar Clases de módulos no requeridos.
+   2) Eliminar requerimiento para comentarios adicional
+   3) get_banner: || is_page('beneficiario-principal')
+4) Wordpress Menu
+   1) Apearance:
+      1) Salvar Permalinks
+      2) Cambiar menues (visible menu)
+      3) Customize->Site Identity cambiar logos.
+   2) Settings:
+      1) Reading: Seleccionar página principal
+5) core->view->navbar.php:
+   1) Incluir clase container en id main_navbar
+   2) Inclur clase rounded-circle en logo

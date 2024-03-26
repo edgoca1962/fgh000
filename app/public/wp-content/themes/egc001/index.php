@@ -31,16 +31,23 @@ $atributos = $core->get_atributos();
       <?php get_template_part($core->get_atributo('navbar'))  ?>
    </header>
    <section class="<?php echo $core->get_atributo('section') ?>">
+      <!-- container -->
       <div class="<?php echo $core->get_atributo('div1') ?>">
+         <!-- row -->
          <div class="<?php echo $core->get_atributo('div2') ?>">
+            <!-- Sidebar Left -->
             <div class="<?php echo $core->get_atributo('div3') ?>">
                <?php get_template_part($core->get_atributo('sidebarlefttemplate')) ?>
             </div>
+            <!-- centro envoltorio -->
             <div class="<?php echo $core->get_atributo('div4') ?>">
                <?php get_template_part($core->get_atributo('agregarpost')) ?>
+               <!-- centro Pregunta si hay posts -->
                <div class="<?php echo $core->get_atributo('div5') ?>">
                   <?php if (have_posts()) : ?>
+                     <!-- Si hay posts envoltorio 1 -->
                      <div class="<?php echo $core->get_atributo('div6') ?>">
+                        <!-- Si hay posts envoltorio 2 -->
                         <div class="<?php echo $core->get_atributo('div7') ?>">
                            <?php
                            while (have_posts()) :
@@ -57,10 +64,12 @@ $atributos = $core->get_atributos();
                         </div>
                      </div>
                   <?php else : ?>
+                     <!-- Si NO hay posts -->
                      <?php get_template_part($core->get_atributo('templatepartnone')) ?>
                   <?php endif; ?>
                </div>
             </div>
+            <!-- Sidebar Right -->
             <div class=" <?php echo $core->get_atributo('div8') ?>">
                <?php get_template_part($core->get_atributo('sidebarrighttemplate')) ?>
             </div>
