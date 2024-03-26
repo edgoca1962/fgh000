@@ -10,7 +10,7 @@ $beneficiario = BeneficiarioController::get_instance()->get_atributos('beneficia
    <div id="logo" class="navbar-brand logo">
       <div class="d-flex justify-content-center animate__animated animate__fadeInDown">
          <a href="<?= esc_url(site_url('/')) ?>">
-            <img style="width: 200px; height:auto;" src="<?php echo (has_custom_logo()) ? wp_get_attachment_image_src(get_theme_mod('custom_logo'))[0] : EGC001_DIR_URI . '/assets/img/fghblanco.png' ?>" class="rounded bg-white" alt="Logo">
+            <img style="width: 200px; height:auto;" src="<?php echo (has_custom_logo()) ? wp_get_attachment_image_src(get_theme_mod('custom_logo'))[0] : EGC001_DIR_URI . '/assets/img/DiosdePactos/fghblanco.png' ?>" class="rounded bg-white" alt="Logo">
          </a>
       </div>
    </div>

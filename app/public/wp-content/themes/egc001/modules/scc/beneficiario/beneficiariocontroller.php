@@ -15,23 +15,28 @@ class BeneficiarioController
    }
    public function get_atributos($postType = 'beneficiario')
    {
-      $this->atributos['templatepartnone'] = 'modules/scc/' . $postType . '/view/' . $postType . '-none';
-      $this->atributos['sidebarrighttemplate'] = 'modules/scc/beneficiario/view/beneficiario-sidebar';
-      $this->atributos['imagen'] = EGC001_DIR_URI . '/assets/img/DiosdePactos/manosorando.jpeg';
-      $this->atributos['regresar'] = $postType;
-      $this->atributos['displaysub'] = 'fs-4';
-      $this->atributos['displaysub2'] = 'fs-5';
 
+
+      // variables del banner
+      $this->atributos['imagen'] = EGC001_DIR_URI . '/assets/img/DiosdePactos/manosorando.jpeg';
+      $this->atributos['fontweight'] = 'fw-lighter';
+      $this->atributos['display'] = 'display-2';
       $this->atributos['titulo'] = $this->get_datosAtributos($postType)['titulo'];
+      $this->atributos['displaysub'] = 'fs-3';
       $this->atributos['subtitulo'] = $this->get_datosAtributos($postType)['subtitulo'];
+      $this->atributos['displaysub2'] = 'fs-5';
       $this->atributos['subtitulo2'] = $this->get_datosAtributos($postType)['subtitulo2'];
-      $this->atributos['div4'] = $this->get_datosAtributos($postType)['div4'];
+      //fin variables banner
       $this->atributos['agregarpost'] = $this->get_datosAtributos($postType)['agregarpost'];
+      $this->atributos['div4'] = $this->get_datosAtributos($postType)['div4'];
       $this->atributos['templatepart'] = $this->get_datosAtributos($postType)['templatepart'];
+      $this->atributos['comentarios'] = true;
+      $this->atributos['templatepartnone'] = 'modules/scc/' . $postType . '/view/' . $postType . '-none';
       $this->atributos['sidebarrighttemplate'] = $this->get_datosAtributos($postType)['sidebarrighttemplate'];
       $this->atributos['footerclass'] = $this->get_datosAtributos($postType)['footerclass'];
       $this->atributos['footertemplate'] = $this->get_datosAtributos($postType)['footertemplate'];
 
+      $this->atributos['regresar'] = $postType;
       $this->atributos['ocultar'] = $this->get_ocultar();
       $this->atributos['ocultarVista'] = $this->get_datosAtributos($postType)['ocultarVista'];
       $this->atributos['ocultarElemento'] = $this->get_datosAtributos($postType)['ocultarElemento'];
@@ -53,6 +58,18 @@ class BeneficiarioController
    {
       $datosAtributos = [];
       $datosAtributos['agregarpost'] = '';
+      $datosAtributos['div3'] = '';
+      $datosAtributos['sidebarlefttemplate'] = '';
+      $datosAtributos['div4'] = 'col-md-8';
+      $datosAtributos['div5'] = '';
+      $datosAtributos['div6'] = '';
+      $datosAtributos['div7'] = '';
+      $datosAtributos['comentarios'] = true;
+      $datosAtributos['div8'] = 'col-md-4';
+      $datosAtributos['sidebarrighttemplate'] = 'modules/scc/beneficiario/view/beneficiario-sidebar';
+      $datosAtributos['footerclass'] = 'container pt-5';
+      $datosAtributos['footertemplate'] = '';
+
       $datosAtributos['verbeneficiarios'] = false;
       $datosAtributos['userAdmin'] = false;
       $usuarioRoles = wp_get_current_user()->roles;
@@ -90,12 +107,12 @@ class BeneficiarioController
 
       if (is_single()) {
          $datosAtributos['templatepart'] = 'modules/scc/' . $postType . '/view/' . $postType . '-single';
-         $datosAtributos['subtitulo'] = '<figcaption class="blockquote-footer fs-4 fw-bold"><cite title="Source Title">Pero Jesús Dijo: Dejad a los niños venir a mi, y no se lo inpidáis; porque de los tales es el reino de los cielos.</cite></figcaption>';
+         $datosAtributos['subtitulo'] = 'Y SABEMOS QUE DIOS HACE<br>QUE TODAS LAS COSAS<br>COOPEREN PARA EL BIEN DE<br>QUIENES LO AMAN Y SON<br>LLAMADOS SEGÚN EL<br>PROPÓSITO QUE ÉL TIENE<br>PARA ELLOS<br><strong>ROMANSOS 8:28<strong>';
          $datosAtributos['subtitulo2'] = get_the_title();
          $datosAtributos['div4'] = 'col-md-8';
       } else {
-         $datosAtributos['subtitulo'] = 'Pero Jesús Dijo: Dejad a los niños venir a mi, y no se lo inpidáis; porque de los tales es el reino de los cielos.';
-         $datosAtributos['subtitulo2'] = 'Mateo 19:14 (RVR1960)';
+         $datosAtributos['subtitulo'] = 'Y SABEMOS QUE DIOS HACE<br>QUE TODAS LAS COSAS<br>COOPEREN PARA EL BIEN DE<br>QUIENES LO AMAN Y SON<br>LLAMADOS SEGÚN EL<br>PROPÓSITO QUE ÉL TIENE<br>PARA ELLOS<br><strong>ROMANSOS 8:28<strong>';
+         $datosAtributos['subtitulo2'] = '';
          $datosAtributos['div4'] = 'col-md-8';
          if (is_page()) {
             $datosAtributos['templatepart'] = 'modules/scc/' . $postType . '/view/' . get_post(get_the_ID())->post_name;
@@ -104,6 +121,10 @@ class BeneficiarioController
                $datosAtributos['div4'] = '';
                $datosAtributos['footerclass'] = '';
                $datosAtributos['footertemplate'] = '';
+            } else {
+               $atributosCore['footerclass'] = 'container pt-5';
+               $atributosCore['footertemplate'] = 'modules/core/view/core-footer';
+               $datosAtributos['sidebarrighttemplate'] = 'modules/scc/beneficiario/view/beneficiario-sidebar';
             }
          } else {
             $datosAtributos['templatepart'] = 'modules/scc/' . $postType . '/view/' . $postType;
@@ -208,31 +229,31 @@ class BeneficiarioController
       if (get_post_meta($post_id, '_sexo', true) == '2') {
          switch (get_post_meta($post_id, '_condicion', true)) {
             case '1':
-               $avatar = EGC001_DIR_URI . '/assets/img/avatar_femenino.png';
+               $avatar = EGC001_DIR_URI . '/assets/img/DiosdePactos/avatar_femenino.png';
                break;
             case '2':
-               $avatar = EGC001_DIR_URI . '/assets/img/avatarAdultaMayor.png';
+               $avatar = EGC001_DIR_URI . '/assets/img/DiosdePactos/avatarAdultaMayor.png';
                break;
             case '3':
-               $avatar = EGC001_DIR_URI . '/assets/img/avatarEmbarazada.png';
+               $avatar = EGC001_DIR_URI . '/assets/img/DiosdePactos/avatarEmbarazada.png';
                break;
             case '4':
-               $avatar = EGC001_DIR_URI . '/assets/img/avatarLactancia.png';
+               $avatar = EGC001_DIR_URI . '/assets/img/DiosdePactos/avatarLactancia.png';
                break;
             default:
-               $avatar = EGC001_DIR_URI . '/assets/img/avatar03.png';
+               $avatar = EGC001_DIR_URI . '/assets/img/DiosdePactos/avatar03.png';
                break;
          }
       } else {
          switch (get_post_meta($post_id, '_condicion', true)) {
             case '1':
-               $avatar = EGC001_DIR_URI . '/assets/img/avatar_masculino.png';
+               $avatar = EGC001_DIR_URI . '/assets/img/DiosdePactos/avatar_masculino.png';
                break;
             case '2':
-               $avatar = EGC001_DIR_URI . '/assets/img/avatarAdultoMayor.png';
+               $avatar = EGC001_DIR_URI . '/assets/img/DiosdePactos/avatarAdultoMayor.png';
                break;
             default:
-               $avatar = EGC001_DIR_URI . '/assets/img/avatar03.png';
+               $avatar = EGC001_DIR_URI . '/assets/img/DiosdePactos/avatar03.png';
                break;
          }
       }

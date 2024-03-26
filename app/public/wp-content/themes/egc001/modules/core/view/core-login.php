@@ -31,7 +31,7 @@ $atributos = $core->get_atributos();
       <div class='position-relative'>
          <div class="d-flex justify-content-center">
             <a href="<?php echo esc_url(site_url('/')) ?>" style="z-index:5">
-               <img style="width: 100px; height:auto;" src="<?php echo (has_custom_logo()) ? wp_get_attachment_image_src(get_theme_mod('custom_logo'))[0] : EGC001_DIR_URI . '/assets/img/fghblanco.png' ?>" alt="Logo">
+               <img style="width: 100px; height:auto;" src="<?php echo (has_custom_logo()) ? wp_get_attachment_image_src(get_theme_mod('custom_logo'))[0] : EGC001_DIR_URI . '/assets/img/DiosdePactos/fghblanco.png' ?>" alt="Logo">
             </a>
          </div>
          <div class="ingreso-bg p-5 rounded-5 shadow" style="margin-top:-2.3rem; width:20rem;">

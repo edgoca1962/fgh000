@@ -86,7 +86,7 @@ class CoreController
    {
       $datosAtributos = [];
       //Imagen
-      $datosAtributos['imagen'] = (get_the_post_thumbnail()) ? get_the_post_thumbnail() : EGC001_DIR_URI . '/assets/img/bg.jpg';
+      $datosAtributos['imagen'] = (get_the_post_thumbnail()) ? get_the_post_thumbnail() : EGC001_DIR_URI . '/assets/img/DiosdePactos/bg.jpg';
 
       return $datosAtributos;
    }

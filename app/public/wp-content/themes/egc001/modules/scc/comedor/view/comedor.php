@@ -9,7 +9,7 @@ $divpolcri = DivPolCriModel::get_instance();
 ?>
 <form id="<?php the_ID() ?>" <?php echo $atributos['ocultarVista'] ?>>
    <div class="card mb-3 bg-dark text-white shadow h-100">
-      <img src="<?php echo (get_the_post_thumbnail_url(get_the_ID())) ? get_the_post_thumbnail_url(get_the_ID()) : FGHEGC_DIR_URI . '/assets/img/scccomedor.png' ?>" class="object-fit-cover rounded-top" alt="Imagen Comedor">
+      <img src="<?php echo (get_the_post_thumbnail_url(get_the_ID())) ? get_the_post_thumbnail_url(get_the_ID()) : FGHEGC_DIR_URI . '/assets/img/DiosdePactos/scccomedor.png' ?>" class="object-fit-cover rounded-top" alt="Imagen Comedor">
       <div class="card-body">
          <h5 class="card-title"><a href="<?php echo get_the_permalink() ?>" class="text-reset"><?php echo get_the_title() ?></a></h5>
          <p> <!-- Provincia, Cantón y Distrito -->

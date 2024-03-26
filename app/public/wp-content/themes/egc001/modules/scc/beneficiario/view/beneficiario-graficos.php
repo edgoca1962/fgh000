@@ -20,8 +20,7 @@ $totalComedores = count($atributos['datosGraficos']['donas']);
 
 ?>
 
-<div id="beneficiario_graficos" class="row" <?php echo $atributos['ocultarVista'] ?>>
-
+<div id="beneficiario_graficos" class="row mt-5" <?php echo $atributos['ocultarVista'] ?>>
    <div class="container">
       <div class="form-group row mb-3">
          <div class="col col-md-4">

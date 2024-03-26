@@ -1008,17 +1008,7 @@ class BeneficiarioModel
          'principal' =>
          [
             'slug' => 'beneficiario-principal',
-            'titulo' => 'Sistema Comedor_ides'
-         ],
-         'ninos' =>
-         [
-            'slug' => 'beneficiario-ninos',
-            'titulo' => 'Mantenimiento Niños(as)'
-         ],
-         'adultos' =>
-         [
-            'slug' => 'beneficiario-adultos',
-            'titulo' => 'Mantenimiento Adultos'
+            'titulo' => 'Forjadores de Esperanza'
          ],
          'usuario' =>
          [
@@ -1318,7 +1308,7 @@ class BeneficiarioModel
                      if (get_user_meta($datos->ID, 'custom_avatar', true)) {
                         $datos_usuario['avatar'] = wp_get_attachment_url(get_user_meta($datos->ID, 'custom_avatar', true));
                      } else {
-                        $datos_usuario['avatar'] = EGC001_DIR_URI . '/assets/img/avatar03.png';
+                        $datos_usuario['avatar'] = EGC001_DIR_URI . '/assets/img/DiosdePactos/avatar03.png';
                      }
                   } else {
                      update_user_meta($datos->ID, 'custom_avatar', $attach_id);

@@ -13,7 +13,7 @@ $menues = get_posts(['post_type' => 'menu', 'posts_per_page' => -1, 'post_status
          <button id="btn_editar" type="button" class="btn btn-warning mb-3"><span><i class="fa-solid fa-pen-to-square"></i></span> Editar Datos</button>
       </div><!-- Boton Editar -->
       <div class="col d-flex justify-content-center">
-         <img class="object-fit-cover rounded" src="<?php echo (get_the_post_thumbnail_url()) ? get_the_post_thumbnail_url() : FGHEGC_DIR_URI . '/assets/img/scccomedor.png' ?>" alt="Imágen del beneficiario" style="width:200px;">
+         <img class="object-fit-cover rounded" src="<?php echo (get_the_post_thumbnail_url()) ? get_the_post_thumbnail_url() : FGHEGC_DIR_URI . '/assets/img/DiosdePactos/scccomedor.png' ?>" alt="Imágen del beneficiario" style="width:200px;">
       </div><!-- Foto Comedor -->
       <div class="form-group row">
          <div class="col-md mb-3">
@@ -97,7 +97,7 @@ $menues = get_posts(['post_type' => 'menu', 'posts_per_page' => -1, 'post_status
       <div class="col d-flex justify-content-center align-items-center my-3">
          <div style="width: 200px; overflow:hidden; ">
             <div class="card h-100">
-               <img id="imagennueva" class="object-fit-cover rounded" src="<?php echo (get_the_post_thumbnail_url()) ? get_the_post_thumbnail_url() : FGHEGC_DIR_URI . '/assets/img/scccomedor.png' ?>" alt="Imágen del beneficiario" style="width:200px;">
+               <img id="imagennueva" class="object-fit-cover rounded" src="<?php echo (get_the_post_thumbnail_url()) ? get_the_post_thumbnail_url() : FGHEGC_DIR_URI . '/assets/img/DiosdePactos/scccomedor.png' ?>" alt="Imágen del beneficiario" style="width:200px;">
                <div class="card-img-overlay d-flex justify-content-center align-items-center">
                   <label class="display-1" for="comedor_imagen"><i class="fa-regular fa-file-image"></i></label>
                   <input type="file" name="comedor_imagen" id="comedor_imagen" multiple="false" hidden>

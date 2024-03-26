@@ -17,7 +17,7 @@ class AsistenciaController
       $this->atributos['titulo'] = 'Forjadores de Esperanza';
       $this->atributos['templatepartnone'] = 'modules/scc/' . $postType . '/view/' . $postType . '-none';
       $this->atributos['sidebar'] = 'modules/scc/beneficiario/view/beneficiario-sidebar';
-      $this->atributos['imagen'] = EGC001_DIR_URI . '/assets/img/manosorando.jpeg';
+      $this->atributos['imagen'] = EGC001_DIR_URI . '/assets/img/DiosdePactos/manosorando.jpeg';
       $this->atributos['regresar'] = $postType;
 
       return $this->atributos;

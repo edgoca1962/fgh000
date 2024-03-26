@@ -7,7 +7,7 @@ $atributos = CoreController::get_instance()->get_atributos('beneficiario');
 $beneficiario = BeneficiarioController::get_instance();
 
 ?>
-<section <?php echo $atributos['ocultarVista'] ?>>
+<section class="mt-5" <?php echo $atributos['ocultarVista'] ?>>
    <div class="row mb-3">
       <div class="position-relative">
          <form id="frmbuscar" class="d-flex">

@@ -17,7 +17,7 @@ $encargados = get_users(['role' => 'encargadocomedores', 'orderby' => 'nicename'
             <div class="col d-flex justify-content-center align-items-center my-3">
                <div style="width: 200px; overflow:hidden; ">
                   <div class="card h-100">
-                     <img id="imagennueva" src="<?php echo FGHEGC_DIR_URI . '/assets/img/scccomedor.png' ?>" class="object-fit-cover rounded" alt="Imágen del comedor" style="width: 200px;">
+                     <img id="imagennueva" src="<?php echo FGHEGC_DIR_URI . '/assets/img/DiosdePactos/scccomedor.png' ?>" class="object-fit-cover rounded" alt="Imágen del comedor" style="width: 200px;">
                      <div class="card-img-overlay d-flex justify-content-center align-items-center">
                         <label class="display-1" for="comedor_imagen"><i class="fa-regular fa-file-image"></i></label>
                         <input type="file" name="comedor_imagen" id="comedor_imagen" multiple="false" hidden>

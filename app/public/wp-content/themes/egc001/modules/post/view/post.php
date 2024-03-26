@@ -13,7 +13,7 @@ $atributos = CoreController::get_instance()->get_atributos(get_post_type());
 ?>
 <div class='col'>
    <div class="card h-100 shadow" style="background-color: rgba(40,48,61,1);">
-      <img src="<?php echo (get_the_post_thumbnail_url()) ? get_the_post_thumbnail_url() : EGC001_DIR_URI . '/assets/img/bg.jpg' ?>" class="card-img-top" alt="post image">
+      <img src="<?php echo (get_the_post_thumbnail_url()) ? get_the_post_thumbnail_url() : EGC001_DIR_URI . '/assets/img/DiosdePactos/bg.jpg' ?>" class="card-img-top" alt="post image">
       <div class="card-body">
          <h4 id="title_<?php get_the_ID() ?>" class="card-title">
             <?php echo the_title(sprintf('<h4><a href="%s" rel="bookmark">', esc_attr(esc_url(get_permalink() . '?pag=' . $atributos['pag']))), '</a></h4>') ?>
