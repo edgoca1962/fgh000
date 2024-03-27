@@ -1,10 +1,10 @@
 <?php
 
 use EGC001\Modules\Core\CoreController;
-use EGC001\Modules\Scc\Beneficiario\BeneficiarioController;
 
-$atributos = CoreController::get_instance()->get_atributos('page');
-$beneficiario = BeneficiarioController::get_instance()->get_atributos('beneficiario');
+$core = CoreController::get_instance();
+$atributos = $core->get_atributos('beneficiario');
+
 ?>
 <section id="hero-page" class="d-flex flex-column justify-content-center align-items-center text-white" style="background: linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)), url(<?php echo $atributos['imagen'] ?>) no-repeat center /cover; height: <?php echo $atributos['height'] ?>;">
    <div id="logo" class="navbar-brand logo">
@@ -15,9 +15,9 @@ $beneficiario = BeneficiarioController::get_instance()->get_atributos('beneficia
       </div>
    </div>
    <p class="animate__animated animate__fadeInDown mb-3 text-center  <?php echo $atributos['fontweight'] ?>  <?php echo $atributos['display'] ?>">
-      <?php echo $beneficiario['titulo'] ?></p>
+      <?php echo $atributos['titulo'] ?></p>
    <p class="animate__animated animate__fadeInUp mb-3 text-center fw-lighter fs-3">
-      <?php echo $beneficiario['subtitulo'] ?></p>
+      <?php echo $atributos['subtitulo'] ?></p>
    <p class="animate__animated animate__fadeInUp text-center  fs-5 fw-lighter">
-      <?php echo  $beneficiario['subtitulo2'] ?></p>
+      <?php echo  $atributos['subtitulo2'] ?></p>
 </section>

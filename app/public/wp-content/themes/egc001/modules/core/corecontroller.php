@@ -2,6 +2,7 @@
 
 namespace EGC001\Modules\Core;
 
+use EGC001\Modules\DivPolCri\DivPolCriModel;
 use EGC001\Modules\Page\PageController;
 use EGC001\Modules\Post\PostController;
 use EGC001\Modules\Scc\Asistencia\AsistenciaModel;
@@ -16,11 +17,19 @@ class CoreController
    private $atributo;
    private function __construct()
    {
+      require_once EGC001_DIR_PATH . '/modules/core/helpers/twentytwentyone/class-twenty-twenty-one-svg-icons.php';
+      require_once EGC001_DIR_PATH . '/modules/core/helpers/twentytwentyone/template-functions.php';
+      require_once EGC001_DIR_PATH . '/modules/core/helpers/twentytwentyone/template-tags.php';
+      require_once EGC001_DIR_PATH . "/modules/core/helpers/walker.php";
+      // require_once EGC001_DIR_PATH . "/modules/core/view/core-comments.php";
+
       ThemeSetup::get_instance();
+      CoreModel::get_instance();
       AsistenciaModel::get_instance();
       BeneficiarioModel::get_instance();
       ComedorModel::get_instance();
       MenuModel::get_instance();
+      DivPolCriModel::get_instance();
       $this->set_paginas();
    }
    public function set_atributo($parametro, $valor)
@@ -86,7 +95,7 @@ class CoreController
    {
       $datosAtributos = [];
       //Imagen
-      $datosAtributos['imagen'] = (get_the_post_thumbnail()) ? get_the_post_thumbnail() : EGC001_DIR_URI . '/assets/img/DiosdePactos/bg.jpg';
+      $datosAtributos['imagen'] = (get_the_post_thumbnail()) ? get_the_post_thumbnail() : EGC001_DIR_URI . '/assets/img/bg.jpg';
 
       return $datosAtributos;
    }

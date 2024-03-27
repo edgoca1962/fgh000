@@ -15,27 +15,47 @@ class BeneficiarioController
    }
    public function get_atributos($postType = 'beneficiario')
    {
-
-
+      /**
+       * 
+       * Parámetros Core 
+       * 
+       * */
+      $this->atributos['banner'] = $this->get_datosAtributos($postType)['banner'];
+      $this->atributos['navbar'] = 'modules/core/view/navbar';
       // variables del banner
       $this->atributos['imagen'] = EGC001_DIR_URI . '/assets/img/DiosdePactos/manosorando.jpeg';
+      $this->atributos['height'] = $this->get_datosAtributos($postType)['height'];
       $this->atributos['fontweight'] = 'fw-lighter';
       $this->atributos['display'] = 'display-2';
       $this->atributos['titulo'] = $this->get_datosAtributos($postType)['titulo'];
       $this->atributos['displaysub'] = 'fs-3';
       $this->atributos['subtitulo'] = $this->get_datosAtributos($postType)['subtitulo'];
-      $this->atributos['displaysub2'] = 'fs-5';
+      $this->atributos['displaysub2'] = 'display-5';
       $this->atributos['subtitulo2'] = $this->get_datosAtributos($postType)['subtitulo2'];
       //fin variables banner
+      $this->atributos['body'] = 'bg-dark bg-gradient text-white';
+      $this->atributos['section'] = '';
+      $this->atributos['div1'] = $this->get_datosAtributos($postType)['div1'];
+      $this->atributos['div2'] = $this->get_datosAtributos($postType)['div2'];
       $this->atributos['agregarpost'] = $this->get_datosAtributos($postType)['agregarpost'];
+      $this->atributos['div3'] = '';
+      $this->atributos['sidebarlefttemplate'] = '';
       $this->atributos['div4'] = $this->get_datosAtributos($postType)['div4'];
+      $this->atributos['div5'] = '';
+      $this->atributos['div6'] = '';
+      $this->atributos['div7'] = '';
       $this->atributos['templatepart'] = $this->get_datosAtributos($postType)['templatepart'];
       $this->atributos['comentarios'] = true;
       $this->atributos['templatepartnone'] = 'modules/scc/' . $postType . '/view/' . $postType . '-none';
+      $this->atributos['div8'] = 'col-md-4';
       $this->atributos['sidebarrighttemplate'] = $this->get_datosAtributos($postType)['sidebarrighttemplate'];
       $this->atributos['footerclass'] = $this->get_datosAtributos($postType)['footerclass'];
       $this->atributos['footertemplate'] = $this->get_datosAtributos($postType)['footertemplate'];
-
+      /**
+       * 
+       * Parámetros Beneficiario 
+       * 
+       * */
       $this->atributos['regresar'] = $postType;
       $this->atributos['ocultar'] = $this->get_ocultar();
       $this->atributos['ocultarVista'] = $this->get_datosAtributos($postType)['ocultarVista'];
@@ -57,7 +77,11 @@ class BeneficiarioController
    private function get_datosAtributos($postType)
    {
       $datosAtributos = [];
+      $datosAtributos['banner'] = 'modules/core/view/banner';
+      $datosAtributos['height'] = '60vh';
       $datosAtributos['agregarpost'] = '';
+      $datosAtributos['div1'] = 'container';
+      $datosAtributos['div2'] = 'row';
       $datosAtributos['div3'] = '';
       $datosAtributos['sidebarlefttemplate'] = '';
       $datosAtributos['div4'] = 'col-md-8';
@@ -107,11 +131,11 @@ class BeneficiarioController
 
       if (is_single()) {
          $datosAtributos['templatepart'] = 'modules/scc/' . $postType . '/view/' . $postType . '-single';
-         $datosAtributos['subtitulo'] = 'Y SABEMOS QUE DIOS HACE<br>QUE TODAS LAS COSAS<br>COOPEREN PARA EL BIEN DE<br>QUIENES LO AMAN Y SON<br>LLAMADOS SEGÚN EL<br>PROPÓSITO QUE ÉL TIENE<br>PARA ELLOS<br><strong>ROMANSOS 8:28<strong>';
+         $datosAtributos['subtitulo'] = 'Y SABEMOS QUE DIOS HACE<br>QUE TODAS LAS COSAS<br>COOPEREN PARA EL BIEN DE<br>QUIENES LO AMAN Y SON<br>LLAMADOS SEGÚN EL<br>PROPÓSITO QUE ÉL TIENE<br>PARA ELLOS<br><strong>ROMANSOS 8:28</strong>';
          $datosAtributos['subtitulo2'] = get_the_title();
          $datosAtributos['div4'] = 'col-md-8';
       } else {
-         $datosAtributos['subtitulo'] = 'Y SABEMOS QUE DIOS HACE<br>QUE TODAS LAS COSAS<br>COOPEREN PARA EL BIEN DE<br>QUIENES LO AMAN Y SON<br>LLAMADOS SEGÚN EL<br>PROPÓSITO QUE ÉL TIENE<br>PARA ELLOS<br><strong>ROMANSOS 8:28<strong>';
+         $datosAtributos['subtitulo'] = 'Y SABEMOS QUE DIOS HACE<br>QUE TODAS LAS COSAS<br>COOPEREN PARA EL BIEN DE<br>QUIENES LO AMAN Y SON<br>LLAMADOS SEGÚN EL<br>PROPÓSITO QUE ÉL TIENE<br>PARA ELLOS<br><strong>ROMANSOS 8:28</strong>';
          $datosAtributos['subtitulo2'] = '';
          $datosAtributos['div4'] = 'col-md-8';
          if (is_page()) {
@@ -121,9 +145,25 @@ class BeneficiarioController
                $datosAtributos['div4'] = '';
                $datosAtributos['footerclass'] = '';
                $datosAtributos['footertemplate'] = '';
+            } elseif (is_front_page() || is_page('core-login')) {
+               $datosAtributos['banner'] = '';
+               $datosAtributos['height'] = '100vh';
+               $datosAtributos['agregarpost'] = '';
+               $datosAtributos['div1'] = '';
+               $datosAtributos['div2'] = '';
+               $datosAtributos['div3'] = '';
+               $datosAtributos['sidebarrighttemplate'] = '';
+               $datosAtributos['div4'] = '';
+               $datosAtributos['div5'] = '';
+               $datosAtributos['div6'] = '';
+               $datosAtributos['div7'] = '';
+               $datosAtributos['comentarios'] = false;
+               $datosAtributos['div8'] = '';
+               $datosAtributos['footerclass'] = '';
+               $datosAtributos['footertemplate'] = '';
             } else {
-               $atributosCore['footerclass'] = 'container pt-5';
-               $atributosCore['footertemplate'] = 'modules/core/view/core-footer';
+               $datosAtributos['footerclass'] = 'container pt-5';
+               $datosAtributos['footertemplate'] = 'modules/core/view/core-footer';
                $datosAtributos['sidebarrighttemplate'] = 'modules/scc/beneficiario/view/beneficiario-sidebar';
             }
          } else {
@@ -137,7 +177,6 @@ class BeneficiarioController
       } else {
          $datosAtributos['titulo'] = 'Forjadores de Esperanza';
       }
-
       return $datosAtributos;
    }
    public function scc_get_provincias()

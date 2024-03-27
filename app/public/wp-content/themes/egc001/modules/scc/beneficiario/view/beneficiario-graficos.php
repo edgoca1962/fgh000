@@ -67,3 +67,6 @@ $totalComedores = count($atributos['datosGraficos']['donas']);
    <input id="nonce" type="hidden" name="nonce" value="<?php echo wp_create_nonce('graficos') ?>">
    <input id="endpoint" type="hidden" name="endpoint" value="<?php echo admin_url('admin-ajax.php') ?>">
 </div>
+<pre>
+   <?php print_r($atributos) ?>
+</pre>

@@ -1,8 +1,8 @@
 <?php
 
-namespace SCC\Modules\DivPolCri;
+namespace EGC001\Modules\DivPolCri;
 
-use SCC\Modules\Core\Singleton;
+use EGC001\Modules\Core\Singleton;
 
 class DivPolCriModel
 {
@@ -18,7 +18,7 @@ class DivPolCriModel
       add_action('save_post', [$this, 'save_canton']);
       add_action('save_post', [$this, 'save_distrito_id']);
       add_action('save_post', [$this, 'save_distrito']);
-      add_action('wp_ajax_beneficiario_csvfile', [$this, 'SCC_beneficiario_csvfile']);
+      add_action('wp_ajax_beneficiario_csvfile', [$this, 'EGC001_beneficiario_csvfile']);
       $this->set_paginas();
       add_action('wp_ajax_provincia', [$this, 'dpc_get_provincia']);
       add_action('wp_ajax_canton', [$this, 'dpc_get_canton']);
@@ -58,25 +58,25 @@ class DivPolCriModel
       $s_lower = strtolower($singular);
 
       $etiquetas = [
-         'name' => _x($plural, 'post type general name', 'SCC'),
-         'singular_name' => _x($singular, 'post type singular name', 'SCC'),
-         'menu_name' => _x($plural, 'admin menu', 'SCC'),
-         'name_admin_bar' => _x($singular, 'add new on admin bar', 'SCC'),
-         'add_new' => _x("Nuevo $singular", 'prayer', 'SCC'),
-         'add_new_item' => __("Agregar $singular", 'SCC'),
-         'new_item' => __("Nuevo $singular", 'SCC'),
-         'edit_item' => __("Editar $singular", 'SCC'),
-         'view_item' => __("Ver $singular", 'SCC'),
-         'view_items' => __("Ver $plural", 'SCC'),
-         'all_items' => __("Todos los $plural", 'SCC'),
-         'search_items' => __("Buscar $plural", 'SCC'),
-         'parent_item_colon' => __("$singular padre", 'SCC'),
-         'not_found' => __("No hay $p_lower", 'SCC'),
-         'not_found_in_trash' => __("No hay $p_lower borrados", 'SCC'),
-         'archives' => __("$singular Archivado", 'SCC'),
-         'attributes' => __("Atributos del $singular", 'SCC'),
-         'insert_into_item' => __("Insertar $s_lower", 'SCC'),
-         'uploaded_to_this_item' => __("Adjuntar a un $s_lower", 'SCC'),
+         'name' => _x($plural, 'post type general name', 'EGC001'),
+         'singular_name' => _x($singular, 'post type singular name', 'EGC001'),
+         'menu_name' => _x($plural, 'admin menu', 'EGC001'),
+         'name_admin_bar' => _x($singular, 'add new on admin bar', 'EGC001'),
+         'add_new' => _x("Nuevo $singular", 'prayer', 'EGC001'),
+         'add_new_item' => __("Agregar $singular", 'EGC001'),
+         'new_item' => __("Nuevo $singular", 'EGC001'),
+         'edit_item' => __("Editar $singular", 'EGC001'),
+         'view_item' => __("Ver $singular", 'EGC001'),
+         'view_items' => __("Ver $plural", 'EGC001'),
+         'all_items' => __("Todos los $plural", 'EGC001'),
+         'search_items' => __("Buscar $plural", 'EGC001'),
+         'parent_item_colon' => __("$singular padre", 'EGC001'),
+         'not_found' => __("No hay $p_lower", 'EGC001'),
+         'not_found_in_trash' => __("No hay $p_lower borrados", 'EGC001'),
+         'archives' => __("$singular Archivado", 'EGC001'),
+         'attributes' => __("Atributos del $singular", 'EGC001'),
+         'insert_into_item' => __("Insertar $s_lower", 'EGC001'),
+         'uploaded_to_this_item' => __("Adjuntar a un $s_lower", 'EGC001'),
       ];
       return $etiquetas;
    }
@@ -456,7 +456,7 @@ class DivPolCriModel
          wp_send_json_success($distritos);
       }
    }
-   public function scc_divpolcri_get_provincia($provincia_id)
+   public function EGC001_divpolcri_get_provincia($provincia_id)
    {
       global $wpdb;
 
@@ -477,7 +477,7 @@ class DivPolCriModel
 
       return $provincia;
    }
-   public function scc_divpolcri_get_canton($canton_id)
+   public function EGC001_divpolcri_get_canton($canton_id)
    {
       global $wpdb;
 
@@ -498,7 +498,7 @@ class DivPolCriModel
 
       return $cantone;
    }
-   public function scc_divpolcri_get_distrito($distrito_id)
+   public function EGC001_divpolcri_get_distrito($distrito_id)
    {
       global $wpdb;
 

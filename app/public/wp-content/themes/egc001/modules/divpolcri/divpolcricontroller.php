@@ -1,8 +1,8 @@
 <?php
 
-namespace SCC\Modules\DivPolCri;
+namespace EGC001\Modules\DivPolCri;
 
-use SCC\Modules\Core\Singleton;
+use EGC001\Modules\Core\Singleton;
 
 class DivPolCri
 {
@@ -18,9 +18,9 @@ class DivPolCri
       $this->atributos['div2'] = 'row';
       $this->atributos['div3'] = 'col-md-8';
       $this->atributos['div5'] = 'col-md-4';
-      $this->atributos['templatepartnone'] = 'modules/scc/' . $postType . '/view/' . $postType . '-none';
-      $this->atributos['sidebar'] = 'modules/scc/acuerdo/view/beneficiario-sidebar';
-      $this->atributos['imagen'] = SCC_DIR_URI . '/assets/img/DiosdePactos/scclogotransparente.png';
+      $this->atributos['templatepartnone'] = 'modules/EGC001/' . $postType . '/view/' . $postType . '-none';
+      $this->atributos['sidebar'] = 'modules/EGC001/acuerdo/view/beneficiario-sidebar';
+      $this->atributos['imagen'] = EGC001_DIR_URI . '/assets/img/DiosdePactos/EGC001logotransparente.png';
 
       $this->atributos['subtitulo'] = $this->get_datosAtributos($postType)['subtitulo'];
       $this->atributos['div4'] = $this->get_datosAtributos($postType)['div4'];
@@ -41,17 +41,17 @@ class DivPolCri
             $datosAtributos['verbeneficiarios'] = true;
             if (in_array('administrator', $usuarioRoles) || in_array('useradmingeneral', $usuarioRoles) || in_array('useradminbeneficiarios', $usuarioRoles)) {
                $datosAtributos['userAdmin'] = true;
-               $datosAtributos['agregarpost'] = 'modules/scc/' . $postType . '/view/' . $postType . '-agregar';
+               $datosAtributos['agregarpost'] = 'modules/EGC001/' . $postType . '/view/' . $postType . '-agregar';
             }
          }
       }
 
       if (is_single()) {
-         $datosAtributos['templatepart'] = 'modules/scc/' . $postType . '/view/' . $postType . '-single';
+         $datosAtributos['templatepart'] = 'modules/EGC001/' . $postType . '/view/' . $postType . '-single';
          $datosAtributos['subtitulo'] = get_the_title();
          $datosAtributos['div4'] = '';
       } else {
-         $datosAtributos['templatepart'] = 'modules/scc/' . $postType . '/view/' . $postType;
+         $datosAtributos['templatepart'] = 'modules/EGC001/' . $postType . '/view/' . $postType;
          $datosAtributos['subtitulo'] = '';
          $datosAtributos['div4'] = 'row row-cols-1 row-cols-md-2 g-4 pb-3';
       }
