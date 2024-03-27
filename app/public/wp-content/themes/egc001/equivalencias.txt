@@ -1,9 +1,0 @@
-section -> div0 background
-div1 -> div1 container
-div2 -> div2 row
-div3 -> No existe Sidebar Left
-div4 -> No existe
-div5 -> No existe
-div6 -> div3
-div7 -> div4
-div8 -> div5
