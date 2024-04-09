@@ -1,0 +1,17 @@
+zip -vr scc.zip scc/ -x "*.DS_Store"
+Modificaciones:
+1) Eliminar carpetas de módulos no requeridos.
+2) Cambiar Dominio EGC001 a SCC
+3) CoreController:
+   1) Eliminar Clases de módulos no requeridos.
+   2) Eliminar require para comentarios adicional
+4) core->view->navbar.php:
+   1) Incluir clase container en id main_navbar
+   2) Inclur clase rounded-circle en logo
+5) Wordpress Menu
+   1) Apearance:
+      1) Salvar Permalinks
+      2) Cambiar menues (visible menu)
+      3) Customize->Site Identity cambiar logos.
+   2) Settings:
+      1) Reading: Seleccionar página principal
